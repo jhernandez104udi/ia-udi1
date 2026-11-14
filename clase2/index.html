@@ -47,12 +47,43 @@ button{font-family:inherit;cursor:pointer}
 .profile-pill:hover{border-color:var(--udi-blue);background:var(--card)}
 .icon-btn{width:38px;height:38px;border-radius:10px;background:var(--bg-3);border:1px solid var(--border);display:grid;place-items:center;color:var(--text);font-size:1rem}
 .icon-btn:hover{background:var(--card);border-color:var(--udi-blue)}
+
+/* --- LAYOUT PRINCIPAL Y SCROLL CORREGIDO --- */
 .layout{display:grid;grid-template-columns:var(--sidebar-width) 1fr;min-height:calc(100vh - 56px);transition:grid-template-columns .3s ease}
 .layout.sidebar-collapsed{grid-template-columns:0 1fr}
-.sidebar{background:var(--bg-2);border-right:1px solid var(--border);padding:1rem;overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:56px;transition:padding .3s ease, border-color .3s ease; overflow: hidden;}
+
+/* El sidebar ocupa toda la altura disponible y permite scroll */
+.sidebar{
+  background:var(--bg-2);
+  border-right:1px solid var(--border);
+  height:calc(100vh - 56px);
+  position:sticky;
+  top:56px;
+  transition:padding .3s ease, border-color .3s ease;
+  display: flex;
+  flex-direction: column;
+}
+/* El contenedor interno es el que hace el scroll */
+.sidebar-inner {
+  width: var(--sidebar-width);
+  flex: 1;
+  overflow-y: auto; /* Aquí está la magia para que baje */
+  padding: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+/* Scrollbar personalizado para Chrome/Safari */
+.sidebar-inner::-webkit-scrollbar { width: 6px; }
+.sidebar-inner::-webkit-scrollbar-track { background: transparent; }
+.sidebar-inner::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+.sidebar-inner::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* Colapsado en escritorio */
 .layout.sidebar-collapsed .sidebar { padding: 0; border-right-color: transparent; }
-.sidebar-inner { width: var(--sidebar-width); } /* Fixed width for content */
 .layout.sidebar-collapsed .sidebar-inner { display: none; }
+
+/* --- FIN LAYOUT --- */
+
 .side-mod{margin-bottom:1rem}
 .side-mod-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;margin:.6rem .2rem .3rem;display:flex;align-items:center;gap:.4rem}
 .side-lesson{display:flex;align-items:center;gap:.5rem;width:100%;padding:.55rem .6rem;border-radius:10px;background:transparent;border:none;color:var(--text);text-align:left;font-size:.85rem;margin-bottom:2px;transition:background .15s}
@@ -70,7 +101,14 @@ button{font-family:inherit;cursor:pointer}
 .grid{display:grid;gap:.8rem}
 .grid-2{grid-template-columns:1fr 1fr}
 .grid-3{grid-template-columns:repeat(3,1fr)}
-@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr}.layout{grid-template-columns:1fr}.sidebar{position:fixed;top:56px;left:-100%;width:85%;max-width:320px;height:calc(100vh - 56px);z-index:40;transition:left .25s}.sidebar.open{left:0}.topbar-title{display:none}.layout.sidebar-collapsed .sidebar { left: -100%; } }
+@media(max-width:900px){
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:fixed;top:56px;left:-100%;width:85%;max-width:320px;height:calc(100vh - 56px);z-index:40;transition:left .25s}
+  .sidebar.open{left:0}
+  .topbar-title{display:none}
+  .layout.sidebar-collapsed .sidebar { left: -100%; }
+}
 label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:.25rem;font-weight:600}
 input[type=text],input[type=email],input[type=password],input[type=number],textarea,select{width:100%;padding:.6rem .75rem;background:var(--bg-2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.88rem;font-family:inherit;transition:border-color .15s}
 input:focus,textarea:focus,select:focus{outline:none;border-color:var(--udi-blue)}
@@ -196,6 +234,7 @@ body.light .quiz-opt.wrong{color:#b91c1c}
 
 <div class="layout" id="mainLayout">
   <aside class="sidebar" id="sidebar">
+    <!-- Aseguramos que el contenedor interno maneje el scroll -->
     <div class="sidebar-inner" id="sidebarInner"></div>
   </aside>
   <main class="main" id="mainView">
@@ -370,7 +409,7 @@ body.light .quiz-opt.wrong{color:#b91c1c}
 /* ============================================================
    UDI · Clase 1 · Industria 4.0 e IA
    Sistema de niveles con protección de profesor + Tema Claro/Oscuro
-   + Mejoras: Colapsar sidebar, perfil con rol, carreras.
+   + Corrección de scroll en barra lateral y colapso animado.
 ============================================================ */
 
 /* ---------- STATE ---------- */
@@ -401,7 +440,6 @@ function ensureProfile(){
   if(!state.profile){
     state.profile={name:'Estudiante',career:'industrial',level:'basic',role:'student'};
   }
-  // Backward compatibility: if role is missing, set default
   if(!state.profile.role) state.profile.role = 'student';
 }
 
@@ -2020,7 +2058,6 @@ function toggleSidebar() {
     isSidebarCollapsed = false;
   }
 }
-
 
 /* ---------- INIT ---------- */
 function init(){
