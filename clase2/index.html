@@ -1,0 +1,2156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UDI · Clase 1 · Industria 4.0 e IA</title>
+<meta name="theme-color" content="#0b1220">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.0/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.0/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.0/700.css">
+<style>
+:root{
+  --udi-blue:#0b66d1;--udi-blue-dark:#084a9a;--udi-orange:#f97316;--udi-orange-deep:#c2410c;
+  --bg:#0b1220;--bg-2:#111a2e;--bg-3:#18233d;--card:#141e36;--border:#22304f;
+  --text:#e7ecf5;--muted:#8ea0c0;--success:#22c55e;--danger:#ef4444;--warn:#eab308;
+  --topbar-bg:rgba(11,18,32,.92);--canvas-bg:#0a1020;
+  --radius:14px;--shadow:0 8px 24px rgba(0,0,0,.35);
+  --sidebar-width:280px;
+}
+body.light{
+  --bg:#f1f5f9;--bg-2:#ffffff;--bg-3:#e2e8f0;--card:#ffffff;--border:#cbd5e1;
+  --text:#0f172a;--muted:#475569;--topbar-bg:rgba(255,255,255,.92);--canvas-bg:#f8fafc;
+  --shadow:0 8px 24px rgba(15,23,42,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:15px;line-height:1.5;transition:background .2s,color .2s}
+a{color:#93c5fd;text-decoration:none}
+body.light a{color:var(--udi-blue)}
+button{font-family:inherit;cursor:pointer}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1rem;border-radius:10px;border:1px solid transparent;font-size:.85rem;font-weight:600;transition:all .15s;background:var(--bg-3);color:var(--text)}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--udi-blue);color:#fff}
+.btn-primary:hover{background:var(--udi-blue-dark)}
+.btn-ghost{background:transparent;border-color:var(--border);color:var(--text)}
+.btn-ghost:hover{background:var(--bg-3)}
+.btn-dark{background:#0f172a;color:#fff}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-sm{padding:.35rem .7rem;font-size:.78rem}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.topbar{position:sticky;top:0;z-index:50;background:var(--topbar-bg);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:.55rem 1rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.55rem;font-weight:700;font-size:1rem}
+.brand-logo{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--udi-blue),var(--udi-orange));display:grid;place-items:center;font-weight:800;color:#fff;font-size:.9rem}
+.topbar-title{font-size:.85rem;color:var(--muted);margin-left:.3rem}
+.topbar-actions{margin-left:auto;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+.profile-pill{display:inline-flex;align-items:center;gap:.45rem;padding:.35rem .75rem;border-radius:999px;background:var(--bg-3);border:1px solid var(--border);color:var(--text);font-size:.78rem;font-weight:600;transition:all .15s}
+.profile-pill:hover{border-color:var(--udi-blue);background:var(--card)}
+.icon-btn{width:38px;height:38px;border-radius:10px;background:var(--bg-3);border:1px solid var(--border);display:grid;place-items:center;color:var(--text);font-size:1rem}
+.icon-btn:hover{background:var(--card);border-color:var(--udi-blue)}
+.layout{display:grid;grid-template-columns:var(--sidebar-width) 1fr;min-height:calc(100vh - 56px);transition:grid-template-columns .3s ease}
+.layout.sidebar-collapsed{grid-template-columns:0 1fr}
+.sidebar{background:var(--bg-2);border-right:1px solid var(--border);padding:1rem;overflow-y:auto;max-height:calc(100vh - 56px);position:sticky;top:56px;transition:padding .3s ease, border-color .3s ease; overflow: hidden;}
+.layout.sidebar-collapsed .sidebar { padding: 0; border-right-color: transparent; }
+.sidebar-inner { width: var(--sidebar-width); } /* Fixed width for content */
+.layout.sidebar-collapsed .sidebar-inner { display: none; }
+.side-mod{margin-bottom:1rem}
+.side-mod-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;margin:.6rem .2rem .3rem;display:flex;align-items:center;gap:.4rem}
+.side-lesson{display:flex;align-items:center;gap:.5rem;width:100%;padding:.55rem .6rem;border-radius:10px;background:transparent;border:none;color:var(--text);text-align:left;font-size:.85rem;margin-bottom:2px;transition:background .15s}
+.side-lesson:hover{background:var(--bg-3)}
+.side-lesson.active{background:var(--udi-blue);color:#fff}
+.side-lesson.done .chk{background:var(--success);color:#fff;border-color:var(--success)}
+.side-lesson .chk{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);display:grid;place-items:center;font-size:.7rem;flex-shrink:0}
+.side-lesson.locked{opacity:.55;cursor:not-allowed}
+.side-lesson.locked:hover{background:transparent}
+.side-lesson .lock{font-size:.7rem;margin-left:auto;opacity:.7}
+.main{padding:1.2rem;max-width:1100px;margin:0 auto;width:100%}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.card h3{margin:0 0 .6rem;font-size:1.15rem}
+.card h4{margin:0 0 .5rem;font-size:1rem}
+.grid{display:grid;gap:.8rem}
+.grid-2{grid-template-columns:1fr 1fr}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr}.layout{grid-template-columns:1fr}.sidebar{position:fixed;top:56px;left:-100%;width:85%;max-width:320px;height:calc(100vh - 56px);z-index:40;transition:left .25s}.sidebar.open{left:0}.topbar-title{display:none}.layout.sidebar-collapsed .sidebar { left: -100%; } }
+label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:.25rem;font-weight:600}
+input[type=text],input[type=email],input[type=password],input[type=number],textarea,select{width:100%;padding:.6rem .75rem;background:var(--bg-2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.88rem;font-family:inherit;transition:border-color .15s}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--udi-blue)}
+textarea{min-height:80px;resize:vertical}
+.prompt-preview{background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:.9rem;font-size:.82rem;line-height:1.55;white-space:pre-wrap;word-break:break-word;min-height:120px;font-family:ui-monospace,monospace}
+.ip-template-btn{display:block;width:100%;text-align:left;padding:.6rem .75rem;background:var(--bg-2);border:1px solid var(--border);border-radius:10px;margin-bottom:.4rem;color:var(--text);font-size:.82rem;transition:all .15s}
+.ip-template-btn:hover{border-color:var(--udi-blue);background:var(--bg-3)}
+.ip-template-btn strong{display:block;margin-bottom:.15rem}
+.ip-template-btn small{color:var(--muted);font-size:.75rem}
+.badge{display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .55rem;border-radius:999px;font-size:.72rem;font-weight:700;background:var(--bg-3);border:1px solid var(--border)}
+.badge-blue{background:rgba(11,102,209,.15);border-color:var(--udi-blue);color:#93c5fd}
+.badge-green{background:rgba(34,197,94,.15);border-color:var(--success);color:#86efac}
+.badge-orange{background:rgba(249,115,22,.15);border-color:var(--udi-orange);color:#fdba74}
+.badge-red{background:rgba(239,68,68,.15);border-color:var(--danger);color:#fca5a5}
+body.light .badge-blue{color:#084a9a;background:rgba(11,102,209,.12)}
+body.light .badge-green{color:#15803d;background:rgba(34,197,94,.15)}
+body.light .badge-orange{color:#c2410c;background:rgba(249,115,22,.15)}
+body.light .badge-red{color:#b91c1c;background:rgba(239,68,68,.12)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:100;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.5rem;max-width:620px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.modal h2{margin:0 0 .5rem;font-size:1.3rem}
+.modal p{color:var(--muted);margin:0 0 1rem}
+.option-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.6rem 0}
+.option-btn{padding:.7rem;background:var(--bg-2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);font-size:.82rem;text-align:left;transition:all .15s}
+.option-btn:hover{border-color:var(--udi-blue)}
+.option-btn.selected{background:rgba(11,102,209,.15);border-color:var(--udi-blue);color:#93c5fd}
+body.light .option-btn.selected{color:#084a9a;background:rgba(11,102,209,.12)}
+.level-card{padding:.9rem;background:var(--bg-2);border:1.5px solid var(--border);border-radius:12px;margin-bottom:.5rem;cursor:pointer;transition:all .15s}
+.level-card:hover{border-color:var(--udi-blue)}
+.level-card.selected{background:rgba(11,102,209,.12);border-color:var(--udi-blue)}
+.level-card h4{margin:0 0 .2rem;display:flex;align-items:center;gap:.4rem}
+.level-card small{color:var(--muted);font-size:.78rem}
+.hero{background:linear-gradient(135deg,var(--udi-blue) 0%,var(--udi-blue-dark) 100%);border-radius:18px;padding:2rem 1.5rem;color:#fff;margin-bottom:1rem;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-40px;top:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(249,115,22,.3),transparent 70%);border-radius:50%}
+.hero h1{margin:0 0 .4rem;font-size:1.8rem;position:relative;z-index:1}
+.hero p{margin:0;opacity:.9;position:relative;z-index:1}
+.cover-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.8rem}
+.cover-tile{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;cursor:pointer;transition:all .2s}
+.cover-tile:hover{transform:translateY(-3px);border-color:var(--udi-blue);box-shadow:var(--shadow)}
+.cover-tile.locked{opacity:.5;cursor:not-allowed}
+.cover-tile.locked:hover{transform:none;border-color:var(--border)}
+.cover-tile .icon{font-size:1.6rem;margin-bottom:.4rem}
+.cover-tile h4{margin:0 0 .2rem;font-size:.95rem}
+.cover-tile small{color:var(--muted);font-size:.75rem;display:block}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.8rem 1.2rem;box-shadow:var(--shadow);z-index:200;transform:translateY(120%);opacity:0;transition:all .3s;font-size:.85rem;max-width:340px}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-color:var(--success)}
+.toast.error{border-color:var(--danger)}
+.toast.warn{border-color:var(--warn)}
+.error-banner{background:rgba(239,68,68,.12);border:1px solid var(--danger);border-radius:10px;padding:.8rem 1rem;margin-bottom:1rem;color:#fca5a5;font-size:.85rem;display:none;position:relative}
+body.light .error-banner{color:#b91c1c}
+.error-banner.show{display:block}
+.error-banner .close-err{position:absolute;top:.5rem;right:.5rem;background:none;border:none;color:inherit;font-size:1rem;cursor:pointer}
+.guide-step{display:flex;gap:.8rem;padding:.7rem;background:var(--bg-2);border-radius:10px;margin-bottom:.5rem}
+.guide-step-num{width:28px;height:28px;border-radius:50%;background:var(--udi-blue);color:#fff;display:grid;place-items:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.guide-step-body{flex:1;font-size:.85rem}
+.guide-step-body b{display:block;margin-bottom:.2rem}
+.level-up-banner{background:linear-gradient(135deg,var(--udi-blue),var(--udi-blue-dark));color:#fff;border-radius:12px;padding:1rem 1.2rem;margin-bottom:1rem;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.level-up-banner b{color:#fbbf24}
+.level-up-banner .btn{background:var(--udi-orange);color:#fff;border:none;font-size:.78rem}
+.locked-panel{text-align:center;padding:2rem 1rem}
+.locked-panel .lock-big{font-size:4rem;margin-bottom:.5rem;line-height:1}
+.locked-panel h2{margin-bottom:.5rem}
+.locked-panel p{color:var(--muted);font-size:.9rem;max-width:500px;margin:0 auto .4rem}
+.locked-actions{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-top:1.2rem}
+.prof-section{background:linear-gradient(135deg,#1e1b4b,#312e81);border:1px solid #4338ca;border-radius:14px;padding:1.2rem;margin-top:1rem;color:#e0e7ff}
+.prof-section h4{color:#c7d2fe;margin:0 0 .5rem}
+.prof-section .prof-status{font-size:.82rem;color:#a5b4fc;margin-bottom:.6rem}
+.math-tabs{display:flex;gap:.3rem;margin-bottom:.8rem;flex-wrap:wrap}
+.math-tab{padding:.45rem .8rem;background:var(--bg-2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.8rem}
+.math-tab.active{background:var(--udi-blue);border-color:var(--udi-blue);color:#fff}
+.math-panel{display:none}
+.math-panel.active{display:block}
+canvas.math-canvas{background:var(--canvas-bg);border:1px solid var(--border);border-radius:10px;width:100%;max-width:600px;display:block}
+.quiz-q{background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.8rem}
+.quiz-q .q-text{font-weight:600;margin-bottom:.6rem}
+.quiz-opt{display:block;width:100%;text-align:left;padding:.6rem .8rem;background:var(--bg-3);border:1px solid var(--border);border-radius:8px;margin-bottom:.3rem;color:var(--text);font-size:.85rem}
+.quiz-opt:hover{border-color:var(--udi-blue)}
+.quiz-opt.correct{background:rgba(34,197,94,.15);border-color:var(--success);color:#86efac}
+.quiz-opt.wrong{background:rgba(239,68,68,.15);border-color:var(--danger);color:#fca5a5}
+body.light .quiz-opt.correct{color:#15803d}
+body.light .quiz-opt.wrong{color:#b91c1c}
+.flow-canvas{background:var(--canvas-bg);border:1px solid var(--border);border-radius:10px;min-height:400px;position:relative;overflow:hidden}
+.flow-node{position:absolute;background:var(--card);border:2px solid var(--udi-blue);border-radius:10px;padding:.5rem .8rem;font-size:.82rem;cursor:move;min-width:100px;text-align:center;user-select:none}
+.flow-node.decision{border-color:var(--udi-orange);transform:rotate(0);background:rgba(249,115,22,.1)}
+.flow-node.end{border-color:var(--success);background:rgba(34,197,94,.1)}
+.flow-toolbar{display:flex;gap:.3rem;margin-bottom:.6rem;flex-wrap:wrap}
+.progress-bar{height:8px;background:var(--bg-2);border-radius:999px;overflow:hidden;margin:.4rem 0}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--udi-blue),var(--udi-orange));transition:width .4s}
+.accordion{border:1px solid var(--border);border-radius:10px;margin-bottom:.4rem;overflow:hidden}
+.accordion summary{padding:.7rem 1rem;background:var(--bg-2);cursor:pointer;font-weight:600;font-size:.88rem;list-style:none;display:flex;align-items:center;gap:.5rem}
+.accordion summary::-webkit-details-marker{display:none}
+.accordion summary::before{content:"▶";font-size:.7rem;transition:transform .2s}
+.accordion[open] summary::before{transform:rotate(90deg)}
+.accordion-body{padding:.9rem 1rem;background:var(--bg-3);font-size:.85rem}
+.tag{display:inline-block;padding:.15rem .5rem;background:var(--bg-3);border:1px solid var(--border);border-radius:6px;font-size:.72rem;margin-right:.3rem;margin-bottom:.2rem}
+.prof-input-group{display:flex;gap:.4rem;margin-top:.5rem;flex-wrap:wrap}
+.prof-input-group input{flex:1;min-width:180px}
+.profile-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:.8rem 0}
+.profile-stat{background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center}
+.profile-stat b{display:block;font-size:1.1rem;color:var(--udi-blue)}
+.profile-stat small{font-size:.72rem;color:var(--muted)}
+.hidden{display:none !important}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="icon-btn" id="menuBtn" aria-label="Menú">☰</button>
+  <div class="brand">
+    <div class="brand-logo">U</div>
+    <div>UDI · Clase 1</div>
+  </div>
+  <div class="topbar-title">Industria 4.0 e IA</div>
+  <div class="topbar-actions">
+    <button class="profile-pill" id="profileBadge" title="Ver perfil del estudiante y opciones de nivel">👤 Estudiante · 🌱 Básico</button>
+    <button class="icon-btn" id="langBtn" title="Cambiar idioma (ES/EN)">🌐</button>
+    <button class="icon-btn" id="themeBtn" title="Cambiar tema Claro / Oscuro">🌙</button>
+    <button class="icon-btn" id="panelBtn" title="Opciones, Perfil y Panel del Profesor">🛠️</button>
+  </div>
+</div>
+
+<div class="layout" id="mainLayout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-inner" id="sidebarInner"></div>
+  </aside>
+  <main class="main" id="mainView">
+    <div id="errorBanner" class="error-banner"><button class="close-err" onclick="this.parentElement.classList.remove('show')">✕</button><span id="errorText"></span></div>
+    <div id="lessonView"></div>
+  </main>
+</div>
+
+<!-- WELCOME MODAL -->
+<div class="modal-overlay" id="welcomeModal">
+  <div class="modal">
+    <h2>👋 ¡Bienvenido a Clase 1!</h2>
+    <p>Personaliza tu experiencia. Todo se guarda solo en tu dispositivo.</p>
+    <label for="wName">¿Cómo te llamas?</label>
+    <input type="text" id="wName" placeholder="Tu nombre">
+    
+    <label style="margin-top:.7rem">¿Cuál es tu rol principal?</label>
+    <div class="option-grid" id="roleGrid">
+      <button class="option-btn" data-role="student">🎓 Estudiante</button>
+      <button class="option-btn" data-role="entrepreneur">🚀 Empresario</button>
+      <button class="option-btn" data-role="micro">🏪 Microempresario</button>
+      <button class="option-btn" data-role="other">✨ Otro</button>
+    </div>
+
+    <label style="margin-top:.7rem">¿Cuál es tu área / carrera?</label>
+    <div class="option-grid" id="careerGrid">
+      <button class="option-btn" data-career="industrial">⚙️ Ingeniería Industrial</button>
+      <button class="option-btn" data-career="systems">💻 Ingeniería de Sistemas</button>
+      <button class="option-btn" data-career="mechatronics">🤖 Mecatrónica / Electrónica</button>
+      <button class="option-btn" data-career="admin">📊 Administración / Negocios</button>
+      <button class="option-btn" data-career="civil">🏗️ Civil / Mecánica</button>
+      <button class="option-btn" data-career="other">✨ Otra carrera</button>
+    </div>
+    <label style="margin-top:.7rem">¿Cuál es tu nivel inicial con IA?</label>
+    <div id="levelCards">
+      <div class="level-card" data-level="basic"><h4>🌱 Básico</h4><small>Nunca he usado IA</small></div>
+      <div class="level-card" data-level="intermediate"><h4>🌿 Intermedio</h4><small>Ya usé ChatGPT</small></div>
+      <div class="level-card" data-level="expert"><h4>🌳 Experto</h4><small>Uso IA a diario</small></div>
+    </div>
+    <div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap">
+      <button class="btn btn-primary" id="startBtn">Comenzar Clase 1 →</button>
+    </div>
+    <p style="font-size:.75rem;margin-top:1rem">También puedes hacer el test diagnóstico o gestionar tu perfil desde el botón 🛠️.</p>
+  </div>
+</div>
+
+<!-- OPTIONS, STUDENT PROFILE & PROFESSOR MODAL -->
+<div class="modal-overlay" id="optionsModal">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+      <h2 style="margin:0">🛠️ Perfil del Estudiante y Opciones</h2>
+      <button class="btn btn-ghost btn-sm" id="optCloseTop">✕</button>
+    </div>
+    <p style="margin-bottom:.8rem">Consulta tu perfil, revisa las herramientas desbloqueadas o solicita al profesor cambio de nivel.</p>
+
+    <!-- DATOS DEL ESTUDIANTE -->
+    <div class="card" style="background:var(--bg-2);margin-bottom:.9rem">
+      <h4>👤 Datos del Estudiante</h4>
+      <div class="grid grid-2">
+        <div>
+          <label for="optName">Nombre del estudiante</label>
+          <input type="text" id="optName" placeholder="Tu nombre">
+        </div>
+        <div>
+          <label for="optRole">Rol principal</label>
+          <select id="optRole">
+            <option value="student">🎓 Estudiante</option>
+            <option value="entrepreneur">🚀 Empresario</option>
+            <option value="micro">🏪 Microempresario</option>
+            <option value="other">✨ Otro</option>
+          </select>
+        </div>
+        <div>
+          <label for="optCareer">Área / Carrera</label>
+          <select id="optCareer">
+            <option value="industrial">⚙️ Ingeniería Industrial</option>
+            <option value="systems">💻 Ingeniería de Sistemas</option>
+            <option value="mechatronics">🤖 Mecatrónica / Electrónica</option>
+            <option value="admin">📊 Administración / Negocios</option>
+            <option value="civil">🏗️ Civil / Mecánica</option>
+            <option value="other">✨ Otra carrera</option>
+          </select>
+        </div>
+      </div>
+      <div class="profile-stat-grid">
+        <div class="profile-stat">
+          <b id="optStatLevel">🌱 Básico</b>
+          <small>Nivel actual</small>
+        </div>
+        <div class="profile-stat">
+          <b id="optStatProgress">0/0</b>
+          <small>Lecciones completadas</small>
+        </div>
+        <div class="profile-stat">
+          <b id="optStatDiag">—</b>
+          <small>Puntaje diagnóstico</small>
+        </div>
+      </div>
+      <div style="display:flex;gap:.4rem;flex-wrap:wrap">
+        <button class="btn btn-primary btn-sm" id="optSaveProfile">💾 Guardar datos de perfil</button>
+        <button class="btn btn-ghost btn-sm" id="optGoDiag">🧪 Ir al Test Diagnóstico</button>
+        <button class="btn btn-ghost btn-sm" id="optGoPanel">🏢 Ir al Panel Empresarial</button>
+      </div>
+    </div>
+
+    <!-- ESTADO DE HERRAMIENTAS BLOQUEADAS -->
+    <div class="card" style="background:var(--bg-2);margin-bottom:.9rem">
+      <h4>🔓 Estado de las 6 Herramientas por Nivel</h4>
+      <div id="optUnlockedList" style="font-size:.82rem;line-height:1.7"></div>
+    </div>
+
+    <!-- ZONA DEL PROFESOR DIRECTA -->
+    <div class="prof-section" style="margin-top:0">
+      <h4>🔐 Zona del Profesor / Director — Subir o Cambiar Nivel</h4>
+      <div class="prof-status" id="optProfStatus">Ingresa la clave maestra del director para desbloquear el cambio de nivel.</div>
+      <label style="color:#c7d2fe">1. Selecciona el nuevo nivel para el estudiante:</label>
+      <div id="optLevelCards" style="margin:.4rem 0 .8rem">
+        <div class="level-card" data-level="basic"><h4>🌱 Básico</h4><small>Acceso a herramientas fundamentales (Módulos 1, 2 y 3 base)</small></div>
+        <div class="level-card" data-level="intermediate"><h4>🌿 Intermedio</h4><small>Desbloquea 3 herramientas: 🎬 Video, 📊 Datos, 🎙️ Reuniones</small></div>
+        <div class="level-card" data-level="expert"><h4>🌳 Experto</h4><small>Desbloquea las 6 herramientas: + 🤖 Agentes, 🔍 RAG, ⚙️ Prompt Chaining</small></div>
+      </div>
+      <label for="optProfKey" style="color:#c7d2fe">2. Clave secreta del profesor:</label>
+      <div class="prof-input-group">
+        <input type="password" id="optProfKey" placeholder="Ingresa la clave del profesor..." autocomplete="off">
+        <button class="btn btn-primary" id="optApplyLevel">🔓 Validar y Aplicar Nivel</button>
+      </div>
+    </div>
+
+    <div style="margin-top:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem">
+      <button class="btn btn-danger btn-sm" id="optResetAll">🗑️ Borrar progreso local</button>
+      <button class="btn btn-ghost" id="optCloseBottom">Cerrar ventana</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFESSOR QUICK MODAL (from locked lessons) -->
+<div class="modal-overlay" id="profModal">
+  <div class="modal">
+    <h2>🔐 Acceso de Profesor / Director del Curso</h2>
+    <p>Solo el director del curso puede cambiar el nivel de los estudiantes. Ingresa la clave maestra.</p>
+    <label for="profKey">Clave del profesor</label>
+    <input type="password" id="profKey" placeholder="••••••••" autocomplete="off">
+    <div style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap">
+      <button class="btn btn-primary" id="profLogin">Autenticar</button>
+      <button class="btn btn-ghost" id="profCancel">Cancelar</button>
+    </div>
+    <p style="font-size:.72rem;margin-top:1rem;color:var(--muted)">Esta clave es única del director del curso. Los estudiantes no pueden cambiar su nivel manualmente.</p>
+  </div>
+</div>
+
+<!-- STUDENT LEVEL CHANGE (after prof auth) -->
+<div class="modal-overlay" id="levelChangeModal">
+  <div class="modal">
+    <h2>🎓 Cambiar Nivel del Estudiante</h2>
+    <p id="levelChangeStudent">Estudiante: —</p>
+    <label>Nuevo nivel</label>
+    <div id="levelChangeCards">
+      <div class="level-card" data-level="basic"><h4>🌱 Básico</h4><small>Acceso a herramientas fundamentales</small></div>
+      <div class="level-card" data-level="intermediate"><h4>🌿 Intermedio</h4><small>Desbloquea 3 herramientas: Video, Datos, Reuniones</small></div>
+      <div class="level-card" data-level="expert"><h4>🌳 Experto</h4><small>Desbloquea 6 herramientas: + Agentes, RAG, Prompt Chaining</small></div>
+    </div>
+    <div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap">
+      <button class="btn btn-primary" id="levelChangeConfirm">Confirmar cambio</button>
+      <button class="btn btn-ghost" id="levelChangeCancel">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   UDI · Clase 1 · Industria 4.0 e IA
+   Sistema de niveles con protección de profesor + Tema Claro/Oscuro
+   + Mejoras: Colapsar sidebar, perfil con rol, carreras.
+============================================================ */
+
+/* ---------- STATE ---------- */
+var STORAGE_KEY='udi_clase1_v2';
+var state=load();
+var currentLesson='cover';
+var currentLang='es';
+var profAuth=false;
+var pendingLevelChange=null;
+var optSelectedLevel='basic';
+var isSidebarCollapsed = false;
+
+function load(){
+  try{
+    var s=localStorage.getItem(STORAGE_KEY);
+    if(s){
+      var parsed=JSON.parse(s);
+      if(!parsed.completed) parsed.completed={};
+      if(!parsed.theme) parsed.theme='dark';
+      return parsed;
+    }
+  }catch(e){}
+  return {profile:null,completed:{},tasks:[],diagnosticScore:null,diagnosticDate:null,theme:'dark'};
+}
+function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}}
+
+function ensureProfile(){
+  if(!state.profile){
+    state.profile={name:'Estudiante',career:'industrial',level:'basic',role:'student'};
+  }
+  // Backward compatibility: if role is missing, set default
+  if(!state.profile.role) state.profile.role = 'student';
+}
+
+/* ---------- HELPERS ---------- */
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function showToast(msg,type){var t=$('toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');clearTimeout(t._t);t._t=setTimeout(function(){t.className='toast';},3200);}
+function copyText(s){if(navigator.clipboard){navigator.clipboard.writeText(s).then(function(){showToast('Copiado ✓','success');});}else{var ta=document.createElement('textarea');ta.value=s;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('Copiado ✓','success');}}
+function downloadBlob(name,content,mime){var b=new Blob([content],{type:(mime||'text/plain')+';charset=utf-8'});var u=URL.createObjectURL(b);var a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(function(){URL.revokeObjectURL(u);},1000);}
+function showError(msg){var b=$('errorBanner');$('errorText').textContent=msg;b.classList.add('show');}
+function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+/* ---------- THEME SYSTEM (LIGHT / DARK) ---------- */
+function applyTheme(){
+  var isLight=(state.theme==='light');
+  document.body.classList.toggle('light',isLight);
+  var btn=$('themeBtn');
+  if(btn) btn.textContent=isLight?'☀️':'🌙';
+}
+function toggleTheme(){
+  state.theme=(state.theme==='light')?'dark':'light';
+  persist();
+  applyTheme();
+  renderAll();
+  showToast('Tema: '+(state.theme==='light'?'Claro ☀️':'Oscuro 🌙'),'success');
+}
+
+/* ---------- LEVEL SYSTEM ---------- */
+var LEVEL_RANK={basic:1,intermediate:2,expert:3};
+var LEVEL_LABELS={basic:'Básico',intermediate:'Intermedio',expert:'Experto'};
+var LEVEL_ICONS={basic:'🌱',intermediate:'🌿',expert:'🌳'};
+var CAREER_LABELS={
+  industrial:'⚙️ Ing. Industrial',
+  systems:'💻 Sistemas',
+  mechatronics:'🤖 Mecatrónica',
+  admin:'📊 Administración',
+  civil:'🏗️ Civil / Mecánica',
+  other:'✨ Otra área'
+};
+var ROLE_LABELS={
+  student: '🎓 Estudiante',
+  entrepreneur: '🚀 Empresario',
+  micro: '🏪 Microempresario',
+  other: '✨ Otro'
+};
+
+function currentLevel(){return (state.profile&&state.profile.level)||'basic';}
+function currentLevelRank(){return LEVEL_RANK[currentLevel()]||1;}
+function isLessonLocked(lesson){
+  if(!lesson.minLevel) return false;
+  return currentLevelRank()<LEVEL_RANK[lesson.minLevel];
+}
+function levelLabel(lvl){return LEVEL_LABELS[lvl]||lvl;}
+function levelIcon(lvl){return LEVEL_ICONS[lvl]||'🌱';}
+
+/* ---------- PROFESSOR KEY ---------- */
+var PROFESSOR_KEY='UDI2026-DIRECTOR';
+
+function openProfModal(){
+  $('profKey').value='';
+  $('profModal').classList.add('show');
+  setTimeout(function(){$('profKey').focus();},100);
+}
+function closeProfModal(){$('profModal').classList.remove('show');}
+function attemptProfLogin(){
+  var k=$('profKey').value.trim();
+  if(k.toUpperCase()===PROFESSOR_KEY){
+    profAuth=true;
+    closeProfModal();
+    showToast('🔓 Autenticado como profesor','success');
+    openLevelChangeForStudent();
+  } else {
+    showToast('❌ Clave incorrecta','error');
+    $('profKey').value='';
+    $('profKey').focus();
+  }
+}
+function openLevelChangeForStudent(){
+  ensureProfile();
+  var name=state.profile.name||'Estudiante';
+  $('levelChangeStudent').textContent='Estudiante: '+name+' (Nivel actual: '+levelLabel(currentLevel())+')';
+  var cards=$('levelChangeCards').querySelectorAll('.level-card');
+  var cur=currentLevel();
+  pendingLevelChange=cur;
+  cards.forEach(function(c){
+    c.classList.toggle('selected',c.dataset.level===cur);
+    c.onclick=function(){
+      cards.forEach(function(x){x.classList.remove('selected');});
+      c.classList.add('selected');
+      pendingLevelChange=c.dataset.level;
+    };
+  });
+  $('levelChangeModal').classList.add('show');
+}
+function confirmLevelChange(){
+  if(!profAuth){showToast('❌ Requiere autenticación de profesor','error');return;}
+  if(!pendingLevelChange) return;
+  ensureProfile();
+  var oldLvl=currentLevel();
+  state.profile.level=pendingLevelChange;
+  persist();
+  $('levelChangeModal').classList.remove('show');
+  profAuth=false;
+  renderProfileBadge();
+  renderSidebar();
+  renderAll();
+  if(oldLvl!==pendingLevelChange){
+    showToast('🎓 Nivel cambiado a '+levelLabel(pendingLevelChange),'success');
+  } else {
+    showToast('🎓 Nivel confirmado: '+levelLabel(pendingLevelChange),'success');
+  }
+}
+
+/* ---------- OPTIONS & PROFILE MODAL ---------- */
+function openOptionsModal(){
+  ensureProfile();
+  $('optName').value=state.profile.name||'';
+  $('optCareer').value=state.profile.career||'industrial';
+  $('optRole').value=state.profile.role||'student';
+  var lvl=currentLevel();
+  $('optStatLevel').textContent=levelIcon(lvl)+' '+levelLabel(lvl);
+  var completedCount=Object.keys(state.completed).filter(function(k){return state.completed[k];}).length;
+  $('optStatProgress').textContent=completedCount+'/'+LESSONS.length;
+  $('optStatDiag').textContent=(state.diagnosticScore!=null)?(state.diagnosticScore+'%'):'Sin realizar';
+
+  // Render unlocked status of the 6 gated tools
+  var gated=LESSONS.filter(function(l){return !!l.minLevel;});
+  var ulHtml='';
+  gated.forEach(function(l){
+    var locked=isLessonLocked(l);
+    ulHtml+='<div style="display:flex;justify-content:space-between;padding:.25rem 0;border-bottom:1px solid var(--border)">'+
+      '<span>'+l.icon+' <b>'+(l.obj[currentLang]||l.id)+'</b> <small style="color:var(--muted)">(Req: '+levelLabel(l.minLevel)+')</small></span>'+
+      '<span class="badge '+(locked?'badge-red':'badge-green')+'">'+(locked?'🔒 Bloqueada':'✅ Desbloqueada')+'</span>'+
+    '</div>';
+  });
+  $('optUnlockedList').innerHTML=ulHtml;
+
+  // Bind level selector inside Options Modal
+  optSelectedLevel=lvl;
+  var cards=$('optLevelCards').querySelectorAll('.level-card');
+  cards.forEach(function(c){
+    c.classList.toggle('selected',c.dataset.level===optSelectedLevel);
+    c.onclick=function(){
+      cards.forEach(function(x){x.classList.remove('selected');});
+      c.classList.add('selected');
+      optSelectedLevel=c.dataset.level;
+    };
+  });
+  $('optProfKey').value='';
+  $('optionsModal').classList.add('show');
+}
+function closeOptionsModal(){
+  $('optionsModal').classList.remove('show');
+}
+
+/* ---------- MODULES & LESSONS ---------- */
+var MODULES=[
+  {id:'m1',title:{es:'Fundamentos de IA',en:'AI Fundamentals'},icon:'📘'},
+  {id:'m2',title:{es:'Prompts Profesionales',en:'Professional Prompts'},icon:'✍️'},
+  {id:'m3',title:{es:'IA Aplicada',en:'Applied AI'},icon:'🎯'},
+  {id:'m4',title:{es:'IA Avanzada',en:'Advanced AI'},icon:'🚀'}
+];
+
+var LESSONS=[
+  // M1 - Fundamentos (siempre accesible)
+  {id:'l_glossary',mod:'m1',icon:'📖',obj:{es:'Dominar el vocabulario esencial de IA.',en:'Master essential AI vocabulary.'},expl:{es:'Aprende los términos clave que todo profesional debe conocer.',en:'Learn key terms every professional must know.'},widget:'w-glossary'},
+  {id:'l_myths',mod:'m1',icon:'🔍',obj:{es:'Distinguir mitos de realidades sobre IA.',en:'Distinguish AI myths from realities.'},expl:{es:'Desmonta creencias falsas con evidencia.',en:'Debunk false beliefs with evidence.'},widget:'w-myths'},
+  {id:'l_ethics',mod:'m1',icon:'🛡️',obj:{es:'Aplicar principios éticos al uso de IA.',en:'Apply ethical principles to AI use.'},expl:{es:'Responsabilidad, sesgo, privacidad y uso correcto.',en:'Responsibility, bias, privacy and proper use.'},widget:'w-ethics'},
+  {id:'l_tools',mod:'m1',icon:'🗺️',obj:{es:'Mapear herramientas de IA por caso de uso.',en:'Map AI tools by use case.'},expl:{es:'Elige la herramienta correcta según la tarea.',en:'Choose the right tool for the task.'},widget:'w-tools'},
+
+  // M2 - Prompts (siempre accesible)
+  {id:'l_anatomy',mod:'m2',icon:'⚖️',obj:{es:'Analizar la anatomía de un prompt.',en:'Analyze prompt anatomy.'},expl:{es:'Rol + contexto + tarea + formato = prompt profesional.',en:'Role + context + task + format = professional prompt.'},widget:'w-anatomy'},
+  {id:'l_techniques',mod:'m2',icon:'🧪',obj:{es:'Aplicar técnicas avanzadas de prompting.',en:'Apply advanced prompting techniques.'},expl:{es:'Few-shot, chain-of-thought, self-consistency.',en:'Few-shot, chain-of-thought, self-consistency.'},widget:'w-techniques'},
+  {id:'l_builder',mod:'m2',icon:'🛠️',obj:{es:'Construir prompts estructurados.',en:'Build structured prompts.'},expl:{es:'Constructor guiado paso a paso.',en:'Step-by-step guided builder.'},widget:'w-builder'},
+  {id:'l_evaluator',mod:'m2',icon:'📏',obj:{es:'Evaluar la calidad de prompts.',en:'Evaluate prompt quality.'},expl:{es:'Métricas y rúbricas de calidad.',en:'Quality metrics and rubrics.'},widget:'w-evaluator'},
+  {id:'l_library',mod:'m2',icon:'📚',obj:{es:'Usar biblioteca de prompts reales.',en:'Use real prompt library.'},expl:{es:'Prompts probados por industria.',en:'Tested prompts by industry.'},widget:'w-library'},
+  {id:'l_playground',mod:'m2',icon:'▶️',obj:{es:'Probar prompts en playground local.',en:'Test prompts in local playground.'},expl:{es:'Simula respuestas y compara versiones.',en:'Simulate responses and compare versions.'},widget:'w-playground'},
+
+  // M3 - Aplicada (algunas bloqueadas)
+  {id:'l_diagnostic',mod:'m3',icon:'🧪',obj:{es:'Diagnosticar tareas automatizables.',en:'Diagnose automatable tasks.'},expl:{es:'Workflow de 5 pasos para identificar oportunidades.',en:'5-step workflow to identify opportunities.'},widget:'w-diagnostic'},
+  {id:'l_roi',mod:'m3',icon:'💰',obj:{es:'Calcular ROI de automatización con IA.',en:'Calculate AI automation ROI.'},expl:{es:'Horas, costos y ahorro anual estimado.',en:'Hours, costs and estimated annual savings.'},widget:'w-roi'},
+  {id:'l_panel',mod:'m3',icon:'🏢',obj:{es:'Generar resúmenes ejecutivos.',en:'Generate executive summaries.'},expl:{es:'Panel empresarial con matriz impacto/esfuerzo.',en:'Business panel with impact/effort matrix.'},widget:'w-panel'},
+  {id:'l_cases',mod:'m3',icon:'🏭',obj:{es:'Analizar casos reales de IA en industria.',en:'Analyze real AI cases in industry.'},expl:{es:'Empresas líderes de manufactura, alimentos y logística.',en:'Leading manufacturing, food and logistics companies.'},widget:'w-cases'},
+  {id:'l_readiness',mod:'m3',icon:'✅',obj:{es:'Evaluar readiness de IA en una organización.',en:'Assess AI readiness in an organization.'},expl:{es:'Checklist de preparación.',en:'Preparation checklist.'},widget:'w-readiness'},
+  {id:'l_project',mod:'m3',icon:'🎓',obj:{es:'Diseñar propuesta de caso de uso.',en:'Design use case proposal.'},expl:{es:'Proyecto final del curso.',en:'Final course project.'},widget:'w-project'},
+  {id:'l_image',mod:'m3',icon:'🎨',obj:{es:'Crear prompts de imagen profesionales.',en:'Create professional image prompts.'},expl:{es:'Para DALL·E, Midjourney, Stable Diffusion.',en:'For DALL·E, Midjourney, Stable Diffusion.'},widget:'w-image'},
+  {id:'l_slides',mod:'m3',icon:'📊',obj:{es:'Generar diapositivas con IA.',en:'Generate slides with AI.'},expl:{es:'Prompts para Gamma, Canva IA, PowerPoint.',en:'Prompts for Gamma, Canva AI, PowerPoint.'},widget:'w-slides'},
+  {id:'l_biblio',mod:'m3',icon:'📚',obj:{es:'Generar referencias bibliográficas.',en:'Generate bibliographic references.'},expl:{es:'Prompts para APA, IEEE, MLA.',en:'Prompts for APA, IEEE, MLA.'},widget:'w-biblio'},
+  {id:'l_flow',mod:'m3',icon:'🔀',obj:{es:'Diseñar diagramas de flujo.',en:'Design flowcharts.'},expl:{es:'Editor visual interactivo.',en:'Interactive visual editor.'},widget:'w-flow'},
+  {id:'l_math',mod:'m3',icon:'📐',obj:{es:'Resolver problemas matemáticos con IA.',en:'Solve math problems with AI.'},expl:{es:'Graficador, derivadas, integrales, EDO.',en:'Grapher, derivatives, integrals, ODE.'},widget:'w-math'},
+
+  // M3 - INTERMEDIO (bloqueado)
+  {id:'l_video',mod:'m3',icon:'🎬',minLevel:'intermediate',obj:{es:'Crear prompts de video profesionales.',en:'Create professional video prompts.'},expl:{es:'Para Runway, Pika, Sora, HeyGen.',en:'For Runway, Pika, Sora, HeyGen.'},widget:'w-video'},
+  {id:'l_data',mod:'m3',icon:'📊',minLevel:'intermediate',obj:{es:'Analizar datos con IA sin fórmulas.',en:'Analyze data with AI without formulas.'},expl:{es:'Sube tu Excel/CSV y obtén análisis.',en:'Upload your Excel/CSV and get analysis.'},widget:'w-data'},
+  {id:'l_meeting',mod:'m3',icon:'🎙️',minLevel:'intermediate',obj:{es:'Convertir reuniones en actas accionables.',en:'Turn meetings into actionable minutes.'},expl:{es:'Workflow: graba → transcribe → resume.',en:'Workflow: record → transcribe → summarize.'},widget:'w-meeting'},
+
+  // M4 - EXPERTO (bloqueado)
+  {id:'l_agents',mod:'m4',icon:'🤖',minLevel:'expert',obj:{es:'Diseñar agentes autónomos con IA.',en:'Design autonomous AI agents.'},expl:{es:'ReAct + function calling + guardrails.',en:'ReAct + function calling + guardrails.'},widget:'w-agents'},
+  {id:'l_rag',mod:'m4',icon:'🔍',minLevel:'expert',obj:{es:'Construir chat con documentos técnicos.',en:'Build chat with technical documents.'},expl:{es:'RAG: chunking + embeddings + retrieval.',en:'RAG: chunking + embeddings + retrieval.'},widget:'w-rag'},
+  {id:'l_chain',mod:'m4',icon:'⚙️',minLevel:'expert',obj:{es:'Encadenar prompts para problemas complejos.',en:'Chain prompts for complex problems.'},expl:{es:'Pipelines multi-paso.',en:'Multi-step pipelines.'},widget:'w-chain'},
+
+  // Diagnóstico
+  {id:'l_diag2',mod:'m3',icon:'🧪',obj:{es:'Test diagnóstico completo.',en:'Complete diagnostic test.'},expl:{es:'Preguntas clave para evaluar tu nivel.',en:'Key questions to assess your level.'},widget:'w-diag2'}
+];
+
+/* ---------- QUIZ BANK ---------- */
+var QUIZ_BANK=[
+  {q:{es:'¿Qué es Takt Time?',en:'What is Takt Time?'},opts:{es:['Tiempo total de producción','Tiempo disponible / demanda del cliente','Tiempo de ciclo de una máquina','Tiempo de descanso'],en:['Total production time','Available time / customer demand','Machine cycle time','Break time']},correct:1},
+  {q:{es:'OEE se calcula como:',en:'OEE is calculated as:'},opts:{es:['Disponibilidad × Rendimiento × Calidad','Horas trabajadas / horas plan','Producción / capacidad','Defectos / total'],en:['Availability × Performance × Quality','Hours worked / planned hours','Production / capacity','Defects / total']},correct:0},
+  {q:{es:'Un prompt profesional debe incluir:',en:'A professional prompt should include:'},opts:{es:['Solo la tarea','Rol, contexto, tarea y formato','Solo el rol','Solo el formato'],en:['Only the task','Role, context, task and format','Only the role','Only the format']},correct:1},
+  {q:{es:'¿Qué técnica de prompting muestra ejemplos antes de pedir la tarea?',en:'Which prompting technique shows examples before asking the task?'},opts:{es:['Zero-shot','Few-shot','Chain-of-thought','Self-consistency'],en:['Zero-shot','Few-shot','Chain-of-thought','Self-consistency']},correct:1}
+];
+
+/* ---------- DIAGNOSTIC BANK ---------- */
+var DIAG_BANK=[
+  {q:{es:'¿Qué es una alucinación en IA?',en:'What is an AI hallucination?'},opts:{es:['Cuando la IA inventa información','Cuando la IA funciona lento','Cuando la IA se apaga','Cuando la IA aprende'],en:['When AI invents information','When AI runs slow','When AI shuts down','When AI learns']},correct:0},
+  {q:{es:'¿Cuál NO es una parte del prompt profesional?',en:'Which is NOT part of a professional prompt?'},opts:{es:['Rol','Contexto','Contraseña','Formato'],en:['Role','Context','Password','Format']},correct:2},
+  {q:{es:'RAG significa:',en:'RAG stands for:'},opts:{es:['Random Access Generation','Retrieval Augmented Generation','Real-time Analysis Graph','Robotic Automation Guide'],en:['Random Access Generation','Retrieval Augmented Generation','Real-time Analysis Graph','Robotic Automation Guide']},correct:1},
+  {q:{es:'¿Qué herramienta es mejor para analizar un PDF de 100 páginas?',en:'Which tool is best to analyze a 100-page PDF?'},opts:{es:['ChatGPT con archivos','DALL·E','Midjourney','Stable Diffusion'],en:['ChatGPT with files','DALL·E','Midjourney','Stable Diffusion']},correct:0},
+  {q:{es:'¿Qué es un agente autónomo?',en:'What is an autonomous agent?'},opts:{es:['Un robot físico','Un sistema IA que planifica y actúa','Una base de datos','Un tipo de prompt'],en:['A physical robot','An AI system that plans and acts','A database','A type of prompt']},correct:1}
+];
+
+/* ---------- RENDER SIDEBAR ---------- */
+function renderSidebar(){
+  var sb=$('sidebarInner');sb.innerHTML='';
+  var coverBtn=document.createElement('button');
+  coverBtn.className='side-lesson'+(currentLesson==='cover'?' active':'');
+  coverBtn.innerHTML='<span class="chk">🏠</span><span>Portada</span>';
+  coverBtn.onclick=function(){openLesson('cover');};
+  sb.appendChild(coverBtn);
+
+  for(var mi=0;mi<MODULES.length;mi++){
+    var m=MODULES[mi];
+    var modDiv=document.createElement('div');modDiv.className='side-mod';
+    var title=document.createElement('div');title.className='side-mod-title';
+    title.textContent=m.icon+' '+m.title[currentLang];
+    modDiv.appendChild(title);
+    var ls=LESSONS.filter(function(l){return l.mod===m.id;});
+    for(var si=0;si<ls.length;si++){(function(l){
+      var locked=isLessonLocked(l);
+      var b=document.createElement('button');
+      b.className='side-lesson'+(currentLesson===l.id?' active':'')+(state.completed[l.id]?' done':'')+(locked?' locked':'');
+      if(locked) b.title='Requiere nivel '+levelLabel(l.minLevel);
+      var chk=document.createElement('span');chk.className='chk';chk.textContent=state.completed[l.id]?'✓':'';
+      var tx=document.createElement('span');tx.textContent=(l.obj&&l.obj[currentLang])||l.id;
+      b.appendChild(chk);b.appendChild(tx);
+      if(locked){var lock=document.createElement('span');lock.className='lock';lock.textContent='🔒';b.appendChild(lock);}
+      b.onclick=function(){openLesson(l.id);};
+      modDiv.appendChild(b);
+    })(ls[si]);}
+    sb.appendChild(modDiv);
+  }
+}
+
+/* ---------- OPEN LESSON ---------- */
+function openLesson(id){
+  currentLesson=id;
+  var sb=$('sidebar');
+  if(window.innerWidth <= 900){ if(sb) sb.classList.remove('open'); }
+  var _lesson=null;for(var _li=0;_li<LESSONS.length;_li++){if(LESSONS[_li].id===id){_lesson=LESSONS[_li];break;}}
+  if(_lesson && isLessonLocked(_lesson)){ showLockedLesson(_lesson); renderSidebar(); return; }
+  if(id==='cover'){renderCover();}
+  else{renderLesson(id);}
+  renderSidebar();
+  persist();
+}
+
+function showLockedLesson(lesson){
+  var v=$('lessonView');v.innerHTML='';
+  var div=document.createElement('div');div.className='card locked-panel';
+  div.innerHTML='<div class="lock-big">🔒</div>'+
+    '<h2>Herramienta bloqueada</h2>'+
+    '<p>Esta herramienta está disponible solo para nivel <strong>'+levelLabel(lesson.minLevel)+'</strong> o superior.</p>'+
+    '<p>Tu nivel actual: <strong>'+levelLabel(currentLevel())+'</strong></p>'+
+    '<div class="locked-actions">'+
+      '<button class="btn btn-primary" id="lockedDiag">📝 Tomar test diagnóstico</button>'+
+      '<button class="btn btn-ghost" id="lockedProf">🔐 Soy profesor / director</button>'+
+    '</div>'+
+    '<p style="font-size:.75rem;margin-top:1rem;color:var(--muted)">Los profesores pueden desbloquear niveles con la clave maestra aquí o desde el botón 🛠️ de la barra superior.</p>';
+  v.appendChild(div);
+  $('lockedDiag').onclick=function(){openLesson('l_diag2');};
+  $('lockedProf').onclick=openOptionsModal;
+}
+
+/* ---------- RENDER COVER ---------- */
+function renderCover(){
+  var v=$('lessonView');v.innerHTML='';
+  var name=(state.profile&&state.profile.name)?esc(state.profile.name):'Estudiante';
+  var career=(state.profile&&state.profile.career)?(CAREER_LABELS[state.profile.career]||''):'';
+  var role=(state.profile&&state.profile.role)?(ROLE_LABELS[state.profile.role]||''):'';
+  var hero=document.createElement('div');hero.className='hero';
+  hero.innerHTML='<h1>👋 Hola, '+name+'</h1><p>Bienvenido a Industria 4.0 e IA · Clase 1</p>'+
+    '<div style="margin-top:.8rem;display:flex;gap:.5rem;flex-wrap:wrap">'+
+      '<span class="badge" style="background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.35)">🎓 Nivel: '+levelIcon(currentLevel())+' '+levelLabel(currentLevel())+'</span>'+
+      (role?'<span class="badge" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3)">'+role+'</span>':'')+
+      (career?'<span class="badge" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3)">'+career+'</span>':'')+
+      '<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.35)" onclick="openOptionsModal()">🛠️ Mi Perfil / Cambiar Nivel</button>'+
+    '</div>';
+  v.appendChild(hero);
+
+  if(currentLevel()!=='basic'){
+    var banner=document.createElement('div');banner.className='level-up-banner';
+    var unlocked=currentLevel()==='expert'?6:3;
+    banner.innerHTML='🎉 <b>Nivel '+levelLabel(currentLevel())+'</b> · '+unlocked+' herramientas avanzadas desbloqueadas. <button class="btn btn-sm" onclick="openOptionsModal()">Ver en Panel 🛠️</button>';
+    v.appendChild(banner);
+  }
+
+  var grid=document.createElement('div');grid.className='cover-grid';
+  for(var i=0;i<LESSONS.length;i++){(function(l){
+    var locked=isLessonLocked(l);
+    var tile=document.createElement('div');
+    tile.className='cover-tile'+(locked?' locked':'');
+    tile.innerHTML='<div class="icon">'+(l.icon||'📄')+'</div><h4>'+(l.obj&&l.obj[currentLang]||l.id)+'</h4><small>'+(locked?'🔒 Nivel '+levelLabel(l.minLevel):(l.expl&&l.expl[currentLang]||''))+'</small>';
+    tile.onclick=function(){openLesson(l.id);};
+    grid.appendChild(tile);
+  })(LESSONS[i]);}
+  v.appendChild(grid);
+}
+
+/* ---------- RENDER LESSON ---------- */
+function renderLesson(id){
+  var v=$('lessonView');v.innerHTML='';
+  var lesson=null;for(var i=0;i<LESSONS.length;i++){if(LESSONS[i].id===id){lesson=LESSONS[i];break;}}
+  if(!lesson){v.innerHTML='<div class="card"><p>Lección no encontrada</p></div>';return;}
+
+  var header=document.createElement('div');header.className='card';
+  header.innerHTML='<div style="display:flex;justify-content:space-between;align-items:start;gap:.5rem;flex-wrap:wrap"><div><h2 style="margin:0 0 .3rem">'+(lesson.icon||'')+' '+(lesson.obj&&lesson.obj[currentLang]||lesson.id)+'</h2><p style="margin:0;color:var(--muted);font-size:.9rem">'+(lesson.expl&&lesson.expl[currentLang]||'')+'</p></div><button class="btn btn-primary btn-sm" id="completeBtn">'+(state.completed[id]?'✓ Completada':'Marcar como completada')+'</button></div>';
+  v.appendChild(header);
+  $('completeBtn').onclick=function(){
+    state.completed[id]=!state.completed[id];persist();
+    renderProfileBadge();renderSidebar();renderLesson(id);
+    showToast(state.completed[id]?'✓ Marcada como completada':'Marcada como pendiente','success');
+  };
+
+  if(lesson.widget){
+    var widgetHost=document.createElement('div');widgetHost.id=lesson.widget;
+    v.appendChild(widgetHost);
+    renderWidget(lesson.widget,id);
+  }
+
+  var quiz=document.createElement('div');quiz.className='card';
+  quiz.innerHTML='<h3>🧠 Mini-quiz</h3><div id="miniQuiz"></div>';
+  v.appendChild(quiz);
+  renderMiniQuiz();
+}
+
+function renderMiniQuiz(){
+  var box=$('miniQuiz');if(!box)return;box.innerHTML='';
+  var q=QUIZ_BANK[Math.floor(Math.random()*QUIZ_BANK.length)];
+  var div=document.createElement('div');div.className='quiz-q';
+  div.innerHTML='<div class="q-text">'+q.q[currentLang]+'</div>';
+  var opts=shuffle(q.opts[currentLang].map(function(t,i){return {t:t,orig:i};}));
+  for(var i=0;i<opts.length;i++){(function(o){
+    var b=document.createElement('button');b.className='quiz-opt';b.textContent=o.t;
+    b.dataset.orig=o.orig;
+    b.onclick=function(){
+      var all=div.querySelectorAll('.quiz-opt');
+      all.forEach(function(x){
+        x.disabled=true;
+        if(parseInt(x.dataset.orig,10)===q.correct) x.classList.add('correct');
+      });
+      if(o.orig===q.correct){showToast('✓ Correcto','success');}
+      else{b.classList.add('wrong');showToast('✗ Incorrecto','error');}
+    };
+    div.appendChild(b);
+  })(opts[i]);}
+  box.appendChild(div);
+}
+
+/* ---------- WIDGETS ---------- */
+function renderWidget(wid,lessonId){
+  var host=$(wid);if(!host)return;
+  host.innerHTML='';
+  switch(wid){
+    case 'w-glossary':renderGlossary(host);break;
+    case 'w-myths':renderMyths(host);break;
+    case 'w-ethics':renderEthics(host);break;
+    case 'w-tools':renderTools(host);break;
+    case 'w-anatomy':renderAnatomy(host);break;
+    case 'w-techniques':renderTechniques(host);break;
+    case 'w-builder':renderBuilder(host);break;
+    case 'w-evaluator':renderEvaluator(host);break;
+    case 'w-library':renderLibrary(host);break;
+    case 'w-playground':renderPlayground(host);break;
+    case 'w-diagnostic':renderDiagnostic(host);break;
+    case 'w-roi':renderROI(host);break;
+    case 'w-panel':renderPanel(host);break;
+    case 'w-cases':renderCases(host);break;
+    case 'w-readiness':renderReadiness(host);break;
+    case 'w-project':renderProject(host);break;
+    case 'w-image':renderImage(host);break;
+    case 'w-slides':renderSlides(host);break;
+    case 'w-biblio':renderBiblio(host);break;
+    case 'w-flow':renderFlow(host);break;
+    case 'w-math':renderMath(host);break;
+    case 'w-video':renderVideo(host);break;
+    case 'w-data':renderData(host);break;
+    case 'w-meeting':renderMeeting(host);break;
+    case 'w-agents':renderAgents(host);break;
+    case 'w-rag':renderRAG(host);break;
+    case 'w-chain':renderChain(host);break;
+    case 'w-diag2':renderDiag2(host);break;
+  }
+}
+
+/* ---------- GLOSSARY ---------- */
+function renderGlossary(host){
+  var terms=[
+    {t:'IA (Inteligencia Artificial)',d:'Sistemas que realizan tareas que normalmente requieren inteligencia humana.'},
+    {t:'LLM (Large Language Model)',d:'Modelo de lenguaje grande entrenado con enormes cantidades de texto (GPT, Claude, Gemini).'},
+    {t:'Prompt',d:'Instrucción o entrada que se da a un modelo de IA para obtener una respuesta.'},
+    {t:'Prompting',d:'El arte de diseñar instrucciones efectivas para obtener mejores resultados de la IA.'},
+    {t:'Alucinación',d:'Cuando la IA genera información falsa o inventada con apariencia de verdad.'},
+    {t:'RAG (Retrieval Augmented Generation)',d:'Técnica que combina búsqueda en documentos con generación de texto.'},
+    {t:'Fine-tuning',d:'Proceso de ajustar un modelo pre-entrenado con datos específicos.'},
+    {t:'Embedding',d:'Representación vectorial de texto que captura su significado semántico.'},
+    {t:'Token',d:'Unidad mínima de texto que el modelo procesa (palabra, parte de palabra o carácter).'},
+    {t:'Agente autónomo',d:'Sistema de IA que puede planificar, usar herramientas y ejecutar tareas.'},
+    {t:'Function Calling',d:'Capacidad del LLM de invocar funciones externas de forma estructurada.'},
+    {t:'Chain-of-Thought',d:'Técnica de prompting donde el modelo razona paso a paso.'},
+    {t:'Few-shot',d:'Dar ejemplos al modelo antes de pedir la tarea principal.'},
+    {t:'Zero-shot',d:'Pedir la tarea sin dar ejemplos previos.'},
+    {t:'Guardrails',d:'Reglas y límites que restringen el comportamiento de un agente o LLM.'}
+  ];
+  var html='<h3>📖 Glosario Interactivo de IA</h3><input type="text" id="glossarySearch" placeholder="🔍 Buscar término..." style="margin-bottom:.8rem"><div id="glossaryList">';
+  for(var i=0;i<terms.length;i++){
+    html+='<details class="accordion"><summary>'+terms[i].t+'</summary><div class="accordion-body">'+terms[i].d+'</div></details>';
+  }
+  html+='</div>';
+  host.innerHTML='<div class="card">'+html+'</div>';
+  $('glossarySearch').oninput=function(){
+    var q=this.value.toLowerCase();
+    var items=host.querySelectorAll('details');
+    items.forEach(function(d){
+      var show=d.textContent.toLowerCase().indexOf(q)>=0;
+      d.style.display=show?'':'none';
+    });
+  };
+}
+
+/* ---------- MYTHS ---------- */
+function renderMyths(host){
+  var myths=[
+    {m:'La IA va a reemplazar todos los trabajos',r:'La IA automatiza tareas, no trabajos completos. Crea nuevos roles y aumenta la productividad.'},
+    {m:'La IA siempre dice la verdad',r:'Los LLM pueden alucinar. Siempre verifica información crítica.'},
+    {m:'Necesito saber programar para usar IA',r:'Herramientas como ChatGPT, Copilot y Canva IA son accesibles sin código.'},
+    {m:'La IA es 100% objetiva',r:'Los modelos reflejan sesgos de sus datos de entrenamiento.'},
+    {m:'La IA entiende como los humanos',r:'Los LLM predicen texto, no "entienden" en sentido humano.'},
+    {m:'ChatGPT es la única IA que existe',r:'Hay Claude, Gemini, Copilot, Perplexity, Mistral y cientos más.'}
+  ];
+  var html='<h3>🔍 Mitos vs Realidad</h3><p style="color:var(--muted);font-size:.85rem">Haz clic en cada tarjeta para revelar la realidad.</p><div class="grid grid-2">';
+  for(var i=0;i<myths.length;i++){
+    html+='<div class="card myth-card" data-idx="'+i+'" style="cursor:pointer;background:var(--bg-2)"><div style="font-size:1.3rem;margin-bottom:.3rem">❌</div><b>'+myths[i].m+'</b><div class="myth-reveal" style="display:none;margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--border);color:var(--success);font-size:.88rem"><div style="font-size:1.3rem;margin-bottom:.3rem">✅</div>'+myths[i].r+'</div></div>';
+  }
+  html+='</div>';
+  host.innerHTML='<div class="card">'+html+'</div>';
+  host.querySelectorAll('.myth-card').forEach(function(c){
+    c.onclick=function(){var r=c.querySelector('.myth-reveal');r.style.display=r.style.display==='none'?'block':'none';};
+  });
+}
+
+/* ---------- ETHICS ---------- */
+function renderEthics(host){
+  host.innerHTML='<div class="card"><h3>🛡️ Ética, Riesgos y Uso Responsable</h3>'+
+    '<div class="grid grid-2">'+
+    '<div><h4>🔴 Riesgos principales</h4>'+
+    '<ul style="font-size:.88rem;line-height:1.7"><li><b>Alucinaciones:</b> información falsa con apariencia real</li><li><b>Sesgos:</b> reflejo de prejuicios en datos de entrenamiento</li><li><b>Privacidad:</b> no subas datos sensibles o confidenciales</li><li><b>Dependencia:</b> pierde pensamiento crítico</li><li><b>Plagio:</b> presentar trabajo de IA como propio</li></ul></div>'+
+    '<div><h4>🟢 Uso responsable</h4>'+
+    '<ul style="font-size:.88rem;line-height:1.7"><li><b>Verifica:</b> contrasta con fuentes primarias</li><li><b>Declara:</b> indica cuándo usaste IA</li><li><b>Anonimiza:</b> quita datos personales antes de subir</li><li><b>Contextualiza:</b> la IA es herramienta, no autoridad</li><li><b>Aprende:</b> usa IA para aprender, no solo para copiar</li></ul></div>'+
+    '</div>'+
+    '<div style="margin-top:1rem;padding:.9rem;background:rgba(234,179,8,.1);border:1px solid var(--warn);border-radius:10px;font-size:.85rem"><b>⚠️ Regla de oro:</b> Nunca uses información crítica (médica, legal, financiera) sin verificar con fuentes primarias y expertos humanos.</div>'+
+    '</div>';
+}
+
+/* ---------- TOOLS MAP ---------- */
+function renderTools(host){
+  var tools=[
+    {cat:'💬 Chat general',items:['ChatGPT','Claude','Gemini','Copilot','Perplexity']},
+    {cat:'🎨 Imagen',items:['DALL·E 3','Midjourney','Stable Diffusion','Firefly','Leonardo']},
+    {cat:'🎬 Video',items:['Runway','Pika','Sora','HeyGen','Kling']},
+    {cat:'🎙️ Audio/Voz',items:['Whisper','ElevenLabs','Murf','Otter.ai','Descript']},
+    {cat:'💻 Código',items:['Copilot','Cursor','Codeium','Claude Code','v0.dev']},
+    {cat:'📊 Datos',items:['ChatGPT Code Interpreter','Julius AI','Tableau AI','Power BI Copilot']},
+    {cat:'📚 Investigación',items:['Consensus','Elicit','Scispace','NotebookLM','Scholar']},
+    {cat:'📑 Documentos',items:['Gamma','Tome','Canva IA','Beautiful.ai','SlidesAI']}
+  ];
+  var html='<h3>🗺️ Mapa de Herramientas de IA</h3><div class="grid grid-2">';
+  for(var i=0;i<tools.length;i++){
+    html+='<div class="card" style="background:var(--bg-2)"><h4>'+tools[i].cat+'</h4>';
+    for(var j=0;j<tools[i].items.length;j++){html+='<span class="tag">'+tools[i].items[j]+'</span>';}
+    html+='</div>';
+  }
+  html+='</div>';
+  host.innerHTML='<div class="card">'+html+'</div>';
+}
+
+/* ---------- ANATOMY ---------- */
+function renderAnatomy(host){
+  host.innerHTML='<div class="card"><h3>⚖️ Anatomía de un Prompt</h3>'+
+    '<div class="grid grid-2">'+
+    '<div class="card" style="background:rgba(239,68,68,.08);border-color:var(--danger)"><h4 style="color:var(--danger)">❌ Prompt Malo</h4><div class="prompt-preview">"Hazme un informe sobre mantenimiento."</div><ul style="font-size:.85rem;margin-top:.6rem;color:var(--danger)"><li>• Sin rol</li><li>• Sin contexto</li><li>• Tarea ambigua</li><li>• Sin formato</li></ul></div>'+
+    '<div class="card" style="background:rgba(34,197,94,.08);border-color:var(--success)"><h4 style="color:var(--success)">✅ Prompt Profesional</h4><div class="prompt-preview">Actúa como ingeniero de mantenimiento senior en una planta automotriz (ROL).\n\nContexto: tenemos 3 líneas de producción y 15% de paradas no planificadas (CONTEXTO).\n\nGenera un informe ejecutivo de 1 página con: causas raíz, impacto económico y 3 acciones correctivas priorizadas (TAREA).\n\nFormato: tabla + bullets + recomendación final (FORMATO).</div><ul style="font-size:.85rem;margin-top:.6rem;color:var(--success)"><li>• Rol creíble</li><li>• Contexto real</li><li>• Tarea delimitada</li><li>• Formato estructurado</li></ul></div>'+
+    '</div></div>';
+}
+
+/* ---------- TECHNIQUES ---------- */
+function renderTechniques(host){
+  var techs=[
+    {n:'Zero-shot',d:'Pide directamente sin ejemplos. Útil para tareas simples.',e:'"Resume este texto en 3 bullets."'},
+    {n:'Few-shot',d:'Da 2-3 ejemplos antes de la tarea. Mejora precisión.',e:'"Ejemplo 1: entrada X → salida Y. Ejemplo 2: ... Ahora hazlo con: Z."'},
+    {n:'Chain-of-Thought',d:'Pide razonamiento paso a paso. Mejora problemas complejos.',e:'"Piensa paso a paso antes de responder."'},
+    {n:'Self-Consistency',d:'Genera múltiples respuestas y vota la más consistente.',e:'"Genera 3 soluciones independientes y elige la mejor."'},
+    {n:'Role Prompting',d:'Asigna un rol experto para mejorar calidad.',e:'"Actúa como ingeniero industrial con 20 años de experiencia."'},
+    {n:'Tree of Thoughts',d:'Explora múltiples caminos de razonamiento en paralelo.',e:'"Considera 3 enfoques distintos, evalúa cada uno y elige el mejor."'}
+  ];
+  var html='<h3>🧪 Técnicas de Prompting</h3><div class="grid">';
+  for(var i=0;i<techs.length;i++){
+    html+='<details class="accordion"><summary>'+techs[i].n+'</summary><div class="accordion-body"><p>'+techs[i].d+'</p><p style="color:var(--muted);font-size:.82rem"><b>Ejemplo:</b> '+techs[i].e+'</p></div></details>';
+  }
+  html+='</div>';
+  host.innerHTML='<div class="card">'+html+'</div>';
+}
+
+/* ---------- BUILDER ---------- */
+function renderBuilder(host){
+  host.innerHTML='<div class="card"><h3>🛠️ Constructor de Prompts</h3>'+
+    '<div class="grid grid-2"><div class="grid">'+
+    '<div><label>Rol *</label><input type="text" id="bRole" placeholder="Ej: ingeniero de mantenimiento senior"></div>'+
+    '<div><label>Contexto *</label><textarea id="bContext" placeholder="Ej: planta automotriz con 3 líneas"></textarea></div>'+
+    '<div><label>Tarea *</label><textarea id="bTask" placeholder="Ej: generar informe de paradas"></textarea></div>'+
+    '<div><label>Formato</label><textarea id="bFormat" placeholder="Ej: tabla + bullets + recomendación"></textarea></div>'+
+    '</div><div>'+
+    '<label style="color:var(--udi-orange-deep)">✨ Vista previa</label>'+
+    '<div class="prompt-preview" id="bPreview" style="min-height:200px"></div>'+
+    '<div style="margin-top:.6rem;display:flex;gap:.4rem;flex-wrap:wrap">'+
+    '<button class="btn btn-primary btn-sm" id="bCopy">📋 Copiar</button>'+
+    '<button class="btn btn-ghost btn-sm" id="bClear">🧹 Limpiar</button>'+
+    '</div></div></div></div>';
+  var upd=function(){
+    var r=$('bRole').value.trim(),c=$('bContext').value.trim(),t=$('bTask').value.trim(),f=$('bFormat').value.trim();
+    if(!r&&!c&&!t){$('bPreview').textContent='Completa los campos para ver tu prompt.';return;}
+    var p='';
+    if(r) p+='Actúa como '+r+'.\n\n';
+    if(c) p+='Contexto: '+c+'\n\n';
+    if(t) p+='Tarea: '+t+'\n\n';
+    if(f) p+='Formato de salida: '+f;
+    $('bPreview').textContent=p;
+  };
+  ['bRole','bContext','bTask','bFormat'].forEach(function(id){$(id).oninput=upd;});
+  $('bCopy').onclick=function(){var s=$('bPreview').textContent;if(!s||s.indexOf('Completa')===0){showToast('Completa el prompt primero','warn');return;}copyText(s);};
+  $('bClear').onclick=function(){['bRole','bContext','bTask','bFormat'].forEach(function(id){$(id).value='';});upd();};
+  upd();
+}
+
+/* ---------- EVALUATOR ---------- */
+function renderEvaluator(host){
+  host.innerHTML='<div class="card"><h3>📏 Evaluador de Prompts</h3>'+
+    '<label>Pega tu prompt</label><textarea id="evPrompt" placeholder="Tu prompt aquí..." style="min-height:120px"></textarea>'+
+    '<button class="btn btn-primary" id="evBtn" style="margin-top:.6rem">📏 Evaluar mi prompt</button>'+
+    '<div id="evResult" style="margin-top:1rem"></div></div>';
+  $('evBtn').onclick=function(){
+    var p=$('evPrompt').value.trim();
+    if(!p){showToast('Pega un prompt primero','warn');return;}
+    var score=0,fb=[];
+    if(/act[uú]a|eres|como/i.test(p)){score+=25;fb.push('✅ Rol definido');}else fb.push('❌ Falta rol');
+    if(p.length>80){score+=25;fb.push('✅ Contexto suficiente');}else fb.push('⚠️ Contexto muy corto');
+    if(p.length>150){score+=15;fb.push('✅ Detallado');}
+    if(/tabla|bullet|lista|formato|paso/i.test(p)){score+=20;fb.push('✅ Formato definido');}else fb.push('⚠️ Falta formato');
+    if(/no |nunca |evita |restricci/i.test(p)){score+=15;fb.push('✅ Tiene restricciones');}else fb.push('⚠️ Sin restricciones');
+    var color=score>=75?'var(--success)':score>=50?'var(--warn)':'var(--danger)';
+    var html='<div class="card" style="background:var(--bg-2)"><h4>Puntaje: <span style="color:'+color+';font-size:1.3rem">'+score+'/100</span></h4><div class="progress-bar"><div class="progress-fill" style="width:'+score+'%;background:'+color+'"></div></div><ul style="font-size:.88rem;margin-top:.6rem">';
+    for(var i=0;i<fb.length;i++) html+='<li>'+fb[i]+'</li>';
+    html+='</ul></div>';
+    $('evResult').innerHTML=html;
+  };
+}
+
+/* ---------- LIBRARY ---------- */
+function renderLibrary(host){
+  var prompts=[
+    {cat:'🏭 Mantenimiento',p:'Actúa como ingeniero de mantenimiento. Analiza estos datos de fallas y genera un plan de mantenimiento preventivo con prioridades.'},
+    {cat:'📊 Calidad',p:'Actúa como auditor de calidad ISO 9001. Revisa este proceso y lista 5 no conformidades potenciales con acciones correctivas.'},
+    {cat:'📈 Productividad',p:'Actúa como consultor de mejora continua. Analiza estos tiempos de ciclo y propone 3 acciones kaizen con ROI estimado.'},
+    {cat:'🎓 Tesis',p:'Actúa como director de tesis de ingeniería industrial. Ayúdame a refinar mi problema de investigación sobre [TEMA] en 3 versiones.'},
+    {cat:'💼 Informe ejecutivo',p:'Actúa como gerente de operaciones. Redacta un informe ejecutivo de 1 página sobre [TEMA] con: situación, análisis, recomendaciones.'}
+  ];
+  var html='<h3>📚 Biblioteca de Prompts Reales</h3><div class="grid">';
+  for(var i=0;i<prompts.length;i++){
+    html+='<div class="card" style="background:var(--bg-2)"><h4>'+prompts[i].cat+'</h4><div class="prompt-preview" style="font-size:.8rem">'+prompts[i].p+'</div><button class="btn btn-ghost btn-sm" style="margin-top:.5rem" data-idx="'+i+'">📋 Copiar</button></div>';
+  }
+  html+='</div>';
+  host.innerHTML='<div class="card">'+html+'</div>';
+  host.querySelectorAll('[data-idx]').forEach(function(b){
+    b.onclick=function(){copyText(prompts[parseInt(b.dataset.idx,10)].p);};
+  });
+}
+
+/* ---------- PLAYGROUND ---------- */
+function renderPlayground(host){
+  host.innerHTML='<div class="card"><h3>▶️ Playground de Prompts</h3>'+
+    '<p style="font-size:.82rem;color:var(--muted)">Demo local sin backend. Para un modelo real implementa callModel() en tu servidor.</p>'+
+    '<label>Tu prompt</label><textarea id="pgPrompt" style="min-height:100px"></textarea>'+
+    '<div style="margin-top:.6rem;display:flex;gap:.4rem;flex-wrap:wrap">'+
+    '<button class="btn btn-primary" id="pgRun">▶ Ejecutar (simulado)</button>'+
+    '<button class="btn btn-ghost" id="pgLoad">⬆ Cargar desde constructor</button>'+
+    '</div>'+
+    '<label style="margin-top:1rem">Respuesta simulada</label>'+
+    '<div class="prompt-preview" id="pgResponse" style="min-height:150px;background:var(--bg-3)"></div></div>';
+  $('pgRun').onclick=function(){
+    var p=$('pgPrompt').value.trim();
+    if(!p){showToast('Escribe un prompt','warn');return;}
+    $('pgResponse').textContent='⏳ Simulando respuesta...\n\n[Esta es una respuesta simulada. En producción, conecta con la API de tu modelo preferido: OpenAI, Anthropic, Google, etc.]\n\nTu prompt tenía '+p.length+' caracteres y fue procesado correctamente.\n\nPara ver respuestas reales, implementa la función callModel() en el backend.';
+  };
+  $('pgLoad').onclick=function(){
+    var b=$('bPreview');
+    if(b&&b.textContent&&b.textContent.indexOf('Completa')!==0){$('pgPrompt').value=b.textContent;showToast('Cargado desde constructor','success');}
+    else showToast('No hay prompt en el constructor','warn');
+  };
+}
+
+/* ---------- DIAGNOSTIC WORKFLOW ---------- */
+function renderDiagnostic(host){
+  host.innerHTML='<div class="card"><h3>🧪 Diagnóstico de Tareas</h3>'+
+    '<div id="diagSteps"></div></div>';
+  var steps=[
+    {n:1,t:'Mapea 5 tareas repetitivas',w:function(){return '<textarea id="dTasks" placeholder="1. ...\n2. ...\n3. ...\n4. ...\n5. ..." style="min-height:150px"></textarea><button class="btn btn-ghost btn-sm" id="dExamples" style="margin-top:.4rem">⚡ Cargar ejemplos</button><button class="btn btn-primary" id="dNext1" style="margin-top:.4rem;margin-left:.3rem">Siguiente ➔</button>';}},
+    {n:2,t:'Clasifica según el tipo de IA',w:function(){return '<div class="grid grid-3"><div class="card" style="background:var(--bg-2)"><h4>📥 Pendientes</h4><div id="dPending"></div></div><div class="card" style="background:rgba(11,102,209,.1)"><h4>📈 IA Analítica</h4><div id="dAnalytic"></div></div><div class="card" style="background:rgba(249,115,22,.1)"><h4>🧠 IA Generativa</h4><div id="dGenerative"></div></div></div><button class="btn btn-ghost" id="dBack2">← Atrás</button><button class="btn btn-primary" id="dNext2" style="margin-left:.3rem">Siguiente ➔</button>';}},
+    {n:3,t:'Selecciona tu tarea más crítica',w:function(){return '<div id="dFocusList"></div><button class="btn btn-ghost" id="dBack3">← Atrás</button>';}},
+    {n:4,t:'Tu tarea está en el Constructor',w:function(){return '<p>Se respeta lo que ya escribiste.</p><button class="btn btn-ghost" id="dBack4">← Atrás</button><button class="btn btn-primary" id="dGoBuilder" style="margin-left:.3rem">🛠️ Ir al Constructor</button>';}},
+    {n:5,t:'Cierre del diagnóstico',w:function(){return '<p>¡Diagnóstico completado!</p><button class="btn btn-ghost" id="dBack5">← Atrás</button><button class="btn btn-primary" id="dCopyPrompt" style="margin-left:.3rem">📋 Copiar mi Prompt</button><button class="btn btn-dark" id="dDownload" style="margin-left:.3rem">📥 Descargar Reporte</button>';}}
+  ];
+  var currentStep=1;
+  var tasks=[];
+  var classifications={};
+  var focusTask=null;
+
+  function renderStep(){
+    var box=$('diagSteps');box.innerHTML='';
+    var s=steps[currentStep-1];
+    var div=document.createElement('div');
+    div.innerHTML='<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem"><span class="badge badge-blue">Paso '+s.n+'/5</span><h4 style="margin:0">'+s.t+'</h4></div>'+s.w();
+    box.appendChild(div);
+    bindStep();
+  }
+  function bindStep(){
+    if(currentStep===1){
+      $('dExamples').onclick=function(){$('dTasks').value='1. Revisar correos y responder consultas\n2. Generar reportes semanales de producción\n3. Clasificar tickets de mantenimiento\n4. Analizar datos de calidad\n5. Redactar actas de reunión';};
+      $('dNext1').onclick=function(){
+        var t=$('dTasks').value.trim().split('\n').map(function(x){return x.replace(/^\d+[\.\)]\s*/,'').trim();}).filter(Boolean);
+        if(t.length<2){showToast('Escribe al menos 2 tareas','warn');return;}
+        tasks=t;currentStep=2;renderStep();
+      };
+    }
+    if(currentStep===2){
+      var pend=$('dPending');
+      tasks.forEach(function(t,i){
+        var b=document.createElement('button');b.className='quiz-opt';b.textContent=t;
+        b.onclick=function(){
+          var type=prompt('¿Qué tipo de IA? (a=analítica, g=generativa)','g');
+          if(!type)return;
+          classifications[i]=type.toLowerCase()==='a'?'analytic':'generative';
+          renderStep();
+        };
+        pend.appendChild(b);
+      });
+      Object.keys(classifications).forEach(function(i){
+        var t=tasks[i];
+        var div=document.createElement('div');div.className='tag';div.textContent=t;
+        if(classifications[i]==='analytic')$('dAnalytic').appendChild(div);
+        else $('dGenerative').appendChild(div);
+      });
+      $('dBack2').onclick=function(){currentStep=1;renderStep();};
+      $('dNext2').onclick=function(){
+        if(Object.keys(classifications).length<tasks.length){showToast('Clasifica todas las tareas','warn');return;}
+        currentStep=3;renderStep();
+      };
+    }
+    if(currentStep===3){
+      var list=$('dFocusList');
+      tasks.forEach(function(t){
+        var b=document.createElement('button');b.className='quiz-opt';b.innerHTML='🎯 '+t;
+        b.onclick=function(){focusTask=t;currentStep=4;renderStep();};
+        list.appendChild(b);
+      });
+      $('dBack3').onclick=function(){currentStep=2;renderStep();};
+    }
+    if(currentStep===4){
+      $('dBack4').onclick=function(){currentStep=3;renderStep();};
+      $('dGoBuilder').onclick=function(){
+        if($('bTask'))$('bTask').value='Automatizar la tarea: '+focusTask;
+        openLesson('l_builder');
+      };
+    }
+    if(currentStep===5){
+      $('dBack5').onclick=function(){currentStep=4;renderStep();};
+      $('dCopyPrompt').onclick=function(){
+        var p='Actúa como experto en automatización.\n\nTarea crítica: '+focusTask+'\n\nGenera un plan de implementación con IA incluyendo: herramientas recomendadas, pasos, ROI estimado y riesgos.';
+        copyText(p);
+      };
+      $('dDownload').onclick=function(){
+        var md='# Reporte de Diagnóstico\n\n## Tareas mapeadas\n'+tasks.map(function(t,i){return (i+1)+'. '+t+' → '+(classifications[i]==='analytic'?'IA Analítica':'IA Generativa');}).join('\n')+'\n\n## Tarea crítica\n'+focusTask;
+        downloadBlob('diagnostico.md',md,'text/markdown');
+      };
+    }
+  }
+  renderStep();
+}
+
+/* ---------- ROI ---------- */
+function renderROI(host){
+  host.innerHTML='<div class="card"><h3>💰 Calculadora de ROI</h3>'+
+    '<div class="grid grid-2"><div class="grid">'+
+    '<div><label>Horas/semana en la tarea</label><input type="number" id="rHours" value="10" min="0"></div>'+
+    '<div><label>Costo hora (USD)</label><input type="number" id="rRate" value="15" min="0"></div>'+
+    '<div><label>% automatizable</label><input type="number" id="rAuto" value="60" min="0" max="100"></div>'+
+    '<div><label>Costo herramienta (USD/mes)</label><input type="number" id="rCost" value="30" min="0"></div>'+
+    '<div><label>Semanas/año (supuesto)</label><input type="number" id="rWeeks" value="50" min="0"></div>'+
+    '</div><div>'+
+    '<label style="color:var(--udi-orange-deep)">💵 Ahorro anual estimado</label>'+
+    '<div class="prompt-preview" id="rResult" style="min-height:180px;font-size:1.1rem;font-weight:700;text-align:center;display:grid;place-items:center"></div>'+
+    '<div id="rInsight" style="margin-top:.6rem;font-size:.85rem;color:var(--muted)"></div>'+
+    '</div></div></div>';
+  var calc=function(){
+    var h=parseFloat($('rHours').value)||0;
+    var r=parseFloat($('rRate').value)||0;
+    var a=parseFloat($('rAuto').value)||0;
+    var c=parseFloat($('rCost').value)||0;
+    var w=parseFloat($('rWeeks').value)||0;
+    var saving=h*r*(a/100)*w;
+    var cost=c*12;
+    var net=saving-cost;
+    var roi=cost>0?((net/cost)*100).toFixed(0):0;
+    $('rResult').innerHTML='<div style="font-size:2rem;color:var(--success)">$'+net.toLocaleString()+'</div><div style="font-size:.9rem;color:var(--muted);font-weight:400;margin-top:.3rem">ROI: '+roi+'% anual</div>';
+    var insight=net>0?'✅ La automatización es rentable. Recuperas la inversión en '+(cost>0?Math.ceil(12/(net/cost)):'∞')+' meses.':'⚠️ Revisa los costos o el % automatizable.';
+    $('rInsight').textContent=insight;
+  };
+  ['rHours','rRate','rAuto','rCost','rWeeks'].forEach(function(id){$(id).oninput=calc;});
+  calc();
+}
+
+/* ---------- PANEL ---------- */
+function renderPanel(host){
+  ensureProfile();
+  var pName=esc(state.profile.name||'Estudiante');
+  var pCareer=CAREER_LABELS[state.profile.career]||'Ingeniería';
+  var pRole=ROLE_LABELS[state.profile.role]||'Estudiante';
+  var pLvl=levelIcon(currentLevel())+' '+levelLabel(currentLevel());
+  var completed=Object.keys(state.completed).filter(function(k){return state.completed[k];}).length;
+
+  host.innerHTML='<div class="card"><h3>👤 Resumen de Perfil del Estudiante</h3>'+
+    '<div class="profile-stat-grid">'+
+      '<div class="profile-stat"><b>'+pName+'</b><small>'+pRole+'</small><small>'+pCareer+'</small></div>'+
+      '<div class="profile-stat"><b>'+pLvl+'</b><small>Nivel asignado</small></div>'+
+      '<div class="profile-stat"><b>'+completed+'/'+LESSONS.length+'</b><small>Lecciones completadas</small></div>'+
+    '</div>'+
+    '<button class="btn btn-primary btn-sm" id="pOpenOptions">🛠️ Editar Perfil / Desbloquear Nivel (Profesor)</button>'+
+    '</div>'+
+    '<div class="card"><h3>🏢 Panel Empresarial</h3>'+
+    '<button class="btn btn-primary" id="pGen">📄 Generar resumen ejecutivo</button>'+
+    '<button class="btn btn-ghost" id="pCopy" style="margin-left:.3rem">📋 Copiar</button>'+
+    '<button class="btn btn-dark" id="pExport" style="margin-left:.3rem">📥 Exportar .md</button>'+
+    '<div class="prompt-preview" id="pSummary" style="margin-top:1rem;min-height:150px"></div>'+
+    '<h4 style="margin-top:1.2rem">Matriz Impacto / Esfuerzo</h4>'+
+    '<button class="btn btn-primary btn-sm" id="pMatrix">📊 Graficar matriz</button>'+
+    '<canvas id="pCanvas" class="math-canvas" width="600" height="400" style="margin-top:.6rem;display:none"></canvas>'+
+    '</div>'+
+    '<div class="prof-section">'+
+    '<h4>🔐 Zona del Profesor / Director del Curso</h4>'+
+    '<div class="prof-status">Estado: '+(profAuth?'<span style="color:#86efac">✓ Autenticado</span>':'<span style="color:#fca5a5">No autenticado</span>')+'</div>'+
+    '<p style="font-size:.82rem;color:#a5b4fc;margin:0 0 .5rem">Solo el director del curso puede cambiar el nivel de los estudiantes con la clave maestra.</p>'+
+    '<div class="prof-input-group">'+
+    '<button class="btn btn-primary btn-sm" id="pProfBtn">🎓 Cambiar nivel con clave de profesor</button>'+
+    (profAuth?'<button class="btn btn-ghost btn-sm" id="pProfLogout" style="color:#fff;border-color:#6366f1">Cerrar sesión</button>':'')+
+    '</div>'+
+    '</div>';
+
+  $('pOpenOptions').onclick=openOptionsModal;
+  $('pGen').onclick=function(){
+    var name=(state.profile&&state.profile.name)||'Estudiante';
+    var lvl=levelLabel(currentLevel());
+    var role=ROLE_LABELS[state.profile.role]||'Estudiante';
+    var comp=Object.keys(state.completed).filter(function(k){return state.completed[k];}).length;
+    var total=LESSONS.filter(function(l){return !isLessonLocked(l);}).length;
+    $('pSummary').textContent='RESUMEN EJECUTIVO\n\nEstudiante: '+name+'\nRol: '+role+'\nNivel actual: '+lvl+'\nProgreso: '+comp+'/'+total+' lecciones habilitadas completadas\n\n'+(comp>0?'El estudiante ha demostrado avance en el curso. Continuar con las siguientes lecciones.':'El estudiante aún no ha completado lecciones. Recomendar iniciar con los fundamentos.');
+  };
+  $('pCopy').onclick=function(){var s=$('pSummary').textContent;if(!s){showToast('Genera el resumen primero','warn');return;}copyText(s);};
+  $('pExport').onclick=function(){var s=$('pSummary').textContent;if(!s){showToast('Genera el resumen primero','warn');return;}downloadBlob('panel.md',s,'text/markdown');};
+  $('pMatrix').onclick=function(){
+    var isLight=document.body.classList.contains('light');
+    var c=$('pCanvas');c.style.display='block';
+    var ctx=c.getContext('2d');
+    ctx.fillStyle=isLight?'#f8fafc':'#0a1020';ctx.fillRect(0,0,600,400);
+    ctx.strokeStyle=isLight?'#cbd5e1':'#22304f';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(300,20);ctx.lineTo(300,380);ctx.moveTo(20,200);ctx.lineTo(580,200);ctx.stroke();
+    ctx.fillStyle=isLight?'#475569':'#8ea0c0';ctx.font='12px Inter';
+    ctx.fillText('ALTO IMPACTO',220,40);ctx.fillText('BAJO IMPACTO',220,390);
+    ctx.save();ctx.translate(40,200);ctx.rotate(-Math.PI/2);ctx.fillText('ALTO ESFUERZO',0,0);ctx.restore();
+    ctx.save();ctx.translate(40,220);ctx.rotate(-Math.PI/2);ctx.fillText('BAJO ESFUERZO',0,0);ctx.restore();
+    var pts=[{x:450,y:80,l:'Quick win 1'},{x:420,y:120,l:'Quick win 2'},{x:150,y:300,l:'Proyecto grande'},{x:480,y:280,l:'Evaluación'}];
+    pts.forEach(function(p){
+      ctx.fillStyle='#f97316';ctx.beginPath();ctx.arc(p.x,p.y,8,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=isLight?'#0f172a':'#e7ecf5';ctx.fillText(p.l,p.x+12,p.y+4);
+    });
+  };
+  $('pProfBtn').onclick=openOptionsModal;
+  if(profAuth && $('pProfLogout')){
+    $('pProfLogout').onclick=function(){profAuth=false;renderPanel(host);showToast('Sesión de profesor cerrada');};
+  }
+}
+
+/* ---------- CASES ---------- */
+function renderCases(host){
+  var cases=[
+    {c:'Empresa automotriz A',r:'95% reducción en tiempo de inspección visual con visión artificial',s:'Visión artificial',n:'Cifra ilustrativa con fines docentes'},
+    {c:'Empresa de alimentos B',r:'Ahorro estimado de $2-4M USD/año en mantenimiento predictivo',s:'IoT + ML',n:'Rango ilustrativo'},
+    {c:'Plataforma educativa C',r:'Personalización de rutas de aprendizaje para millones de usuarios',s:'IA adaptativa',n:'Caso documentado'},
+    {c:'Empresa logística D',r:'Optimización de rutas con 20-30% menos combustible',s:'Optimización IA',n:'Rango típico del sector'}
+  ];
+  var html='<h3>🏭 Casos Reales de IA en Industria</h3><p style="font-size:.78rem;color:var(--muted)">* Cifras ilustrativas con fines docentes.</p><div class="grid">';
+  for(var i=0;i<cases.length;i++){
+    html+='<div class="card" style="background:var(--bg-2)"><h4>'+cases[i].c+'</h4><p style="font-size:.88rem;margin:.3rem 0">'+cases[i].r+'</p><span class="tag">'+cases[i].s+'</span><p style="font-size:.72rem;color:var(--muted);margin:.4rem 0 0">'+cases[i].n+'</p></div>';
+  }
+  html+='</div>';
+  host.innerHTML='<div class="card">'+html+'</div>';
+}
+
+/* ---------- READINESS ---------- */
+function renderReadiness(host){
+  var items=['Datos disponibles y organizados','Equipo con habilidades digitales','Procesos documentados','Presupuesto asignado','Apoyo de la dirección','Casos de uso identificados','Infraestructura TI adecuada','Cultura de innovación'];
+  var html='<h3>✅ Checklist de Readiness</h3><div id="rdList"></div><div style="margin-top:1rem"><b>Nivel de preparación:</b> <span id="rdPct">0%</span><div class="progress-bar"><div class="progress-fill" id="rdBar" style="width:0%"></div></div></div>';
+  host.innerHTML='<div class="card">'+html+'</div>';
+  var list=$('rdList');
+  items.forEach(function(it,i){
+    var div=document.createElement('div');div.style.cssText='display:flex;align-items:center;gap:.6rem;padding:.5rem;border-bottom:1px solid var(--border)';
+    div.innerHTML='<input type="checkbox" id="rd'+i+'" style="width:18px;height:18px"><label for="rd'+i+'" style="margin:0;cursor:pointer">'+it+'</label>';
+    list.appendChild(div);
+  });
+  var upd=function(){
+    var c=0;items.forEach(function(_,i){if($('rd'+i).checked)c++;});
+    var p=Math.round((c/items.length)*100);
+    $('rdPct').textContent=p+'%';
+    $('rdBar').style.width=p+'%';
+  };
+  items.forEach(function(_,i){$('rd'+i).onchange=upd;});
+}
+
+/* ---------- PROJECT ---------- */
+function renderProject(host){
+  host.innerHTML='<div class="card"><h3>🎓 Proyecto Final: Propuesta de Caso de Uso</h3>'+
+    '<div class="grid">'+
+    '<div><label>Problema del proceso</label><textarea id="pjProblem"></textarea></div>'+
+    '<div><label>Datos disponibles</label><textarea id="pjData"></textarea></div>'+
+    '<div><label>Tipo de IA propuesto</label><select id="pjType"><option>IA Generativa (LLM)</option><option>IA Analítica / predicción</option><option>Visión artificial</option><option>Agentes / automatización</option></select></div>'+
+    '<div><label>ROI esperado (USD/año)</label><input type="text" id="pjROI"></div>'+
+    '<div><label>Riesgos y mitigaciones</label><textarea id="pjRisk"></textarea></div>'+
+    '</div>'+
+    '<div style="margin-top:1rem;display:flex;gap:.4rem;flex-wrap:wrap">'+
+    '<button class="btn btn-primary" id="pjPreview">Vista previa</button>'+
+    '<button class="btn btn-dark" id="pjExport">📥 Exportar .md</button>'+
+    '</div>'+
+    '<div class="prompt-preview" id="pjOut" style="margin-top:1rem;min-height:120px;display:none"></div></div>';
+  var build=function(){
+    return '# Propuesta de Caso de Uso\n\n## Problema\n'+($('pjProblem').value||'(sin definir)')+'\n\n## Datos disponibles\n'+($('pjData').value||'(sin definir)')+'\n\n## Tipo de IA\n'+$('pjType').value+'\n\n## ROI esperado\n'+($('pjROI').value||'(sin definir)')+' USD/año\n\n## Riesgos y mitigaciones\n'+($('pjRisk').value||'(sin definir)');
+  };
+  $('pjPreview').onclick=function(){var o=$('pjOut');o.style.display='block';o.textContent=build();};
+  $('pjExport').onclick=function(){downloadBlob('propuesta.md',build(),'text/markdown');};
+}
+
+/* ---------- IMAGE PROMPT ---------- */
+function renderImage(host){
+  var styles=['Fotorrealista','Ilustración técnica','Render 3D','Isométrico','Blueprint','Cinematográfico','Bauhaus','Minimalista'];
+  var lights=['Estudio (softbox)','Golden hour','Neón / cyberpunk','Industrial fría','Natural difusa','Contraluz'];
+  var html='<h3>🎨 Desarrollador de Prompts de Imagen</h3>'+
+    '<p style="font-size:.82rem;color:var(--muted)">Crea prompts para DALL·E, Midjourney, Stable Diffusion o Firefly.</p>'+
+    '<div class="grid grid-2"><div class="grid">'+
+    '<div><label>Sujeto / Escena *</label><input type="text" id="ipSubject" placeholder="Ej: planta de producción moderna"></div>'+
+    '<div><label>Estilo visual</label><select id="ipStyle">'+styles.map(function(s){return '<option>'+s+'</option>';}).join('')+'</select></div>'+
+    '<div><label>Iluminación</label><select id="ipLight">'+lights.map(function(s){return '<option>'+s+'</option>';}).join('')+'</select></div>'+
+    '<div><label>Composición / plano</label><input type="text" id="ipComp" placeholder="Ej: plano general, simétrico"></div>'+
+    '<div><label>Mood / ambiente</label><input type="text" id="ipMood" placeholder="Ej: profesional, tecnológico"></div>'+
+    '<div><label>Cámara / lente</label><input type="text" id="ipCam" placeholder="Ej: 35mm, profundidad de campo"></div>'+
+    '<div><label>Calidad / negative</label><input type="text" id="ipQuality" placeholder="Ej: 8K, ultra detailed, no text"></div>'+
+    '</div><div>'+
+    '<label style="color:var(--udi-orange-deep)">✨ Vista previa del prompt</label>'+
+    '<div class="prompt-preview" id="ipPreview" style="min-height:200px"></div>'+
+    '<div style="margin-top:.6rem;display:flex;gap:.4rem;flex-wrap:wrap">'+
+    '<button class="btn btn-primary btn-sm" id="ipCopy">📋 Copiar prompt</button>'+
+    '<button class="btn btn-ghost btn-sm" id="ipRandom">🎲 Plantilla rápida</button>'+
+    '</div>'+
+    '<label style="margin-top:.9rem">📚 Plantillas de tu área</label>'+
+    '<div id="ipTemplates"></div>'+
+    '</div></div>';
+  host.innerHTML='<div class="card">'+html+'</div>';
+  var templates={
+    industrial:[{n:'Planta moderna',s:'modern manufacturing plant with robotic arms'},{n:'Línea ensamblaje',s:'automated assembly line with conveyor belts'},{n:'Control calidad',s:'quality control lab with precision instruments'}],
+    systems:[{n:'Data center',s:'modern data center with blue LED lights'},{n:'Red neuronal',s:'neural network visualization in 3D space'}],
+    mechatronics:[{n:'Brazo robótico',s:'6-axis robotic arm in industrial setting'},{n:'Drone industrial',s:'industrial inspection drone flying'}],
+    admin:[{n:'Dashboard ejecutivo',s:'executive dashboard with charts and KPIs'},{n:'Reunión ejecutiva',s:'modern boardroom with digital screens'}],
+    civil:[{n:'Puente',s:'cable-stayed bridge at sunset'},{n:'Edificio inteligente',s:'smart building with glass facade'}],
+    other:[{n:'Oficina moderna',s:'modern office with natural light'}]
+  };
+  var career=(state.profile&&state.profile.career)||'industrial';
+  var list=templates[career]||templates.other;
+  var tbox=$('ipTemplates');
+  list.forEach(function(t){
+    var b=document.createElement('button');b.className='ip-template-btn';b.innerHTML='<strong>'+t.n+'</strong><small>'+t.s+'</small>';
+    b.onclick=function(){$('ipSubject').value=t.s;upd();};
+    tbox.appendChild(b);
+  });
+  var upd=function(){
+    var s=$('ipSubject').value.trim();
+    if(!s){$('ipPreview').textContent='Completa el sujeto para ver tu prompt.';return;}
+    var parts=[s,$('ipStyle').value,$('ipLight').value,$('ipComp').value,$('ipMood').value,$('ipCam').value,$('ipQuality').value].filter(Boolean);
+    $('ipPreview').textContent=parts.join(', ');
+  };
+  ['ipSubject','ipStyle','ipLight','ipComp','ipMood','ipCam','ipQuality'].forEach(function(id){$(id).oninput=upd;$(id).onchange=upd;});
+  $('ipCopy').onclick=function(){var s=$('ipPreview').textContent;if(!s||s.indexOf('Completa')===0){showToast('Completa el prompt','warn');return;}copyText(s);};
+  $('ipRandom').onclick=function(){var t=list[Math.floor(Math.random()*list.length)];$('ipSubject').value=t.s;upd();};
+  upd();
+}
+
+/* ---------- SLIDES ---------- */
+function renderSlides(host){
+  var types=[{v:'big',n:'📚 Grupo grande · más de 10 diapositivas'},{v:'small',n:'👥 Grupo pequeño · ~5 diapositivas'},{v:'one',n:'🎯 Una sola diapositiva'}];
+  var styles=[{v:'academic',n:'🎓 Académico'},{v:'corporate',n:'💼 Corporativo'},{v:'creative',n:'🎨 Creativo'},{v:'minimal',n:'⚪ Minimalista'},{v:'technical',n:'🔧 Técnico'}];
+  host.innerHTML='<div class="card"><h3>📊 Desarrollador de Diapositivas con IA</h3>'+
+    '<div class="grid grid-2"><div class="grid">'+
+    '<div><label>Tipo de presentación</label><select id="slType">'+types.map(function(t){return '<option value="'+t.v+'">'+t.n+'</option>';}).join('')+'</select></div>'+
+    '<div><label>Tema principal *</label><input type="text" id="slTopic"></div>'+
+    '<div><label>Audiencia</label><input type="text" id="slAudience" placeholder="Ej: gerentes de planta"></div>'+
+    '<div><label>Contexto adicional</label><textarea id="slContext"></textarea></div>'+
+    '<div><label>Estilo visual</label><select id="slStyle">'+styles.map(function(s){return '<option value="'+s.v+'">'+s.n+'</option>';}).join('')+'</select></div>'+
+    '</div><div>'+
+    '<label style="color:var(--udi-orange-deep)">✨ Prompts generados</label>'+
+    '<div class="prompt-preview" id="slOut" style="min-height:280px;font-size:.78rem">Completa el tema y haz clic en "Generar".</div>'+
+    '<div style="margin-top:.6rem;display:flex;gap:.4rem;flex-wrap:wrap">'+
+    '<button class="btn btn-primary btn-sm" id="slGen">⚡ Generar prompts</button>'+
+    '<button class="btn btn-ghost btn-sm" id="slCopy">📋 Copiar todo</button>'+
+    '<button class="btn btn-dark btn-sm" id="slExport">📥 Exportar .md</button>'+
+    '</div></div></div></div>';
+  $('slGen').onclick=function(){
+    var topic=$('slTopic').value.trim();
+    if(!topic){showToast('Completa el tema','warn');return;}
+    var type=$('slType').value;
+    var audience=$('slAudience').value.trim()||'audiencia general';
+    var context=$('slContext').value.trim();
+    var style=$('slStyle').value;
+    var n=type==='big'?12:type==='small'?5:1;
+    var styleMap={academic:'sobrio, sans-serif, académico',corporate:'limpio, azul, corporativo',creative:'colorido, ilustrado',minimal:'blanco, mucho aire',technical:'diagramas, blueprint'};
+    var out='# Prompts para presentación: '+topic+'\n\n**Audiencia:** '+audience+'\n**Estilo:** '+styleMap[style]+'\n**Diapositivas:** '+n+'\n\n';
+    if(context) out+='**Contexto:** '+context+'\n\n';
+    for(var i=0;i<n;i++){
+      out+='---\n\n## Diapositiva '+(i+1)+'\n\n';
+      out+='**Título:** Aspecto '+(i+1)+' de '+topic+'\n';
+      out+='**Prompt de imagen:** "'+topic+', '+styleMap[style]+', slide '+(i+1)+' visual, professional presentation"\n';
+      out+='**Texto corto:** 2-3 bullets clave sobre este aspecto.\n\n';
+    }
+    $('slOut').textContent=out;
+  };
+  $('slCopy').onclick=function(){var s=$('slOut').textContent;if(!s||s.indexOf('Completa')===0){showToast('Genera primero','warn');return;}copyText(s);};
+  $('slExport').onclick=function(){var s=$('slOut').textContent;if(!s||s.indexOf('Completa')===0){showToast('Genera primero','warn');return;}downloadBlob('diapositivas.md',s,'text/markdown');};
+}
+
+/* ---------- BIBLIO ---------- */
+function renderBiblio(host){
+  var styles=['APA 7ª edición','IEEE','MLA 9ª edición','Chicago','Vancouver'];
+  var sources=['Todas (artículos, libros, tesis)','Artículos académicos','Libros y capítulos','Tesis y proyectos de grado','Recursos web confiables'];
+  var levels=['Pregrado','Posgrado / maestría','Profesional / consultoría'];
+  var quantities=['5','10','15','20'];
+  host.innerHTML='<div class="card"><h3>📚 Generador de Referencias Bibliográficas</h3>'+
+    '<div class="grid grid-2"><div class="grid">'+
+    '<div><label>Tema o palabras clave *</label><input type="text" id="bbTopic"></div>'+
+    '<div><label>Estilo de citación</label><select id="bbStyle">'+styles.map(function(s){return '<option>'+s+'</option>';}).join('')+'</select></div>'+
+    '<div><label>Tipo de fuentes</label><select id="bbSource">'+sources.map(function(s){return '<option>'+s+'</option>';}).join('')+'</select></div>'+
+    '<div><label>Nivel académico</label><select id="bbLevel">'+levels.map(function(s){return '<option>'+s+'</option>';}).join('')+'</select></div>'+
+    '<div><label>Cantidad</label><select id="bbQty">'+quantities.map(function(s){return '<option>'+s+' referencias</option>';}).join('')+'</select></div>'+
+    '</div><div>'+
+    '<label style="color:var(--udi-orange-deep)">📝 Prompt generado</label>'+
+    '<div class="prompt-preview" id="bbOut" style="min-height:220px;font-size:.78rem">Completa el tema y haz clic en "Generar".</div>'+
+    '<div style="margin-top:.6rem;display:flex;gap:.4rem;flex-wrap:wrap">'+
+    '<button class="btn btn-primary btn-sm" id="bbGen">⚡ Generar prompt</button>'+
+    '<button class="btn btn-ghost btn-sm" id="bbCopy">📋 Copiar prompt</button>'+
+    '<button class="btn btn-ghost btn-sm" id="bbScholar">🔍 Buscar en Scholar</button>'+
+    '</div>'+
+    '<div style="margin-top:.9rem;padding:.7rem;background:rgba(234,179,8,.1);border:1px solid var(--warn);border-radius:10px;font-size:.78rem"><b>⚠️ IMPORTANTE</b> — Verifica cada referencia. La IA puede inventar artículos (alucinación). Nunca uses una referencia sin buscarla en Google Scholar, Scopus o la biblioteca.</div>'+
+    '</div></div></div>';
+  $('bbGen').onclick=function(){
+    var topic=$('bbTopic').value.trim();
+    if(!topic){showToast('Completa el tema','warn');return;}
+    var p='Necesito '+$('bbQty').value+' para '+$('bbLevel').value+' sobre: "'+topic+'".\n\n';
+    p+='Estilo: '+$('bbStyle').value+'.\n';
+    p+='Tipo de fuentes: '+$('bbSource').value+'.\n\n';
+    p+='Requisitos estrictos:\n';
+    p+='- SOLO referencias reales y verificables\n';
+    p+='- Incluye DOI o URL cuando exista\n';
+    p+='- Autores, año, título, revista/editorial\n';
+    p+='- NO inventes referencias. Si no estás seguro, no la incluyas\n';
+    p+='- Prefiere fuentes de los últimos 5 años\n\n';
+    p+='Al final, lista las referencias en formato '+$('bbStyle').value+'.';
+    $('bbOut').textContent=p;
+  };
+  $('bbCopy').onclick=function(){var s=$('bbOut').textContent;if(!s||s.indexOf('Completa')===0){showToast('Genera primero','warn');return;}copyText(s);};
+  $('bbScholar').onclick=function(){var topic=$('bbTopic').value.trim();if(!topic){showToast('Completa el tema','warn');return;}window.open('https://scholar.google.com/scholar?q='+encodeURIComponent(topic),'_blank');};
+}
+
+/* ---------- FLOWCHART ---------- */
+function renderFlow(host){
+  host.innerHTML='<div class="card"><h3>🔀 Diagrama de Flujo</h3>'+
+    '<div class="flow-toolbar">'+
+    '<button class="btn btn-sm" id="fAddStart">➕ Inicio</button>'+
+    '<button class="btn btn-sm" id="fAddProc">⬜ Proceso</button>'+
+    '<button class="btn btn-sm" id="fAddDec">🔷 Decisión</button>'+
+    '<button class="btn btn-sm" id="fAddEnd">⏹️ Fin</button>'+
+    '<button class="btn btn-sm btn-primary" id="fConnect">🔗 Conectar</button>'+
+    '<button class="btn btn-sm btn-ghost" id="fClear">🧹 Limpiar</button>'+
+    '</div>'+
+    '<div class="flow-canvas" id="fCanvas"></div>'+
+    '<p style="font-size:.78rem;color:var(--muted);margin-top:.5rem">💡 Arrastra los nodos. "Conectar" y luego clic en dos nodos. El diagrama se guarda solo.</p></div>';
+  var canvas=$('fCanvas');
+  var nodes=[];var connections=[];var connecting=false;var connectFrom=null;var nodeId=0;
+  var restore=function(){try{var s=localStorage.getItem('udi_flow');if(s){var d=JSON.parse(s);nodes=d.nodes||[];connections=d.connections||[];nodeId=d.nodeId||0;}}catch(e){}};
+  var save=function(){localStorage.setItem('udi_flow',JSON.stringify({nodes:nodes,connections:connections,nodeId:nodeId}));};
+  var render=function(){
+    canvas.querySelectorAll('.flow-node').forEach(function(n){n.remove();});
+    var svg=canvas.querySelector('svg');if(!svg){svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none';canvas.appendChild(svg);}
+    svg.innerHTML='';
+    nodes.forEach(function(n){
+      var d=document.createElement('div');
+      d.className='flow-node'+(n.type==='decision'?' decision':'')+(n.type==='end'?' end':'');
+      d.style.left=n.x+'px';d.style.top=n.y+'px';
+      d.textContent=n.label;
+      d.dataset.id=n.id;
+      d.onmousedown=function(e){
+        if(connecting){
+          if(!connectFrom){connectFrom=n.id;showToast('Selecciona el segundo nodo','warn');}
+          else if(connectFrom!==n.id){connections.push({from:connectFrom,to:n.id});connecting=false;connectFrom=null;save();render();showToast('Conectado ✓','success');}
+          return;
+        }
+        var startX=e.clientX,startY=e.clientY,origX=n.x,origY=n.y;
+        var move=function(ev){n.x=origX+(ev.clientX-startX);n.y=origY+(ev.clientY-startY);d.style.left=n.x+'px';d.style.top=n.y+'px';render();};
+        var up=function(){document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);save();};
+        document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
+      };
+      canvas.appendChild(d);
+    });
+    var strokeCol=document.body.classList.contains('light')?'#0b66d1':'#93c5fd';
+    connections.forEach(function(c){
+      var a=nodes.find(function(n){return n.id===c.from;});
+      var b=nodes.find(function(n){return n.id===c.to;});
+      if(!a||!b)return;
+      var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1',a.x+50);line.setAttribute('y1',a.y+20);
+      line.setAttribute('x2',b.x+50);line.setAttribute('y2',b.y+20);
+      line.setAttribute('stroke',strokeCol);line.setAttribute('stroke-width','2');
+      line.setAttribute('marker-end','url(#arrow)');
+      svg.appendChild(line);
+    });
+    var defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+    defs.innerHTML='<marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="'+strokeCol+'"/></marker>';
+    svg.insertBefore(defs,svg.firstChild);
+  };
+  var addNode=function(type,label){
+    nodes.push({id:++nodeId,type:type,label:label,x:50+Math.random()*200,y:50+Math.random()*200});
+    save();render();
+  };
+  $('fAddStart').onclick=function(){addNode('start','Inicio');};
+  $('fAddProc').onclick=function(){var l=prompt('Nombre del proceso','Proceso');if(l)addNode('process',l);};
+  $('fAddDec').onclick=function(){var l=prompt('Pregunta de decisión','¿Condición?');if(l)addNode('decision',l);};
+  $('fAddEnd').onclick=function(){addNode('end','Fin');};
+  $('fConnect').onclick=function(){connecting=true;connectFrom=null;showToast('Clic en el primer nodo','warn');};
+  $('fClear').onclick=function(){if(confirm('¿Limpiar todo?')){nodes=[];connections=[];nodeId=0;save();render();}};
+  restore();render();
+}
+
+/* ---------- MATH ---------- */
+function renderMath(host){
+  host.innerHTML='<div class="card"><h3>📐 Calculadora Graficadora</h3>'+
+    '<p style="font-size:.82rem;color:var(--muted)">Acepta 3x^2, 2pi, sin, cos, tan, exp, ln, log, abs, sqrt.</p>'+
+    '<div class="math-tabs">'+
+    '<button class="math-tab active" data-tab="graph">Graficador</button>'+
+    '<button class="math-tab" data-tab="deriv">Derivada</button>'+
+    '<button class="math-tab" data-tab="integ">Integral</button>'+
+    '<button class="math-tab" data-tab="ode">Ec. Diferenciales</button>'+
+    '</div>'+
+    '<div class="math-panel active" id="mpGraph">'+
+    '<label>f(x)</label><input type="text" id="mgFunc" placeholder="Ej: sin(x) + x^2/5" value="sin(x)">'+
+    '<div style="margin-top:.5rem;display:flex;gap:.3rem;flex-wrap:wrap">'+
+    '<button class="btn btn-primary btn-sm" id="mgPlot">Graficar</button>'+
+    '<button class="btn btn-ghost btn-sm" id="mgRoots">Raíces f(x)</button>'+
+    '</div>'+
+    '<canvas id="mgCanvas" class="math-canvas" width="600" height="400" style="margin-top:.8rem"></canvas>'+
+    '</div>'+
+    '<div class="math-panel" id="mpDeriv">'+
+    '<label>f(x)</label><input type="text" id="mdFunc" placeholder="Ej: x^3 + 2x">'+
+    '<button class="btn btn-primary btn-sm" id="mdRun" style="margin-top:.5rem">Derivar paso a paso</button>'+
+    '<div class="prompt-preview" id="mdOut" style="margin-top:.6rem;min-height:80px"></div>'+
+    '</div>'+
+    '<div class="math-panel" id="mpInteg">'+
+    '<label>f(x)</label><input type="text" id="miFunc" placeholder="Ej: 2x">'+
+    '<div class="grid grid-2" style="margin-top:.5rem">'+
+    '<div><label>a</label><input type="number" id="miA" value="0"></div>'+
+    '<div><label>b</label><input type="number" id="miB" value="1"></div>'+
+    '</div>'+
+    '<div style="margin-top:.5rem;display:flex;gap:.3rem;flex-wrap:wrap">'+
+    '<button class="btn btn-primary btn-sm" id="miAnti">Antiderivada</button>'+
+    '<button class="btn btn-ghost btn-sm" id="miDef">Integral definida</button>'+
+    '</div>'+
+    '<div class="prompt-preview" id="miOut" style="margin-top:.6rem;min-height:80px"></div>'+
+    '</div>'+
+    '<div class="math-panel" id="mpOde">'+
+    '<label>Tipo de ecuación</label><select id="moType"><option>y\' = f(x)</option><option>y\' = k·y</option><option>y\' = g(x)·y (separable)</option></select>'+
+    '<label style="margin-top:.5rem">f(x) o expresión</label><input type="text" id="moFunc" placeholder="Ej: 2x o 3">'+
+    '<button class="btn btn-primary btn-sm" id="moRun" style="margin-top:.5rem">Resolver paso a paso</button>'+
+    '<div class="prompt-preview" id="moOut" style="margin-top:.6rem;min-height:80px"></div>'+
+    '</div>'+
+    '</div>';
+  host.querySelectorAll('.math-tab').forEach(function(t){
+    t.onclick=function(){
+      host.querySelectorAll('.math-tab').forEach(function(x){x.classList.remove('active');});
+      host.querySelectorAll('.math-panel').forEach(function(x){x.classList.remove('active');});
+      t.classList.add('active');
+      $('mp'+({graph:'Graph',deriv:'Deriv',integ:'Integ',ode:'Ode'}[t.dataset.tab])).classList.add('active');
+    };
+  });
+  function parseMath(expr,x){
+    try{
+      var e=expr.replace(/\^/g,'**').replace(/pi/g,'Math.PI').replace(/e(?![xp])/g,'Math.E').replace(/sin\(/g,'Math.sin(').replace(/cos\(/g,'Math.cos(').replace(/tan\(/g,'Math.tan(').replace(/exp\(/g,'Math.exp(').replace(/ln\(/g,'Math.log(').replace(/log\(/g,'Math.log10(').replace(/abs\(/g,'Math.abs(').replace(/sqrt\(/g,'Math.sqrt(');
+      return Function('x','return '+e)(x);
+    }catch(err){return NaN;}
+  }
+  function plotGraph(){
+    var expr=$('mgFunc').value.trim();if(!expr)return;
+    var isLight=document.body.classList.contains('light');
+    var c=$('mgCanvas');var ctx=c.getContext('2d');
+    var W=c.width,H=c.height;
+    ctx.fillStyle=isLight?'#f8fafc':'#0a1020';ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle=isLight?'#e2e8f0':'#18233d';ctx.lineWidth=1;
+    for(var i=0;i<W;i+=30){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,H);ctx.stroke();}
+    for(var j=0;j<H;j+=30){ctx.beginPath();ctx.moveTo(0,j);ctx.lineTo(W,j);ctx.stroke();}
+    ctx.strokeStyle=isLight?'#94a3b8':'#22304f';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(0,H/2);ctx.lineTo(W,H/2);ctx.moveTo(W/2,0);ctx.lineTo(W/2,H);ctx.stroke();
+    ctx.strokeStyle='#f97316';ctx.lineWidth=2;ctx.beginPath();
+    var scale=30;var first=true;
+    for(var px=0;px<W;px++){
+      var x=(px-W/2)/scale;
+      var y=parseMath(expr,x);
+      if(isNaN(y)||!isFinite(y)){first=true;continue;}
+      var py=H/2-y*scale;
+      if(first){ctx.moveTo(px,py);first=false;}
+      else ctx.lineTo(px,py);
+    }
+    ctx.stroke();
+    ctx.fillStyle=isLight?'#334155':'#8ea0c0';ctx.font='11px Inter';
+    ctx.fillText('f(x) = '+expr,10,20);
+  }
+  $('mgPlot').onclick=plotGraph;
+  $('mgRoots').onclick=function(){
+    var expr=$('mgFunc').value.trim();if(!expr)return;
+    var roots=[];
+    for(var x=-10;x<=10;x+=0.1){
+      var y1=parseMath(expr,x);
+      var y2=parseMath(expr,x+0.1);
+      if(y1*y2<0) roots.push((x+x+0.1)/2);
+    }
+    if(roots.length>0){
+      showToast('Raíces en [-10,10]: ' + roots.map(function(r){return r.toFixed(2);}).join(', '), 'success');
+    } else {
+      showToast('No se encontraron raíces en el rango [-10, 10]', 'warn');
+    }
+  };
+  plotGraph();
+  $('mdRun').onclick=function(){
+    var e=$('mdFunc').value.trim();if(!e){showToast('Escribe f(x)','warn');return;}
+    var out='Derivada de f(x) = '+e+'\n\n';
+    out+='Reglas aplicadas:\n';
+    if(/\^/.test(e)) out+='- Regla de la potencia: d/dx[x^n] = n·x^(n-1)\n';
+    if(/sin/.test(e)) out+='- d/dx[sin(x)] = cos(x)\n';
+    if(/cos/.test(e)) out+='- d/dx[cos(x)] = -sin(x)\n';
+    if(/exp/.test(e)) out+='- d/dx[exp(x)] = exp(x)\n';
+    if(/ln/.test(e)) out+='- d/dx[ln(x)] = 1/x\n';
+    out+='\nPara derivadas simbólicas completas, usa SymPy (Python) o Wolfram Alpha.';
+    $('mdOut').textContent=out;
+  };
+  $('miAnti').onclick=function(){
+    var e=$('miFunc').value.trim();if(!e){showToast('Escribe f(x)','warn');return;}
+    var out='Antiderivada de f(x) = '+e+'\n\n';
+    out+='∫ f(x) dx = F(x) + C\n\n';
+    out+='Reglas aplicadas:\n';
+    if(/\^/.test(e)) out+='- ∫x^n dx = x^(n+1)/(n+1) + C\n';
+    if(/sin/.test(e)) out+='- ∫sin(x) dx = -cos(x) + C\n';
+    if(/cos/.test(e)) out+='- ∫cos(x) dx = sin(x) + C\n';
+    if(/exp/.test(e)) out+='- ∫exp(x) dx = exp(x) + C\n';
+    out+='\nPara integrales complejas, usa Wolfram Alpha o SymPy.';
+    $('miOut').textContent=out;
+  };
+  $('miDef').onclick=function(){
+    var e=$('miFunc').value.trim();if(!e){showToast('Escribe f(x)','warn');return;}
+    var a=parseFloat($('miA').value)||0;
+    var b=parseFloat($('miB').value)||1;
+    var n=1000;var h=(b-a)/n;var sum=parseMath(e,a)+parseMath(e,b);
+    for(var i=1;i<n;i++){var x=a+i*h;sum+=(i%2===0?2:4)*parseMath(e,x);}
+    var result=sum*h/3;
+    $('miOut').textContent='∫['+a+','+b+'] '+e+' dx ≈ '+result.toFixed(6)+'\n\nMétodo: Simpson con '+n+' subintervalos.';
+  };
+  $('moRun').onclick=function(){
+    var type=$('moType').value;
+    var e=$('moFunc').value.trim();if(!e){showToast('Escribe la expresión','warn');return;}
+    var out='EDO: '+type+'\n\n';
+    if(type==="y' = f(x)"){
+      out+='Solución general: y = ∫ '+e+' dx + C\n';
+      out+='Para resolver, calcula la antiderivada de '+e+'.';
+    } else if(type==="y' = k·y"){
+      out+='Solución: y(x) = C·exp('+e+'·x)\n';
+      out+='EDO de crecimiento/decaimiento exponencial.';
+    } else {
+      out+='Separable: dy/y = '+e+' dx\n';
+      out+='Integrando: ln|y| = ∫ '+e+' dx + C\n';
+      out+='y = C·exp(∫ '+e+' dx)';
+    }
+    $('moOut').textContent=out;
+  };
+}
+
+/* ---------- VIDEO ---------- */
+function renderVideo(host){
+  var styles=[{v:'cinematic',n:'Cinematográfico'},{v:'documentary',n:'Documental'},{v:'industrial',n:'Industrial corporativo'},{v:'timelapse',n:'Timelapse'},{v:'slowmo',n:'Slow motion'},{v:'aerial',n:'Aéreo / dron'}];
+  var cams=[{v:'static',n:'Estática'},{v:'dolly-in',n:'Dolly in'},{v:'dolly-out',n:'Dolly out'},{v:'pan-right',n:'Pan derecha'},{v:'pan-left',n:'Pan izquierda'},{v:'orbit',n:'Órbita 360°'},{v:'tilt-up',n:'Tilt up'}];
+  var lights=[{v:'natural',n:'Natural'},{v:'industrial',n:'Industrial fría'},{v:'golden',n:'Golden hour'},{v:'neon',n:'Neón / cyberpunk'},{v:'studio',n:'Estudio'}];
+  host.innerHTML='<div class="card"><h3>🎬 Generador de Prompts de Video</h3>'+
+    '<p style="font-size:.82rem;color:var(--muted)">Crea prompts para Runway, Pika, Sora, HeyGen o Kling.</p>'+
+    '<div class="grid grid-2"><div class="grid">'+
+    '<div><label>Escena / Sujeto *</label><input type="text" id="viScene" placeholder="Ej: operario inspeccionando CNC"></div>'+
+    '<div><label>Acción</label><input type="text" id="viAction" placeholder="Ej: máquina enciende, operario revisa pantalla"></div>'+
+    '<div><label>Estilo visual</label><select id="viStyle">'+styles.map(function(s){return '<option value="'+s.v+'">'+s.n+'</option>';}).join('')+'</select></div>'+
+    '<div><label>Movimiento de cámara</label><select id="viCamera">'+cams.map(function(s){return '<option value="'+s.v+'">'+s.n+'</option>';}).join('')+'</select></div>'+
+    '<div><label>Iluminación</label><select id="viLight">'+lights.map(function(s){return '<option value="'+s.v+'">'+s.n+'</option>';}).join('')+'</select></div>'+
+    '<div><label>Duración (segundos)</label><select id="viDuration"><option>3</option><option selected>5</option><option>8</option><option>10</option></select></div>'+
+    '<div><label>Audio / sonido</label><input type="text" id="viAudio" placeholder="Ej: sonido ambiental de fábrica"></div>'+
+    '<div><label>Calidad / negative</label><input type="text" id="viQuality" placeholder="Ej: 4K, sin texto"></div>'+
+    '</div><div>'+
+    '<label style="color:var(--udi-orange-deep)">✨ Prompt de video</label>'+
+    '<div class="prompt-preview" id="viPreview" style="min-height:200px"></div>'+
+    '<div style="margin-top:.6rem;display:flex;gap:.4rem;flex-wrap:wrap">'+
+    '<button class="btn btn-primary btn-sm" id="viCopy">📋 Copiar prompt</button>'+
+    '<button class="btn btn-ghost btn-sm" id="viRandom">🎲 Plantilla rápida</button>'+
+    '</div>'+
+    '<div style="margin-top:1rem;padding:.8rem;background:var(--bg-2);border-radius:10px;font-size:.78rem;line-height:1.5">'+
+    '<strong>💡 Tips de video:</strong><ul style="margin:.4rem 0 0 1.1rem;padding:0"><li><b>Runway / Pika:</b> máx 5 seg por clip</li><li><b>Sora / Kling:</b> hasta 20 seg</li><li><b>HeyGen:</b> avatar hablando</li><li>Siempre indica la cámara</li></ul></div>'+
+    '<label style="margin-top:.9rem">📚 Plantillas de tu área</label>'+
+    '<div id="viTemplates"></div>'+
+    '</div></div></div>';
+  var VIDEO_STYLES={cinematic:'cinematic, anamorphic',documentary:'documentary, natural',industrial:'corporate industrial',timelapse:'timelapse, fast motion',slowmo:'slow motion',aerial:'aerial drone shot'};
+  var VIDEO_CAM={static:'static camera','dolly-in':'slow dolly in','dolly-out':'slow dolly out','pan-right':'smooth pan right','pan-left':'smooth pan left',orbit:'360° orbit','tilt-up':'tilt up'};
+  var VIDEO_LIGHT={natural:'natural daylight',industrial:'cool industrial lighting',golden:'golden hour warm light',neon:'neon cyberpunk',studio:'studio softbox'};
+  var templates={
+    industrial:[{n:'Inspección CNC',s:'operator inspecting CNC machine',a:'machine starts, operator checks screen',st:'industrial',cam:'dolly-in',li:'industrial',dur:5},{n:'Línea ensamblaje',s:'robotic assembly line',a:'robots move in sync',st:'cinematic',cam:'pan-right',li:'industrial',dur:8}],
+    systems:[{n:'Data center',s:'modern server room with blue LEDs',a:'lights blink',st:'cinematic',cam:'dolly-in',li:'neon',dur:5}],
+    mechatronics:[{n:'Brazo robótico',s:'6-axis robotic arm',a:'arm picks and places part',st:'industrial',cam:'orbit',li:'studio',dur:5}],
+    admin:[{n:'Dashboard KPI',s:'executive dashboard with charts',a:'numbers tick up',st:'cinematic',cam:'dolly-in',li:'neon',dur:3}],
+    civil:[{n:'Obra construcción',s:'construction site with cranes',a:'crane lifts beams',st:'cinematic',cam:'aerial',li:'golden',dur:8}],
+    other:[{n:'Oficina moderna',s:'modern office with people working',a:'fast forward motion',st:'timelapse',cam:'static',li:'natural',dur:8}]
+  };
+  var career=(state.profile&&state.profile.career)||'industrial';
+  var list=templates[career]||templates.other;
+  var tbox=$('viTemplates');
+  list.forEach(function(t){
+    var b=document.createElement('button');b.className='ip-template-btn';b.innerHTML='<strong>'+t.n+'</strong><small>'+t.s+'</small>';
+    b.onclick=function(){$('viScene').value=t.s;$('viAction').value=t.a;$('viStyle').value=t.st;$('viCamera').value=t.cam;$('viLight').value=t.li;$('viDuration').value=String(t.dur);upd();};
+    tbox.appendChild(b);
+  });
+  var upd=function(){
+    var s=$('viScene').value.trim();
+    if(!s){$('viPreview').textContent='Completa la escena para ver tu prompt.';return;}
+    var parts=[s];
+    if($('viAction').value.trim()) parts.push($('viAction').value.trim());
+    parts.push(VIDEO_STYLES[$('viStyle').value]);
+    parts.push(VIDEO_CAM[$('viCamera').value]);
+    parts.push(VIDEO_LIGHT[$('viLight').value]);
+    parts.push($('viDuration').value+'s duration');
+    if($('viAudio').value.trim()) parts.push('audio: '+$('viAudio').value.trim());
+    if($('viQuality').value.trim()) parts.push($('viQuality').value.trim());
+    $('viPreview').textContent=parts.join(', ');
+  };
+  ['viScene','viAction','viStyle','viCamera','viLight','viDuration','viAudio','viQuality'].forEach(function(id){$(id).oninput=upd;$(id).onchange=upd;});
+  $('viCopy').onclick=function(){var s=$('viPreview').textContent;if(!s||s.indexOf('Completa')===0){showToast('Completa la escena','warn');return;}copyText(s);};
+  $('viRandom').onclick=function(){var t=list[Math.floor(Math.random()*list.length)];$('viScene').value=t.s;$('viAction').value=t.a;$('viStyle').value=t.st;$('viCamera').value=t.cam;$('viLight').value=t.li;$('viDuration').value=String(t.dur);upd();};
+  upd();
+}
+
+/* ---------- DATA ANALYSIS ---------- */
+function renderData(host){
+  var types=[{v:'sales',n:'📈 Ventas / ingresos'},{v:'quality',n:'🔍 Control de calidad'},{v:'cycle',n:'⏱️ Tiempos de ciclo'},{v:'inventory',n:'📦 Inventario'},{v:'maintenance',n:'🔧 Fallas / mantenimiento'},{v:'hr',n:'👥 RRHH'},{v:'custom',n:'🎯 Personalizado'}];
+  var formats=[{v:'report',n:'Informe estructurado'},{v:'table',n:'Tabla resumen'},{v:'bullets',n:'Bullets ejecutivos'},{v:'chart',n:'Especificación de gráficos'}];
+  host.innerHTML='<div class="card"><h3>📊 Análisis de Datos con IA</h3>'+
+    '<p style="font-size:.82rem;color:var(--muted)">Genera prompts para analizar Excel/CSV con ChatGPT, Claude o Copilot.</p>'+
+    '<div class="grid grid-2"><div class="grid">'+
+    '<div><label>Tipo de análisis</label><select id="daType">'+types.map(function(t){return '<option value="'+t.v+'">'+t.n+'</option>';}).join('')+'</select></div>'+
+    '<div><label>¿Qué datos tienes? *</label><textarea id="daContext" placeholder="Ej: CSV con 6 meses de ventas"></textarea></div>'+
+    '<div><label>¿Qué quieres saber?</label><textarea id="daGoal" placeholder="Ej: producto más rentable, tendencia mensual"></textarea></div>'+
+    '<div><label>Formato de salida</label><select id="daFormat">'+formats.map(function(t){return '<option value="'+t.v+'">'+t.n+'</option>';}).join('')+'</select></div>'+
+    '</div><div>'+
+    '<label style="color:var(--udi-orange-deep)">📝 Prompt para análisis</label>'+
+    '<div class="prompt-preview" id="daPreview" style="min-height:220px;font-size:.76rem"></div>'+
+    '<div style="margin-top:.6rem;display:flex;gap:.4rem;flex-wrap:wrap">'+
+    '<button class="btn btn-primary btn-sm" id="daCopy">📋 Copiar prompt</button>'+
+    '<button class="btn btn-ghost btn-sm" id="daSteps">📖 Ver paso a paso</button>'+
+    '</div></div></div>'+
+    '<div id="daGuide" style="margin-top:1rem;display:none"><div class="card" style="background:var(--bg-2)"><h4>📖 Paso a paso</h4>'+
+    '<div class="guide-step"><div class="guide-step-num">1</div><div class="guide-step-body"><b>Prepara tu archivo</b>Exporta a CSV. Máx 20MB.</div></div>'+
+    '<div class="guide-step"><div class="guide-step-num">2</div><div class="guide-step-body"><b>Anonimiza datos sensibles</b>Reemplaza nombres por IDs.</div></div>'+
+    '<div class="guide-step"><div class="guide-step-num">3</div><div class="guide-step-body"><b>Sube a la IA</b>Arrastra el CSV a ChatGPT/Claude.</div></div>'+
+    '<div class="guide-step"><div class="guide-step-num">4</div><div class="guide-step-body"><b>Pega el prompt</b>Usa "Copiar prompt".</div></div>'+
+    '<div class="guide-step"><div class="guide-step-num">5</div><div class="guide-step-body"><b>Verifica los números</b>Contrasta con tu Excel.</div></div>'+
+    '<div class="guide-step"><div class="guide-step-num">6</div><div class="guide-step-body"><b>Documenta</b>Guarda prompt + resultado.</div></div>'+
+    '</div></div></div>';
+  var typeMap={sales:'análisis de ventas',quality:'control de calidad',cycle:'tiempos de ciclo',inventory:'inventario',maintenance:'fallas',hr:'RRHH',custom:'análisis personalizado'};
+  var fmtMap={report:'informe ejecutivo estructurado',table:'tabla resumen',bullets:'bullets ejecutivos',chart:'especificación de gráficos'};
+  var upd=function(){
+    var ctx=$('daContext').value.trim();
+    if(!ctx){$('daPreview').textContent='Completa el contexto de tus datos.';return;}
+    var goal=$('daGoal').value.trim()||'encontrar patrones y recomendaciones';
+    var p='Actúa como analista de datos senior.\n\nVoy a subir:\n"'+ctx+'"\n\n';
+    p+='Tipo: '+typeMap[$('daType').value]+'.\n';
+    p+='Objetivo: '+goal+'.\n\n';
+    p+='Instrucciones:\n- Valida que el archivo se leyó correctamente\n- NO inventes números\n- Muestra cálculos intermedios\n- Marca anomalías\n- Presenta como: '+fmtMap[$('daFormat').value]+'\n\n';
+    p+='Al final: 3 hallazgos, 3 recomendaciones, 1 advertencia.';
+    $('daPreview').textContent=p;
+  };
+  ['daType','daContext','daGoal','daFormat'].forEach(function(id){$(id).oninput=upd;$(id).onchange=upd;});
+  $('daCopy').onclick=function(){var s=$('daPreview').textContent;if(!s||s.indexOf('Completa')===0){showToast('Completa el contexto','warn');return;}copyText(s);};
+  $('daSteps').onclick=function(){var g=$('daGuide');g.style.display=g.style.display==='none'?'block':'none';};
+  upd();
+}
+
+/* ---------- MEETING ---------- */
+function renderMeeting(host){
+  var types=[{v:'meeting',n:'👥 Reunión de equipo'},{v:'class',n:'🎓 Clase / conferencia'},{v:'interview',n:'🎤 Entrevista'},{v:'call',n:'📞 Llamada con cliente'}];
+  var outputs=[{v:'full',n:'Todo (resumen + decisiones + action items)'},{v:'summary',n:'Solo resumen ejecutivo'},{v:'actions',n:'Solo action items'},{v:'minutes',n:'Acta formal'}];
+  host.innerHTML='<div class="card"><h3>🎙️ Transcripción + Resumen de Reuniones</h3>'+
+    '<p style="font-size:.82rem;color:var(--muted)">Workflow: graba → transcribe → resume → action items.</p>'+
+    '<div class="grid grid-2"><div class="grid">'+
+    '<div><label>Tipo de grabación</label><select id="mtType">'+types.map(function(t){return '<option value="'+t.v+'">'+t.n+'</option>';}).join('')+'</select></div>'+
+    '<div><label>Tema principal *</label><input type="text" id="mtTopic" placeholder="Ej: reunión semanal de producción"></div>'+
+    '<div><label>Contexto adicional</label><textarea id="mtContext"></textarea></div>'+
+    '<div><label>¿Qué necesitas extraer?</label><select id="mtOutput">'+outputs.map(function(t){return '<option value="'+t.v+'">'+t.n+'</option>';}).join('')+'</select></div>'+
+    '</div><div>'+
+    '<label style="color:var(--udi-orange-deep)">📝 Prompt para procesar</label>'+
+    '<div class="prompt-preview" id="mtPreview" style="min-height:200px;font-size:.76rem"></div>'+
+    '<div style="margin-top:.6rem;display:flex;gap:.4rem;flex-wrap:wrap">'+
+    '<button class="btn btn-primary btn-sm" id="mtCopy">📋 Copiar prompt</button>'+
+    '<button class="btn btn-ghost btn-sm" id="mtSteps">📖 Ver paso a paso</button>'+
+    '</div></div></div>'+
+    '<div id="mtGuide" style="margin-top:1rem;display:none"><div class="card" style="background:var(--bg-2)"><h4>📖 Workflow (4 pasos)</h4>'+
+    '<div class="guide-step"><div class="guide-step-num">1</div><div class="guide-step-body"><b>Graba</b>Usa Otter.ai, grabadora del celular o micrófono.</div></div>'+
+    '<div class="guide-step"><div class="guide-step-num">2</div><div class="guide-step-body"><b>Transcribe</b>Otter.ai, Whisper o ChatGPT-4o con audio.</div></div>'+
+    '<div class="guide-step"><div class="guide-step-num">3</div><div class="guide-step-body"><b>Procesa</b>Copia el prompt y pégalo con la transcripción.</div></div>'+
+    '<div class="guide-step"><div class="guide-step-num">4</div><div class="guide-step-body"><b>Guarda</b>Notion, Google Docs o correo al equipo.</div></div>'+
+    '</div></div></div>';
+  var typeMap={meeting:'reunión de equipo',class:'clase o conferencia',interview:'entrevista',call:'llamada con cliente'};
+  var outMap={full:'resumen + decisiones + action items',summary:'solo resumen ejecutivo',actions:'solo action items',minutes:'acta formal'};
+  var upd=function(){
+    var topic=$('mtTopic').value.trim();
+    if(!topic){$('mtPreview').textContent='Completa el tema.';return;}
+    var p='Actúa como asistente ejecutivo.\n\n';
+    p+='Transcripción de '+typeMap[$('mtType').value]+' sobre: "'+topic+'".\n';
+    if($('mtContext').value.trim()) p+='Contexto: '+$('mtContext').value.trim()+'\n';
+    p+='\nGenera: '+outMap[$('mtOutput').value]+'.\n\n';
+    p+='Formato:\n## Resumen ejecutivo (3 bullets)\n## Decisiones tomadas\n## Action items (tabla con responsable y fecha)\n## Riesgos identificados\n\n';
+    p+='Reglas:\n- Solo usa info de la transcripción\n- No inventes\n- Marca "sin asignar" cuando no haya responsable';
+    $('mtPreview').textContent=p;
+  };
+  ['mtType','mtTopic','mtContext','mtOutput'].forEach(function(id){$(id).oninput=upd;$(id).onchange=upd;});
+  $('mtCopy').onclick=function(){var s=$('mtPreview').textContent;if(!s||s.indexOf('Completa')===0){showToast('Completa el tema','warn');return;}copyText(s);};
+  $('mtSteps').onclick=function(){var g=$('mtGuide');g.style.display=g.style.display==='none'?'block':'none';};
+  upd();
+}
+
+/* ---------- AGENTS ---------- */
+function renderAgents(host){
+  host.innerHTML='<div class="card"><h3>🤖 Constructor de Agentes Autónomos</h3>'+
+    '<p style="font-size:.82rem;color:var(--muted)">Diseña agentes con ReAct + function calling. Aplicable a Industria 4.0.</p>'+
+    '<div class="grid grid-2"><div class="grid">'+
+    '<div><label>Rol del agente *</label><input type="text" id="agRole" placeholder="Ej: agente de mantenimiento predictivo"></div>'+
+    '<div><label>Objetivo principal</label><textarea id="agGoal" placeholder="Ej: monitorear sensores, detectar anomalías"></textarea></div>'+
+    '<div><label>Herramientas que puede usar</label><textarea id="agTools" placeholder="Ej: leer sensores, crear tickets, enviar email"></textarea></div>'+
+    '<div><label>Reglas / límites (guardrails)</label><textarea id="agGuardrails" placeholder="Ej: nunca detener producción sin aprobación"></textarea></div>'+
+    '<div><label>Memoria</label><select id="agMemory"><option value="none">Sin memoria</option><option value="short">Memoria corta</option><option value="long">Memoria larga (vector store)</option></select></div>'+
+    '</div><div>'+
+    '<label style="color:var(--udi-orange-deep)">📝 Especificación del agente</label>'+
+    '<div class="prompt-preview" id="agPreview" style="min-height:220px;font-size:.74rem"></div>'+
+    '<div style="margin-top:.6rem;display:flex;gap:.4rem;flex-wrap:wrap">'+
+    '<button class="btn btn-primary btn-sm" id="agCopy">📋 Copiar</button>'+
+    '<button class="btn btn-ghost btn-sm" id="agExample">📚 Ejemplo completo</button>'+
+    '</div>'+
+    '<div style="margin-top:1rem;padding:.8rem;background:var(--bg-2);border-radius:10px;font-size:.78rem;line-height:1.5">'+
+    '<strong>🏗️ Arquitectura típica:</strong><ul style="margin:.4rem 0 0 1.1rem;padding:0"><li><b>Framework:</b> LangGraph, CrewAI, AutoGen</li><li><b>LLM:</b> GPT-4o, Claude 3.5, Gemini 1.5</li><li><b>Tools:</b> APIs, DBs, funciones Python</li><li><b>Guardrails:</b> validación, human-in-the-loop</li></ul></div>'+
+    '</div></div></div>';
+  var memMap={none:'stateless',short:'últimas 10 acciones',long:'vector store'};
+  var upd=function(){
+    var role=$('agRole').value.trim();
+    if(!role){$('agPreview').textContent='Completa el rol del agente.';return;}
+    var s='# Especificación de Agente\n\n## Rol\n'+role+'\n\n## Objetivo\n'+($('agGoal').value.trim()||'No especificado')+'\n\n## Herramientas\n'+($('agTools').value.trim()||'No especificadas')+'\n\n## Guardrails\n'+($('agGuardrails').value.trim()||'No especificados')+'\n\n## Memoria\n'+memMap[$('agMemory').value]+'\n\n## Ciclo ReAct\n1. **Thought:** analiza información necesaria\n2. **Action:** elige herramienta\n3. **Observation:** procesa resultado\n4. Repite hasta responder\n5. **Final Answer**';
+    $('agPreview').textContent=s;
+  };
+  ['agRole','agGoal','agTools','agGuardrails','agMemory'].forEach(function(id){$(id).oninput=upd;$(id).onchange=upd;});
+  $('agCopy').onclick=function(){var s=$('agPreview').textContent;if(!s||s.indexOf('Completa')===0){showToast('Completa el rol','warn');return;}copyText(s);};
+  $('agExample').onclick=function(){
+    $('agRole').value='agente de mantenimiento predictivo';
+    $('agGoal').value='monitorear sensores IoT, detectar anomalías y crear tickets cuando probabilidad >70% de falla en 48h';
+    $('agTools').value='leer sensores, consultar historial, crear ticket, enviar email';
+    $('agGuardrails').value='nunca detener producción sin aprobación humana\nno comprar repuestos >$1000 sin autorización';
+    $('agMemory').value='long';
+    upd();
+  };
+  upd();
+}
+
+/* ---------- RAG ---------- */
+function renderRAG(host){
+  var tools=[{v:'chatgpt',n:'ChatGPT (Plus)'},{v:'claude',n:'Claude (Projects)'},{v:'notebooklm',n:'NotebookLM (Google)'},{v:'custom',n:'Sistema propio (Python)'}];
+  host.innerHTML='<div class="card"><h3>🔍 RAG — Chat con Documentos Técnicos</h3>'+
+    '<p style="font-size:.82rem;color:var(--muted)">Diseña un sistema que "chatea" con PDFs, manuales, normas ISO.</p>'+
+    '<div class="grid grid-2"><div class="grid">'+
+    '<div><label>¿Qué documentos? *</label><textarea id="ragDocs" placeholder="Ej: pliego de 120 páginas, manual CNC, 5 normas ISO"></textarea></div>'+
+    '<div><label>¿Qué preguntas harás?</label><textarea id="ragTask" placeholder="Ej: requisitos obligatorios, plazos, criterios"></textarea></div>'+
+    '<div><label>Herramienta preferida</label><select id="ragTool">'+tools.map(function(t){return '<option value="'+t.v+'">'+t.n+'</option>';}).join('')+'</select></div>'+
+    '<div><label>¿Citas obligatorias?</label><select id="ragCitation"><option value="yes">Sí — cada respuesta cita página/artículo</option><option value="no">No es necesario</option></select></div>'+
+    '</div><div>'+
+    '<label style="color:var(--udi-orange-deep)">📝 Especificación RAG</label>'+
+    '<div class="prompt-preview" id="ragPreview" style="min-height:220px;font-size:.74rem"></div>'+
+    '<div style="margin-top:.6rem;display:flex;gap:.4rem;flex-wrap:wrap">'+
+    '<button class="btn btn-primary btn-sm" id="ragCopy">📋 Copiar</button>'+
+    '<button class="btn btn-ghost btn-sm" id="ragSteps">📖 Ver paso a paso</button>'+
+    '</div></div></div>'+
+    '<div id="ragGuide" style="margin-top:1rem;display:none"><div class="card" style="background:var(--bg-2)"><h4>📖 Cómo construir RAG</h4>'+
+    '<div class="guide-step"><div class="guide-step-num">1</div><div class="guide-step-body"><b>Opciones no-code</b>ChatGPT Plus, Claude Projects, NotebookLM.</div></div>'+
+    '<div class="guide-step"><div class="guide-step-num">2</div><div class="guide-step-body"><b>Chunking</b>Fragmentos de 500-1000 tokens con overlap.</div></div>'+
+    '<div class="guide-step"><div class="guide-step-num">3</div><div class="guide-step-body"><b>Embeddings</b>text-embedding-3-small o bge-m3.</div></div>'+
+    '<div class="guide-step"><div class="guide-step-num">4</div><div class="guide-step-body"><b>Vector DB</b>Pinecone, Weaviate, Chroma, pgvector.</div></div>'+
+    '<div class="guide-step"><div class="guide-step-num">5</div><div class="guide-step-body"><b>Retrieval + LLM</b>Top-k chunks + generación con citas.</div></div>'+
+    '<div class="guide-step"><div class="guide-step-num">6</div><div class="guide-step-body"><b>Verifica</b>Nunca confíes sin abrir el PDF.</div></div>'+
+    '</div></div></div>';
+  var toolMap={chatgpt:'ChatGPT Plus',claude:'Claude Projects',notebooklm:'NotebookLM',custom:'Sistema propio Python'};
+  var upd=function(){
+    var docs=$('ragDocs').value.trim();
+    if(!docs){$('ragPreview').textContent='Completa los documentos.';return;}
+    var s='# Sistema RAG\n\n## Documentos\n'+docs+'\n\n## Preguntas\n'+($('ragTask').value.trim()||'No especificadas')+'\n\n## Herramienta\n'+toolMap[$('ragTool').value]+'\n\n## Citas\n'+($('ragCitation').value==='yes'?'Obligatorias':'Opcionales')+'\n\n## Arquitectura\n1. Ingesta (pypdf)\n2. Chunking (800 tokens, overlap 150)\n3. Embeddings (text-embedding-3-small)\n4. Vector DB (Chroma/Pinecone)\n5. Retrieval top-5 + re-ranking\n6. LLM con instrucción de citar\n\n## Prompt del sistema\nEres asistente técnico. Responde solo con base en fragmentos recuperados.';
+    if($('ragCitation').value==='yes') s+='\nCita documento y página en cada afirmación.';
+    s+='\nSi no está en los documentos, di "No encuentro esa información".';
+    $('ragPreview').textContent=s;
+  };
+  ['ragDocs','ragTask','ragTool','ragCitation'].forEach(function(id){$(id).oninput=upd;$(id).onchange=upd;});
+  $('ragCopy').onclick=function(){var s=$('ragPreview').textContent;if(!s||s.indexOf('Completa')===0){showToast('Completa los documentos','warn');return;}copyText(s);};
+  $('ragSteps').onclick=function(){var g=$('ragGuide');g.style.display=g.style.display==='none'?'block':'none';};
+  upd();
+}
+
+/* ---------- CHAIN ---------- */
+function renderChain(host){
+  var types=[{v:'diagnose',n:'🔍 Diagnóstico de problema'},{v:'thesis',n:'🎓 Estructura de tesis'},{v:'proposal',n:'📋 Propuesta técnica'},{v:'analysis',n:'📊 Análisis complejo'},{v:'custom',n:'🎯 Personalizado'}];
+  var TEMPLATES={
+    diagnose:[{t:'Definir problema',p:'Describe el problema: [PROBLEMA]. Síntomas, cuándo empezó, qué cambió.'},{t:'Causas posibles',p:'Dado [PROBLEMA] con síntomas [SÍNTOMAS], genera 8 causas con Ishikawa.'},{t:'Priorizar',p:'De [CAUSAS], prioriza con matriz impacto × probabilidad. Top 3.'},{t:'Diagnóstico',p:'Para top 3: diseña plan de verificación con qué medir, cómo y criterio.'},{t:'Plan acción',p:'Con [RESULTADOS], genera plan con acciones, responsables, plazos, KPIs.'}],
+    thesis:[{t:'Problema',p:'Refina [TEMA]. Formula en 3 versiones: descriptiva, comparativa, correlacional.'},{t:'Objetivos',p:'Para [PROBLEMA], 1 general y 5 específicos con verbos medibles.'},{t:'Marco teórico',p:'Para [OBJETIVOS], mapa de 10 conceptos con 2 autores cada uno.'},{t:'Metodología',p:'Propón 3 enfoques (cuanti, cuali, mixto) con justificación.'},{t:'Cronograma',p:'Con [MÉTODO], cronograma 6 meses con hitos y riesgos.'}],
+    proposal:[{t:'Analizar pliego',p:'Analiza [RESUMEN]. Extrae requisitos, plazos, criterios, multas.'},{t:'Estructura',p:'Con [REQUISITOS], diseña estructura de propuesta técnica.'},{t:'Resumen ejecutivo',p:'Redacta resumen para [ESTRUCTURA]. Máx 300 palabras.'},{t:'Precio',p:'Para [ENTREGABLES], Gantt con duración y costos.'},{t:'Riesgos',p:'Identifica 5 riesgos de [PROPUESTA] con mitigación.'}],
+    analysis:[{t:'Entender datos',p:'Tengo [DESCRIPCIÓN]. Valida estructura: filas, columnas, nulos.'},{t:'Explorar',p:'Calcula estadísticas descriptivas y detecta atípicos.'},{t:'Hipótesis',p:'Con [HALLAZGOS], formula 5 hipótesis.'},{t:'Validar',p:'Para [HIPÓTESIS], propón análisis estadístico.'},{t:'Recomendar',p:'Con [RESULTADOS], 5 recomendaciones con impacto y esfuerzo.'}],
+    custom:[]
+  };
+  host.innerHTML='<div class="card"><h3>⚙️ Prompt Chaining — Pipelines Multi-Paso</h3>'+
+    '<p style="font-size:.82rem;color:var(--muted)">Divide un problema complejo en pasos.</p>'+
+    '<div class="grid grid-2"><div class="grid">'+
+    '<div><label>Problema complejo *</label><textarea id="chProblem" placeholder="Ej: diagnosticar 40% defectos en línea"></textarea></div>'+
+    '<div><label>Tipo de cadena</label><select id="chType">'+types.map(function(t){return '<option value="'+t.v+'">'+t.n+'</option>';}).join('')+'</select></div>'+
+    '<div><label>Número de pasos</label><select id="chSteps"><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>'+
+    '</div><div>'+
+    '<label style="color:var(--udi-orange-deep)">📝 Pipeline generado</label>'+
+    '<div class="prompt-preview" id="chPreview" style="min-height:240px;font-size:.74rem"></div>'+
+    '<div style="margin-top:.6rem;display:flex;gap:.4rem;flex-wrap:wrap">'+
+    '<button class="btn btn-primary btn-sm" id="chGenerate">⚡ Generar pipeline</button>'+
+    '<button class="btn btn-ghost btn-sm" id="chCopy">📋 Copiar</button>'+
+    '<button class="btn btn-dark btn-sm" id="chExport">📥 Exportar .md</button>'+
+    '</div></div></div></div>';
+  var currentData=null;
+  var gen=function(){
+    var prob=$('chProblem').value.trim();
+    if(!prob){showToast('Completa el problema','warn');return;}
+    var type=$('chType').value;
+    var n=parseInt($('chSteps').value,10);
+    var template=TEMPLATES[type]||[];
+    var steps=template.slice(0,n);
+    if(!steps.length){$('chPreview').textContent='Sin plantilla para este tipo. Personaliza manualmente.';return;}
+    currentData={problem:prob,type:type,steps:steps};
+    var txt='# Pipeline de '+steps.length+' pasos\n\n**Problema:** '+prob+'\n\n## Uso\n1. Copia prompt del paso 1\n2. Reemplaza [PLACEHOLDERS]\n3. Copia respuesta al paso 2\n4. Repite\n\n';
+    for(var i=0;i<steps.length;i++){txt+='---\n\n## Paso '+(i+1)+': '+steps[i].t+'\n\n'+steps[i].p+'\n\n';}
+    $('chPreview').textContent=txt;
+  };
+  $('chGenerate').onclick=gen;
+  $('chCopy').onclick=function(){var p=$('chPreview').textContent;if(!p){showToast('Genera primero','warn');return;}copyText(p);};
+  $('chExport').onclick=function(){if(!currentData){showToast('Genera primero','warn');return;}downloadBlob('pipeline_'+currentData.type+'.md',$('chPreview').textContent,'text/markdown');};
+  ['chProblem','chType','chSteps'].forEach(function(id){$(id).oninput=gen;$(id).onchange=gen;});
+}
+
+/* ---------- DIAG2 (TEST DIAGNÓSTICO) ---------- */
+function renderDiag2(host){
+  host.innerHTML='<div class="card"><h3>🧪 Test Diagnóstico de Nivel</h3>'+
+    '<p style="font-size:.85rem;color:var(--muted)">Responde para evaluar tu dominio actual. También puedes solicitar el cambio de nivel desde el botón 🛠️ Opciones (requiere clave de profesor).</p>'+
+    '<div id="diag2Content"><p style="color:var(--muted)">⏳ Listo para comenzar. Haz clic en "Iniciar test".</p>'+
+    '<button class="btn btn-primary" id="d2Start">▶ Iniciar test</button>'+
+    '<button class="btn btn-ghost" id="d2Reset" style="margin-left:.3rem">🔄 Resetear nivel a Básico</button>'+
+    '<button class="btn btn-ghost" id="d2Prof" style="margin-left:.3rem">🔐 Clave de Profesor</button></div></div>';
+  $('d2Start').onclick=startDiag;
+  $('d2Prof').onclick=openOptionsModal;
+  $('d2Reset').onclick=function(){
+    if(confirm('¿Resetear tu nivel a Básico?')){
+      ensureProfile();
+      state.profile.level='basic';
+      state.diagnosticScore=null;
+      state.diagnosticDate=null;
+      persist();
+      renderProfileBadge();
+      renderSidebar();
+      renderAll();
+      showToast('Nivel reseteado a Básico','success');
+    }
+  };
+  function startDiag(){
+    var box=$('diag2Content');box.innerHTML='';
+    var questions=shuffle(DIAG_BANK).slice(0,5);
+    var answers=[];var current=0;
+    function showQ(){
+      if(current>=questions.length){finish();return;}
+      var q=questions[current];
+      box.innerHTML='<div class="quiz-q"><div style="display:flex;justify-content:space-between;margin-bottom:.5rem"><span class="badge badge-blue">Pregunta '+(current+1)+'/'+questions.length+'</span></div><div class="q-text">'+q.q[currentLang]+'</div><div id="d2Opts"></div></div>';
+      var opts=shuffle(q.opts[currentLang].map(function(t,i){return {t:t,orig:i};}));
+      var optsBox=$('d2Opts');
+      opts.forEach(function(o){
+        var b=document.createElement('button');b.className='quiz-opt';b.textContent=o.t;
+        b.dataset.orig=o.orig;
+        b.onclick=function(){
+          answers[current]=o.orig===q.correct;
+          optsBox.querySelectorAll('.quiz-opt').forEach(function(x){
+            x.disabled=true;
+            if(parseInt(x.dataset.orig,10)===q.correct) x.classList.add('correct');
+          });
+          if(o.orig!==q.correct){b.classList.add('wrong');}
+          setTimeout(function(){current++;showQ();},1200);
+        };
+        optsBox.appendChild(b);
+      });
+    }
+    function finish(){
+      var correct=answers.filter(function(a){return a;}).length;
+      var pct=Math.round((correct/questions.length)*100);
+      var newLevel=pct>=80?'expert':pct>=50?'intermediate':'basic';
+      state.diagnosticScore=pct;
+      state.diagnosticDate=new Date().toISOString();
+      persist();
+      box.innerHTML='<div style="text-align:center;padding:1rem"><div style="font-size:3rem;margin-bottom:.5rem">'+(pct>=80?'🏆':pct>=50?'🎯':'🌱')+'</div><h2>Resultado: '+pct+'%</h2><p style="color:var(--muted)">'+correct+' de '+questions.length+' correctas</p>'+
+        '<div class="card" style="background:var(--bg-2);text-align:left;margin-top:1rem"><h4>📊 Recomendación</h4><p>Según tu puntaje, tu nivel sugerido es: <strong>'+levelLabel(newLevel)+'</strong></p>'+
+        '<p style="font-size:.85rem;color:var(--muted)">Tu nivel actual: <strong>'+levelLabel(currentLevel())+'</strong></p>'+
+        '<p style="font-size:.82rem;margin-top:.6rem">⚠️ <strong>Importante:</strong> Solo el profesor/director del curso puede autorizar el cambio de nivel. Muéstrale este resultado para que ingrese su clave.</p>'+
+        '<p style="font-size:.78rem;color:var(--muted);margin-top:.4rem">Fecha del test: '+new Date().toLocaleString()+'</p></div>'+
+        '<div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-top:1rem">'+
+          '<button class="btn btn-primary" id="d2Unlock">🔐 Desbloquear Nivel (Profesor)</button>'+
+          '<button class="btn btn-ghost" id="d2BackCover">Volver a portada</button>'+
+        '</div></div>';
+      $('d2Unlock').onclick=openOptionsModal;
+      $('d2BackCover').onclick=function(){openLesson('cover');};
+      renderProfileBadge();
+      renderSidebar();
+    }
+    showQ();
+  }
+}
+
+/* ---------- PROFILE BADGE ---------- */
+function renderProfileBadge(){
+  var badge=$('profileBadge');
+  if(!badge) return;
+  var name=(state.profile&&state.profile.name)?state.profile.name:'Estudiante';
+  var lvl=currentLevel();
+  badge.innerHTML='👤 '+esc(name)+' · '+levelIcon(lvl)+' '+levelLabel(lvl);
+}
+
+/* ---------- RENDER ALL ---------- */
+function renderAll(){
+  if(currentLesson==='cover') renderCover();
+  else renderLesson(currentLesson);
+}
+
+/* ---------- WELCOME ---------- */
+function showWelcomeIfNeeded(){
+  if(state.profile&&state.profile.name) return false;
+  $('welcomeModal').classList.add('show');
+  return true;
+}
+
+/* ---------- TOGGLE SIDEBAR ---------- */
+function toggleSidebar() {
+  isSidebarCollapsed = !isSidebarCollapsed;
+  var layout = $('mainLayout');
+  if (isSidebarCollapsed) {
+    layout.classList.add('sidebar-collapsed');
+  } else {
+    layout.classList.remove('sidebar-collapsed');
+  }
+  // On mobile, the menu button toggles the 'open' class instead
+  if (window.innerWidth <= 900) {
+    var sidebar = $('sidebar');
+    if (sidebar.classList.contains('open')) {
+      sidebar.classList.remove('open');
+    } else {
+      sidebar.classList.add('open');
+    }
+    // Reset collapsed state for desktop when in mobile view to avoid conflicts
+    layout.classList.remove('sidebar-collapsed');
+    isSidebarCollapsed = false;
+  }
+}
+
+
+/* ---------- INIT ---------- */
+function init(){
+  applyTheme();
+  renderProfileBadge();
+
+  // Welcome modal bindings
+  var roleBtns=document.querySelectorAll('#roleGrid .option-btn');
+  var selectedRole='student';
+  roleBtns[0].classList.add('selected');
+  roleBtns.forEach(function(b){
+    b.onclick=function(){
+      roleBtns.forEach(function(x){x.classList.remove('selected');});
+      b.classList.add('selected');
+      selectedRole=b.dataset.role;
+    };
+  });
+
+  var careerBtns=document.querySelectorAll('#careerGrid .option-btn');
+  var selectedCareer='industrial';
+  careerBtns[0].classList.add('selected');
+  careerBtns.forEach(function(b){
+    b.onclick=function(){
+      careerBtns.forEach(function(x){x.classList.remove('selected');});
+      b.classList.add('selected');
+      selectedCareer=b.dataset.career;
+    };
+  });
+  var levelCards=document.querySelectorAll('#levelCards .level-card');
+  var selectedLevel='basic';
+  levelCards.forEach(function(c){
+    c.onclick=function(){
+      levelCards.forEach(function(x){x.classList.remove('selected');});
+      c.classList.add('selected');
+      selectedLevel=c.dataset.level;
+    };
+  });
+  levelCards[0].classList.add('selected');
+  $('startBtn').onclick=function(){
+    var name=$('wName').value.trim();
+    if(!name){showToast('Escribe tu nombre','warn');$('wName').focus();return;}
+    if(!selectedCareer){showToast('Selecciona tu área','warn');return;}
+    if(!selectedRole){showToast('Selecciona tu rol','warn');return;}
+    state.profile={name:name,career:selectedCareer,level:selectedLevel,role:selectedRole};
+    persist();
+    $('welcomeModal').classList.remove('show');
+    renderProfileBadge();
+    renderSidebar();
+    renderAll();
+    showToast('👋 Bienvenido, '+name,'success');
+  };
+
+  // Options & Student Profile Modal bindings
+  $('profileBadge').onclick=openOptionsModal;
+  $('panelBtn').onclick=openOptionsModal;
+  $('optCloseTop').onclick=closeOptionsModal;
+  $('optCloseBottom').onclick=closeOptionsModal;
+  $('optSaveProfile').onclick=function(){
+    ensureProfile();
+    var newName=$('optName').value.trim();
+    if(!newName){showToast('El nombre no puede estar vacío','warn');return;}
+    state.profile.name=newName;
+    state.profile.career=$('optCareer').value;
+    state.profile.role=$('optRole').value;
+    persist();
+    renderProfileBadge();
+    renderAll();
+    showToast('✓ Perfil actualizado','success');
+  };
+  $('optGoDiag').onclick=function(){
+    closeOptionsModal();
+    openLesson('l_diag2');
+  };
+  $('optGoPanel').onclick=function(){
+    closeOptionsModal();
+    openLesson('l_panel');
+  };
+  $('optApplyLevel').onclick=function(){
+    var key=$('optProfKey').value.trim();
+    if(key.toUpperCase()!==PROFESSOR_KEY){
+      showToast('❌ Clave de profesor incorrecta','error');
+      $('optProfKey').focus();
+      return;
+    }
+    ensureProfile();
+    state.profile.level=optSelectedLevel;
+    persist();
+    $('optProfKey').value='';
+    $('optStatLevel').textContent=levelIcon(optSelectedLevel)+' '+levelLabel(optSelectedLevel);
+    renderProfileBadge();
+    renderSidebar();
+    renderAll();
+    openOptionsModal(); // refresh modal badges
+    showToast('🎓 Nivel actualizado a '+levelLabel(optSelectedLevel),'success');
+  };
+  $('optProfKey').onkeydown=function(e){if(e.key==='Enter')$('optApplyLevel').click();};
+  $('optResetAll').onclick=function(){
+    if(confirm('¿Seguro que deseas borrar todo tu progreso y reiniciar tu perfil?')){
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+  };
+
+  // Secondary Professor modal bindings
+  $('profLogin').onclick=attemptProfLogin;
+  $('profCancel').onclick=closeProfModal;
+  $('profKey').onkeydown=function(e){if(e.key==='Enter')attemptProfLogin();};
+  $('levelChangeConfirm').onclick=confirmLevelChange;
+  $('levelChangeCancel').onclick=function(){$('levelChangeModal').classList.remove('show');};
+
+  // Topbar bindings
+  $('menuBtn').onclick=toggleSidebar;
+  $('langBtn').onclick=function(){currentLang=currentLang==='es'?'en':'es';renderSidebar();renderAll();showToast('Idioma: '+(currentLang==='es'?'Español':'English'));};
+  $('themeBtn').onclick=toggleTheme;
+
+  // Error handling
+  window.addEventListener('error',function(e){showError('Error: '+e.message);});
+  window.addEventListener('unhandledrejection',function(e){showError('Error: '+e.reason);});
+
+  // Show welcome or render
+  if(!showWelcomeIfNeeded()){
+    renderSidebar();
+    renderAll();
+  } else {
+    renderSidebar();
+    renderCover();
+  }
+}
+
+init();
+</script>
+</body>
+</html>
