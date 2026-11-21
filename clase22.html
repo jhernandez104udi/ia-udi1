@@ -1,0 +1,2188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UDI · Clase 2 · Laboratorio 4.0 y 5.0</title>
+<style>
+:root{
+  --udi-blue:#0a3d62;
+  --udi-blue-2:#1e6091;
+  --udi-gold:#c8a951;
+  --bg-1:#f4f6fa;
+  --bg-2:#ffffff;
+  --card:#ffffff;
+  --border:#e1e7ef;
+  --text:#1a2332;
+  --text-2:#5a6779;
+  --text-3:#8a95a5;
+  --success:#27ae60;
+  --warning:#f39c12;
+  --danger:#e74c3c;
+  --info:#3498db;
+  --shadow-sm:0 1px 3px rgba(10,61,98,.06);
+  --shadow:0 4px 12px rgba(10,61,98,.08);
+  --shadow-lg:0 10px 30px rgba(10,61,98,.12);
+  --radius:10px;
+  --radius-sm:6px;
+  --radius-lg:16px;
+  --sidebar-w:290px;
+  --header-h:64px;
+  --transition:all .25s cubic-bezier(.4,0,.2,1);
+}
+[data-theme="dark"]{
+  --bg-1:#0f1620;
+  --bg-2:#1a2332;
+  --card:#1e2a3a;
+  --border:#2d3a4d;
+  --text:#e8ecf1;
+  --text-2:#a8b3c2;
+  --text-3:#6b7789;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.3);
+  --shadow:0 4px 12px rgba(0,0,0,.4);
+  --shadow-lg:0 10px 30px rgba(0,0,0,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;
+  background:var(--bg-1);
+  color:var(--text);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit}
+
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:var(--header-h);
+  background:var(--udi-blue);color:#fff;
+  display:flex;align-items:center;padding:0 20px;
+  z-index:100;box-shadow:var(--shadow);
+}
+.topbar-toggle{
+  width:40px;height:40px;border-radius:var(--radius-sm);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;margin-right:12px;transition:var(--transition);
+}
+.topbar-toggle:hover{background:rgba(255,255,255,.15)}
+.topbar-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}
+.topbar-brand .logo{
+  width:36px;height:36px;background:var(--udi-gold);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--udi-blue);font-size:18px;
+}
+.topbar-title{margin-left:8px;opacity:.9;font-weight:400;font-size:14px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.topbar-chip{
+  padding:6px 14px;background:rgba(255,255,255,.12);border-radius:20px;
+  font-size:12px;display:flex;align-items:center;gap:6px;
+}
+.topbar-icon{
+  width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:16px;transition:var(--transition);
+}
+.topbar-icon:hover{background:rgba(255,255,255,.15)}
+
+.sidebar-overlay{
+  position:fixed;inset:0;background:rgba(15,22,32,.5);z-index:85;
+  display:none;backdrop-filter:blur(2px);
+}
+.sidebar-overlay.open{display:block}
+.sidebar{
+  position:fixed;top:var(--header-h);left:0;bottom:0;width:var(--sidebar-w);
+  background:var(--bg-2);border-right:1px solid var(--border);
+  overflow-y:auto;z-index:90;transition:transform .3s ease;
+  display:flex;flex-direction:column;
+}
+.sidebar.collapsed{transform:translateX(calc(var(--sidebar-w)*-1))}
+.sidebar-section{padding:14px 12px 6px}
+.sidebar-section-title{
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;
+  color:var(--text-3);margin-bottom:8px;padding:0 10px;
+}
+.sidebar-item{
+  width:100%;text-align:left;
+  display:flex;align-items:center;gap:10px;padding:9px 12px;
+  border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition);
+  margin-bottom:2px;font-size:13.5px;color:var(--text-2);
+  border:1px solid transparent;
+}
+.sidebar-item:hover,.sidebar-item:focus-visible{background:var(--bg-1);color:var(--text);outline:none}
+.sidebar-item.active{
+  background:linear-gradient(135deg,var(--udi-blue),var(--udi-blue-2));
+  color:#fff;font-weight:600;box-shadow:var(--shadow-sm);
+}
+.sidebar-item .ico{font-size:17px;width:22px;text-align:center;flex-shrink:0}
+.sidebar-item .label{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-item .check{color:var(--success);font-size:14px;font-weight:700}
+.sidebar-item.active .check{color:#a8f0c6}
+.sidebar-footer{
+  margin-top:auto;padding:14px;border-top:1px solid var(--border);
+  display:flex;flex-direction:column;gap:8px;
+}
+.sidebar-progress{
+  background:var(--bg-1);border-radius:var(--radius-sm);padding:12px;margin-bottom:2px;
+}
+.sidebar-progress-label{font-size:11px;color:var(--text-3);margin-bottom:6px;display:flex;justify-content:space-between}
+.sidebar-progress-bar{
+  height:6px;background:var(--border);border-radius:3px;overflow:hidden;
+}
+.sidebar-progress-fill{
+  height:100%;background:linear-gradient(90deg,var(--udi-gold),#e0c068);
+  transition:width .5s ease;border-radius:3px;
+}
+
+.main{
+  margin-left:var(--sidebar-w);margin-top:var(--header-h);
+  padding:28px;min-height:calc(100vh - var(--header-h));
+  transition:margin-left .3s ease;
+}
+.main.expanded{margin-left:0}
+
+.accordion{
+  background:var(--bg-1);border:1px solid var(--border);border-radius:var(--radius);
+  margin-bottom:18px;overflow:hidden;
+}
+.accordion summary{
+  padding:12px 16px;font-weight:700;font-size:13.5px;color:var(--udi-blue);
+  cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;
+  user-select:none;
+}
+[data-theme="dark"] .accordion summary{color:var(--udi-gold)}
+.accordion summary::after{content:'▾';font-size:14px;transition:transform .2s}
+.accordion[open] summary::after{transform:rotate(180deg)}
+.accordion-body{
+  padding:0 16px 14px;font-size:13px;color:var(--text-2);border-top:1px solid var(--border);padding-top:12px;
+}
+.guide-step{display:flex;align-items:flex-start;gap:10px;margin:8px 0}
+.guide-step-num{
+  width:22px;height:22px;border-radius:50%;background:var(--udi-blue);color:#fff;
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;
+}
+.guide-step-body{flex:1}
+
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);
+  padding:24px;margin-bottom:20px;transition:var(--transition);
+}
+.card:hover{box-shadow:var(--shadow)}
+.card-header{
+  display:flex;align-items:center;gap:12px;margin-bottom:18px;
+  padding-bottom:14px;border-bottom:1px solid var(--border);flex-wrap:wrap;
+}
+.card-icon{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  background:linear-gradient(135deg,var(--udi-blue),var(--udi-blue-2));color:#fff;flex-shrink:0;
+}
+.card-title{font-size:18px;font-weight:700;color:var(--text)}
+.card-subtitle{font-size:13px;color:var(--text-2);margin-top:2px}
+.card-body{color:var(--text-2);font-size:14px}
+
+.widget-actions{
+  display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;align-items:center;
+}
+.widget-actions .next-btn{margin-left:auto}
+
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 16px;border-radius:var(--radius-sm);
+  font-size:13.5px;font-weight:600;transition:var(--transition);
+  border:1px solid transparent;cursor:pointer;
+}
+.btn-primary{background:var(--udi-blue);color:#fff}
+.btn-primary:hover{background:var(--udi-blue-2);transform:translateY(-1px);box-shadow:var(--shadow)}
+.btn-success{background:var(--success);color:#fff}
+.btn-success:hover{background:#219150}
+.btn-warning{background:var(--warning);color:#fff}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-gold{background:var(--udi-gold);color:var(--udi-blue)}
+.btn-gold:hover{filter:brightness(1.06)}
+.btn-outline{background:transparent;border-color:var(--border);color:var(--text)}
+.btn-outline:hover{border-color:var(--udi-blue);color:var(--udi-blue);background:rgba(10,61,98,.04)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-block{width:100%;justify-content:center}
+
+.tag{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;
+  background:rgba(10,61,98,.08);color:var(--udi-blue);
+}
+.tag-success{background:rgba(39,174,96,.12);color:var(--success)}
+.tag-warning{background:rgba(243,156,18,.12);color:var(--warning)}
+.tag-danger{background:rgba(231,76,60,.12);color:var(--danger)}
+.tag-info{background:rgba(52,152,219,.12);color:var(--info)}
+
+.grid{display:grid;gap:16px}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.grid-4{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
+.form-input,.form-select,.form-textarea{
+  width:100%;padding:10px 14px;border:1px solid var(--border);
+  border-radius:var(--radius-sm);background:var(--bg-2);color:var(--text);
+  font-size:14px;transition:var(--transition);
+}
+.form-textarea{min-height:86px;resize:vertical;font-family:monospace}
+.form-input:focus,.form-select:focus,.form-textarea:focus{
+  outline:none;border-color:var(--udi-blue);box-shadow:0 0 0 3px rgba(10,61,98,.1);
+}
+
+.career-bar{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:14px 18px;margin-bottom:22px;display:flex;align-items:center;gap:14px;
+  flex-wrap:wrap;box-shadow:var(--shadow-sm);
+}
+.career-bar-label{font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+.career-pills{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+.career-pill{
+  padding:7px 14px;border-radius:20px;font-size:13px;font-weight:600;
+  border:2px solid var(--border);background:var(--bg-2);color:var(--text-2);
+  transition:var(--transition);cursor:pointer;
+}
+.career-pill:hover{border-color:var(--udi-blue);color:var(--udi-blue)}
+.career-pill.active{background:var(--udi-blue);color:#fff;border-color:var(--udi-blue)}
+
+.fs-flow{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  flex-wrap:wrap;padding:20px;background:var(--bg-1);border-radius:var(--radius);
+  border:2px dashed var(--border);min-height:130px;margin-bottom:16px;
+}
+.fs-slot{
+  width:150px;min-height:86px;border:2px dashed var(--border);border-radius:var(--radius);
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:10px;font-size:12.5px;color:var(--text-3);transition:var(--transition);
+  background:var(--bg-2);cursor:pointer;position:relative;
+}
+.fs-slot.drag-over{border-color:var(--udi-blue);background:rgba(10,61,98,.05)}
+.fs-slot.filled{border-style:solid;border-color:var(--udi-blue);background:var(--udi-blue);color:#fff}
+.fs-slot.slot-ok{border-color:var(--success);background:var(--success);color:#fff}
+.fs-slot.slot-err{border-color:var(--danger);background:var(--danger);color:#fff}
+.fs-slot.filled .fs-slot-label{font-weight:600}
+.fs-arrow{font-size:22px;color:var(--udi-blue);font-weight:700}
+.fs-pool{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px}
+.fs-node{
+  padding:10px 15px;background:var(--card);border:2px solid var(--udi-blue);
+  border-radius:var(--radius);cursor:grab;font-size:13px;font-weight:600;
+  color:var(--udi-blue);transition:var(--transition);user-select:none;box-shadow:var(--shadow-sm);
+}
+[data-theme="dark"] .fs-node{color:#93c5fd;border-color:#3b82f6}
+.fs-node:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.fs-node.used{opacity:.35;cursor:not-allowed;pointer-events:none}
+.fs-node.dragging{opacity:.5}
+
+.pm-slider-wrap{margin:14px 0}
+.pm-slider-label{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text)}
+.pm-slider{
+  width:100%;height:8px;border-radius:4px;background:var(--border);
+  -webkit-appearance:none;appearance:none;outline:none;
+}
+.pm-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+  background:var(--udi-blue);cursor:pointer;box-shadow:var(--shadow);
+}
+.pm-slider::-moz-range-thumb{
+  width:22px;height:22px;border-radius:50%;background:var(--udi-blue);
+  cursor:pointer;border:none;
+}
+.pm-canvas{
+  width:100%;height:240px;background:var(--bg-1);border-radius:var(--radius);
+  border:1px solid var(--border);margin:14px 0;display:block;
+}
+.radar-canvas{
+  width:100%;max-width:360px;height:300px;margin:0 auto;display:block;
+}
+.pm-status{
+  padding:13px;border-radius:var(--radius);text-align:center;font-weight:700;
+  font-size:14px;margin:12px 0;
+}
+.pm-status.ok{background:rgba(39,174,96,.12);color:var(--success);border:1px solid rgba(39,174,96,.3)}
+.pm-status.warn{background:rgba(243,156,18,.12);color:var(--warning);border:1px solid rgba(243,156,18,.3)}
+.pm-status.danger{background:rgba(231,76,60,.12);color:var(--danger);border:1px solid rgba(231,76,60,.3)}
+
+.ts-pool{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.ts-task{
+  padding:11px 14px;background:var(--card);border:2px solid var(--border);
+  border-radius:var(--radius);cursor:pointer;font-size:13px;
+  transition:var(--transition);user-select:none;flex:1 1 calc(50% - 5px);min-width:200px;
+}
+.ts-task:hover{border-color:var(--udi-blue);transform:translateY(-1px)}
+.ts-task.selected{border-color:var(--udi-blue);background:rgba(10,61,98,.06);box-shadow:var(--shadow)}
+.ts-task.assigned{opacity:.35;cursor:not-allowed;pointer-events:none}
+.ts-zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.ts-zone{
+  min-height:145px;border:2px dashed var(--border);border-radius:var(--radius);
+  padding:14px;transition:var(--transition);background:var(--bg-1);
+}
+.ts-zone.drag-over{border-color:var(--udi-blue);background:rgba(10,61,98,.05)}
+.ts-zone-title{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px;color:var(--text)}
+.ts-zone-task{
+  padding:8px 10px;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius-sm);font-size:12px;margin-bottom:6px;
+  cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:6px;
+}
+.ts-zone-task:hover{border-color:var(--danger)}
+.ts-zone-task .undo-x{font-size:11px;opacity:.6}
+.ts-zone-task.correct{border-color:var(--success);background:rgba(39,174,96,.1)}
+.ts-zone-task.wrong{border-color:var(--danger);background:rgba(231,76,60,.1)}
+
+.kpi-card{
+  background:var(--bg-1);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px;text-align:center;
+}
+.kpi-val{font-size:28px;font-weight:800;color:var(--udi-blue);line-height:1.1}
+[data-theme="dark"] .kpi-val{color:var(--udi-gold)}
+.kpi-lbl{font-size:12px;color:var(--text-2);margin-top:4px}
+
+.sus-metric{
+  text-align:center;padding:22px;background:linear-gradient(135deg,var(--udi-blue),var(--udi-blue-2));
+  border-radius:var(--radius);color:#fff;margin:14px 0;
+}
+.sus-metric-value{font-size:38px;font-weight:900;line-height:1}
+.sus-metric-label{font-size:13px;opacity:.85;margin-top:6px}
+.dt-output{
+  background:var(--bg-1);border-left:4px solid var(--udi-blue);
+  border-radius:var(--radius);padding:18px;margin-top:16px;
+}
+.dt-output h4{color:var(--udi-blue);margin-bottom:8px}
+[data-theme="dark"] .dt-output h4{color:var(--udi-gold)}
+.dt-output ul{margin:8px 0 10px 20px}
+.dt-output li{margin-bottom:4px;font-size:13px;color:var(--text-2)}
+.vp-output{
+  background:#1e272e;color:#dfe6e9;padding:18px;border-radius:var(--radius);
+  font-family:'Courier New',monospace;font-size:12px;line-height:1.6;
+  position:relative;margin-top:16px;white-space:pre-wrap;max-height:380px;overflow-y:auto;
+}
+.vp-copy{
+  position:absolute;top:10px;right:10px;padding:6px 12px;
+  background:var(--udi-blue);color:#fff;border-radius:var(--radius-sm);
+  font-size:11px;font-weight:600;
+}
+.vp-copy:hover{background:var(--udi-blue-2)}
+
+.alert{
+  padding:13px 16px;border-radius:var(--radius);margin:12px 0;
+  font-size:13px;border-left:4px solid;
+}
+.alert-success{background:rgba(39,174,96,.1);color:var(--success);border-color:var(--success)}
+.alert-info{background:rgba(52,152,219,.1);color:var(--info);border-color:var(--info)}
+.alert-warning{background:rgba(243,156,18,.1);color:var(--warning);border-color:var(--warning)}
+.alert-danger{background:rgba(231,76,60,.1);color:var(--danger);border-color:var(--danger)}
+
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(15,22,32,.6);z-index:200;
+  display:none;align-items:center;justify-content:center;padding:20px;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--card);border-radius:var(--radius-lg);max-width:540px;width:100%;
+  max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);
+}
+.modal-header{
+  padding:18px 22px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-header h3{font-size:17px;font-weight:700}
+.modal-close{
+  width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:18px;transition:var(--transition);
+}
+.modal-close:hover{background:var(--bg-1)}
+.modal-body{padding:22px}
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(calc(var(--sidebar-w)*-1))}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .topbar-title{display:none}
+  .fs-flow{flex-direction:column}
+  .fs-arrow{transform:rotate(90deg)}
+}
+@media(max-width:600px){
+  .main{padding:16px}
+  .card{padding:18px}
+  .career-bar{flex-direction:column;align-items:flex-start}
+  .ts-task{flex:1 1 100%}
+  .widget-actions .next-btn{margin-left:0;width:100%;justify-content:center}
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .35s ease}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="topbar-toggle" id="sidebarToggle" title="Menú" aria-label="Abrir menú">☰</button>
+  <div class="topbar-brand">
+    <div class="logo">U</div>
+    <span>UDI · Clase 2</span>
+    <span class="topbar-title">Laboratorio 4.0 y 5.0</span>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-chip" id="userChip">👤 <span id="userNameChip">Estudiante</span> · <span id="userCareerChip">Ing.</span></div>
+    <button class="topbar-icon" id="themeToggle" title="Cambiar tema" aria-label="Cambiar tema">🌙</button>
+    <button class="topbar-icon" id="profileBtn" title="Perfil" aria-label="Abrir perfil">🛠️</button>
+  </div>
+</header>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar" aria-label="Navegación de módulos">
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Módulo 2 · Laboratorio 4.0</div>
+    <button type="button" class="sidebar-item" data-wid="w-factory-sim">
+      <span class="ico">🔗</span><span class="label">1. Simulador Sistema 4.0</span><span class="check" style="display:none">✓</span>
+    </button>
+    <button type="button" class="sidebar-item" data-wid="w-predictive-maint">
+      <span class="ico">📈</span><span class="label">2. Mantenimiento Predictivo</span><span class="check" style="display:none">✓</span>
+    </button>
+    <button type="button" class="sidebar-item" data-wid="w-oee">
+      <span class="ico">⚙️</span><span class="label">3. Calculadora OEE + Takt</span><span class="check" style="display:none">✓</span>
+    </button>
+    <button type="button" class="sidebar-item" data-wid="w-spc">
+      <span class="ico">📉</span><span class="label">4. Gráfico de Control (SPC)</span><span class="check" style="display:none">✓</span>
+    </button>
+    <button type="button" class="sidebar-item" data-wid="w-task-splitter">
+      <span class="ico">🤝</span><span class="label">5. Humano vs IA</span><span class="check" style="display:none">✓</span>
+    </button>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">Módulo 2 · Industria 5.0</div>
+    <button type="button" class="sidebar-item" data-wid="w-pillars">
+      <span class="ico">🧭</span><span class="label">6. Evaluador 3 Pilares 5.0</span><span class="check" style="display:none">✓</span>
+    </button>
+    <button type="button" class="sidebar-item" data-wid="w-sustainability">
+      <span class="ico">🌱</span><span class="label">7. Huella Digital (UPME)</span><span class="check" style="display:none">✓</span>
+    </button>
+    <button type="button" class="sidebar-item" data-wid="w-digital-twin">
+      <span class="ico">👥</span><span class="label">8. Gemelos Digitales</span><span class="check" style="display:none">✓</span>
+    </button>
+    <button type="button" class="sidebar-item" data-wid="w-vision-prompt">
+      <span class="ico">👁️</span><span class="label">9. Dataset Visión Artificial</span><span class="check" style="display:none">✓</span>
+    </button>
+  </div>
+  <div class="sidebar-footer">
+    <div class="sidebar-progress">
+      <div class="sidebar-progress-label">
+        <span>Progreso Módulo 2</span>
+        <span id="progressPercent">0%</span>
+      </div>
+      <div class="sidebar-progress-bar">
+        <div class="sidebar-progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+    </div>
+    <button type="button" class="btn btn-gold btn-sm btn-block" id="exportMdBtn">📄 Exportar Reporte (.md)</button>
+    <button type="button" class="btn btn-outline btn-sm btn-block" id="resetBtn">🗑️ Reiniciar Progreso</button>
+  </div>
+</aside>
+
+<main class="main" id="main">
+  <div class="career-bar">
+    <div class="career-bar-label">🎓 Adapta el contenido a tu carrera:</div>
+    <div class="career-pills" id="careerPills">
+      <button type="button" class="career-pill active" data-career="ingenieria">⚙️ Ingeniería</button>
+      <button type="button" class="career-pill" data-career="administracion">📊 Administración</button>
+    </div>
+  </div>
+  <div id="widgetHost" class="fade-in"></div>
+</main>
+
+<div class="modal-overlay" id="profileModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>🛠️ Perfil del Estudiante (Compartido UDI)</h3>
+      <button type="button" class="modal-close" data-close="profileModal" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Nombre del estudiante</label>
+        <input type="text" class="form-input" id="profileName" placeholder="Tu nombre completo">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Área / Carrera</label>
+        <select class="form-select" id="profileCareer">
+          <option value="ingenieria">⚙️ Ingeniería Industrial / Afines</option>
+          <option value="administracion">📊 Administración / Negocios</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nivel actual (calculado por progreso)</label>
+        <div class="tag tag-info" id="profileLevel">🌱 Básico</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Lecciones completadas</label>
+        <div id="profileLessons">0 / 9</div>
+      </div>
+      <button type="button" class="btn btn-primary btn-block" id="saveProfileBtn">💾 Guardar Perfil</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   UTILIDADES SEGURAS Y COMPARTIDAS
+================================================================ */
+function esc(str){
+  return String(str ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
+function copyTextSafe(text, onSuccess, onFail){
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text).then(onSuccess).catch(() => fallbackCopy(text, onSuccess, onFail));
+  } else {
+    fallbackCopy(text, onSuccess, onFail);
+  }
+}
+
+function fallbackCopy(text, onSuccess, onFail){
+  try{
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    if(ok) onSuccess(); else if(onFail) onFail();
+  }catch(e){
+    if(onFail) onFail();
+  }
+}
+
+function guideBox(goal, steps, deliverable){
+  return `<details class="accordion" open>
+    <summary>📖 ¿Cómo usar esta herramienta?</summary>
+    <div class="accordion-body">
+      <p style="margin-bottom:8px"><b>🎯 Objetivo:</b> ${goal}</p>
+      ${steps.map((s,i)=>`<div class="guide-step"><div class="guide-step-num">${i+1}</div><div class="guide-step-body">${s}</div></div>`).join('')}
+      <p style="margin-top:8px"><b>✅ Se completa cuando:</b> ${deliverable}</p>
+    </div>
+  </details>`;
+}
+
+function shuffleArray(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+/* ================================================================
+   CONFIGURACIÓN POR CARRERA (DEFINIDA ANTES DE loadState)
+================================================================ */
+const careerConfig = {
+  ingenieria: {
+    short: 'Ing.',
+    factorySim: {
+      title: 'Fábrica 4.0',
+      desc: 'Conecta los componentes en el orden correcto desde la captura de datos físicos hasta la ejecución automatizada.',
+      nodes: [
+        { id:'sensor', icon:'📡', label:'Sensor IoT' },
+        { id:'cloud', icon:'☁️', label:'Nube / Edge' },
+        { id:'ai', icon:'🧠', label:'Cerebro IA' },
+        { id:'actuator', icon:'⚙️', label:'Actuador' }
+      ],
+      successMsg: 'Flujo Industria 4.0 validado: Sensor IoT → Nube/Edge → Cerebro IA → Actuador.'
+    },
+    predictiveMaint: {
+      title: 'Vibración de Motor Industrial',
+      metric: 'Vibración',
+      unit: 'mm/s',
+      threshold: 70,
+      optStart: 65,
+      failDay: 90,
+      action: '🔧 Programar Mantenimiento',
+      desc: 'Monitorea la vibración del motor. Explora la curva y programa el mantenimiento en la ventana óptima (entre el día 65 y 89, antes del fallo en el día 90).',
+      failMsg: '⚠️ FALLO CRÍTICO (Día 90+): El motor se averió. Retrocede el deslizador o reinicia para intervenir en la ventana óptima (días 65–89).',
+      earlyMsg: '⏳ Demasiado pronto (Día < 65): El motor aún opera sano. Intervenir tan temprano desperdicia vida útil y aumenta costos innecesariamente.',
+      successMsg: '✅ ¡Mantenimiento predictivo óptimo! Interviniste justo cuando la vibración superó el umbral de alerta y antes del fallo catastrófico.'
+    },
+    tasks: [
+      { text:'Clasificar 10.000 imágenes de piezas defectuosas por turno', cat:'ia', reason:'La visión artificial procesa grandes volúmenes repetitivos con alta velocidad.' },
+      { text:'Calcular rutas mínimas de transporte entre 50 nodos', cat:'ia', reason:'La optimización combinatoria es ideal para algoritmos matemáticos.' },
+      { text:'Interpretar anomalías en 1 millón de datos de planta y decidir paro', cat:'collab', reason:'En Industria 5.0 la IA detecta patrones masivos, pero el ingeniero valida el contexto y decide el paro.' },
+      { text:'Diseñar el layout de una nueva celda de manufactura', cat:'collab', reason:'La IA genera alternativas optimizadas; el ingeniero aporta ergonomía y criterio técnico.' },
+      { text:'Negociar acuerdos de nivel de servicio con proveedores', cat:'human', reason:'Requiere empatía, confianza y negociación interpersonal.' },
+      { text:'Liderar y motivar al equipo técnico de mantenimiento', cat:'human', reason:'El liderazgo y la gestión humana no son delegables a algoritmos.' }
+    ]
+  },
+  administracion: {
+    short: 'Adm.',
+    factorySim: {
+      title: 'Oficina Inteligente 4.0',
+      desc: 'Conecta los componentes para construir un flujo de Business Intelligence desde los datos crudos hasta la decisión ejecutiva.',
+      nodes: [
+        { id:'sensor', icon:'📊', label:'Datos de Ventas' },
+        { id:'cloud', icon:'☁️', label:'CRM en la Nube' },
+        { id:'ai', icon:'🧠', label:'IA de Análisis' },
+        { id:'actuator', icon:'📈', label:'Dashboard Ejecutivo' }
+      ],
+      successMsg: 'Flujo BI validado: Datos de Ventas → CRM → IA de Análisis → Dashboard Ejecutivo.'
+    },
+    predictiveMaint: {
+      title: 'Riesgo de Rotación de Personal',
+      metric: 'Riesgo de Rotación',
+      unit: '%',
+      threshold: 70,
+      optStart: 65,
+      failDay: 90,
+      action: '🤝 Activar Plan de Retención',
+      desc: 'Monitorea el índice de riesgo de rotación. Explora la tendencia y activa el plan de retención en la ventana óptima (días 65–89, antes de la renuncia en el día 90).',
+      failMsg: '⚠️ RENUNCIA (Día 90+): Perdiste talento clave. Retrocede el deslizador para intervenir a tiempo en la ventana óptima (días 65–89).',
+      earlyMsg: '⏳ Demasiado pronto (Día < 65): El riesgo aún es bajo. Focaliza el presupuesto de retención cuando aparezcan señales claras de alerta.',
+      successMsg: '✅ ¡Retención óptima! Actuaste justo en la ventana de alerta temprana, evitando el costo de reemplazo.'
+    },
+    tasks: [
+      { text:'Generar conciliaciones y reportes financieros rutinarios', cat:'ia', reason:'La automatización de reportes estructurados reduce errores y ahorra horas.' },
+      { text:'Pronosticar demanda semanal a partir de series históricas', cat:'ia', reason:'Los modelos estadísticos y de ML superan la intuición en forecasting.' },
+      { text:'Analizar 1 millón de reseñas de clientes y definir mejoras', cat:'collab', reason:'La IA agrupa sentimientos a escala, pero el administrador define la acción estratégica.' },
+      { text:'Diseñar el plan de expansión comercial anual', cat:'collab', reason:'La IA simula escenarios; la dirección aporta visión y juicio de negocio.' },
+      { text:'Negociar contratos estratégicos con socios clave', cat:'human', reason:'Requiere lectura emocional, ética y construcción de confianza.' },
+      { text:'Liderar la cultura organizacional y el bienestar del equipo', cat:'human', reason:'La empatía y el liderazgo humano son irremplazables.' }
+    ]
+  }
+};
+
+/* ================================================================
+   ESTADO GLOBAL Y ALMACENAMIENTO UNIFICADO (udi_profile)
+================================================================ */
+const WIDGET_ORDER = [
+  'w-factory-sim','w-predictive-maint','w-oee','w-spc','w-task-splitter',
+  'w-pillars','w-sustainability','w-digital-twin','w-vision-prompt'
+];
+
+const WIDGET_NAMES = {
+  'w-factory-sim':'Simulador Sistema 4.0',
+  'w-predictive-maint':'Mantenimiento Predictivo',
+  'w-oee':'Calculadora OEE + Takt Time',
+  'w-spc':'Gráfico de Control (SPC)',
+  'w-task-splitter':'Divisor Humano vs IA',
+  'w-pillars':'Evaluador 3 Pilares 5.0',
+  'w-sustainability':'Calculadora de Huella Digital (UPME)',
+  'w-digital-twin':'Constructor de Gemelos Digitales',
+  'w-vision-prompt':'Especificación de Dataset Visión Artificial'
+};
+
+const state = {
+  profile: { name: 'Estudiante', career: 'ingenieria', level: 'basico' },
+  completed: {},
+  results: {},
+  currentWid: 'w-factory-sim',
+  cleanupFn: null
+};
+
+(function loadState(){
+  try{
+    const shared = localStorage.getItem('udi_profile');
+    if(shared){
+      const p = JSON.parse(shared);
+      if(p && typeof p === 'object'){
+        if(typeof p.name === 'string' && p.name.trim()) state.profile.name = p.name.trim();
+        if(p.career && careerConfig[p.career]) state.profile.career = p.career;
+      }
+    }
+    const saved = localStorage.getItem('udi_curso2_state');
+    if(saved){
+      const parsed = JSON.parse(saved);
+      if(parsed && typeof parsed === 'object'){
+        state.completed = (parsed.completed && typeof parsed.completed === 'object') ? parsed.completed : {};
+        state.results = (parsed.results && typeof parsed.results === 'object') ? parsed.results : {};
+      }
+    }
+  }catch(e){
+    console.warn('No se pudo cargar el estado guardado:', e);
+  }
+})();
+
+function saveState(){
+  try{
+    const pct = getProgressPct();
+    state.profile.level = pct >= 76 ? 'avanzado' : pct >= 34 ? 'intermedio' : 'basico';
+    localStorage.setItem('udi_profile', JSON.stringify(state.profile));
+    localStorage.setItem('udi_curso2_state', JSON.stringify({
+      completed: state.completed,
+      results: state.results
+    }));
+  }catch(e){
+    console.warn('No se pudo guardar el estado:', e);
+  }
+}
+
+function getProgressPct(){
+  const done = WIDGET_ORDER.filter(id => state.completed[id]).length;
+  return Math.round((done / WIDGET_ORDER.length) * 100);
+}
+
+function getLevelBadge(){
+  const pct = getProgressPct();
+  if(pct >= 76) return '🚀 Avanzado';
+  if(pct >= 34) return '⚡ Intermedio';
+  return '🌱 Básico';
+}
+
+/* ================================================================
+   INICIALIZACIÓN
+================================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  initSidebar();
+  initCareerSelector();
+  initTopbar();
+  initModal();
+  updateUserChip();
+  updateProgress();
+  renderWidget(state.currentWid);
+});
+
+/* ================================================================
+   SIDEBAR
+================================================================ */
+function initSidebar(){
+  const toggle = document.getElementById('sidebarToggle');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  const main = document.getElementById('main');
+
+  function closeMobileMenu(){
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+  }
+
+  toggle.addEventListener('click', () => {
+    if(window.innerWidth <= 900){
+      const isOpen = sidebar.classList.toggle('open');
+      overlay.classList.toggle('open', isOpen);
+    } else {
+      sidebar.classList.toggle('collapsed');
+      main.classList.toggle('expanded');
+      setTimeout(() => window.dispatchEvent(new Event('resize')), 320);
+    }
+  });
+
+  overlay.addEventListener('click', closeMobileMenu);
+
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    item.addEventListener('click', () => {
+      goToWidget(item.dataset.wid);
+      if(window.innerWidth <= 900) closeMobileMenu();
+    });
+  });
+
+  document.getElementById('exportMdBtn').addEventListener('click', exportMarkdownReport);
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    if(confirm('¿Seguro que quieres reiniciar todo tu progreso de la Clase 2?')){
+      state.completed = {};
+      state.results = {};
+      saveState();
+      updateProgress();
+      renderWidget(state.currentWid);
+    }
+  });
+}
+
+function goToWidget(wid){
+  document.querySelectorAll('.sidebar-item').forEach(i => {
+    i.classList.toggle('active', i.dataset.wid === wid);
+  });
+  state.currentWid = wid;
+  renderWidget(wid);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function nextLessonButton(currentWid){
+  const idx = WIDGET_ORDER.indexOf(currentWid);
+  if(idx < 0 || idx >= WIDGET_ORDER.length - 1) return '';
+  const nextId = WIDGET_ORDER[idx + 1];
+  return `<button type="button" class="btn btn-outline next-btn" data-next="${nextId}">Siguiente lección →</button>`;
+}
+
+function bindNextButtons(){
+  document.querySelectorAll('[data-next]').forEach(btn => {
+    btn.addEventListener('click', () => goToWidget(btn.dataset.next));
+  });
+}
+
+function updateProgress(){
+  const pct = getProgressPct();
+  document.getElementById('progressPercent').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    const wid = item.dataset.wid;
+    const check = item.querySelector('.check');
+    check.style.display = state.completed[wid] ? 'inline' : 'none';
+  });
+}
+
+/* ================================================================
+   SELECTOR DE CARRERA, TOPBAR Y MODAL
+================================================================ */
+function initCareerSelector(){
+  const pills = document.querySelectorAll('.career-pill');
+  pills.forEach(p => p.classList.toggle('active', p.dataset.career === state.profile.career));
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      pills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      state.profile.career = pill.dataset.career;
+      saveState();
+      updateUserChip();
+      renderWidget(state.currentWid);
+    });
+  });
+}
+
+function initTopbar(){
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    document.getElementById('themeToggle').textContent = next === 'dark' ? '☀️' : '🌙';
+    window.dispatchEvent(new Event('resize'));
+  });
+  document.getElementById('profileBtn').addEventListener('click', () => {
+    openModal('profileModal');
+    document.getElementById('profileName').value = state.profile.name;
+    document.getElementById('profileCareer').value = state.profile.career;
+    document.getElementById('profileLevel').textContent = getLevelBadge();
+    const done = WIDGET_ORDER.filter(id => state.completed[id]).length;
+    document.getElementById('profileLessons').textContent = `${done} / ${WIDGET_ORDER.length}`;
+  });
+  document.getElementById('saveProfileBtn').addEventListener('click', () => {
+    state.profile.name = document.getElementById('profileName').value.trim() || 'Estudiante';
+    state.profile.career = document.getElementById('profileCareer').value;
+    saveState();
+    updateUserChip();
+    document.querySelectorAll('.career-pill').forEach(p => {
+      p.classList.toggle('active', p.dataset.career === state.profile.career);
+    });
+    closeModal('profileModal');
+    renderWidget(state.currentWid);
+  });
+}
+
+function updateUserChip(){
+  document.getElementById('userNameChip').textContent = state.profile.name;
+  document.getElementById('userCareerChip').textContent = careerConfig[state.profile.career].short;
+}
+
+function initModal(){
+  document.querySelectorAll('[data-close]').forEach(btn => {
+    btn.addEventListener('click', () => closeModal(btn.dataset.close));
+  });
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+      if(e.target === overlay) overlay.classList.remove('open');
+    });
+  });
+}
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+/* ================================================================
+   ROUTER DE WIDGETS (CON LIMPIEZA DE LISTENERS)
+================================================================ */
+function renderWidget(wid){
+  if(typeof state.cleanupFn === 'function'){
+    state.cleanupFn();
+    state.cleanupFn = null;
+  }
+  state.currentWid = wid;
+  document.querySelectorAll('.sidebar-item').forEach(i => {
+    i.classList.toggle('active', i.dataset.wid === wid);
+  });
+  const host = document.getElementById('widgetHost');
+  host.classList.remove('fade-in');
+  void host.offsetWidth;
+  host.classList.add('fade-in');
+
+  switch(wid){
+    case 'w-factory-sim': renderFactorySim(host); break;
+    case 'w-predictive-maint': renderPredictiveMaint(host); break;
+    case 'w-oee': renderOEE(host); break;
+    case 'w-spc': renderSPC(host); break;
+    case 'w-task-splitter': renderTaskSplitter(host); break;
+    case 'w-pillars': renderPillars(host); break;
+    case 'w-sustainability': renderSustainability(host); break;
+    case 'w-digital-twin': renderDigitalTwin(host); break;
+    case 'w-vision-prompt': renderVisionPrompt(host); break;
+    default: host.innerHTML = '<div class="card"><p>Widget no encontrado</p></div>';
+  }
+  bindNextButtons();
+}
+
+function markComplete(wid, summary){
+  state.completed[wid] = true;
+  if(summary) state.results[wid] = summary;
+  saveState();
+  updateProgress();
+}
+
+/* ================================================================
+   WIDGET 1: SIMULADOR SISTEMA 4.0
+================================================================ */
+function renderFactorySim(host){
+  const cfg = careerConfig[state.profile.career].factorySim;
+  host.innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🔗</div>
+        <div>
+          <div class="card-title">1. Simulador de ${esc(cfg.title)}</div>
+          <div class="card-subtitle">${esc(cfg.desc)}</div>
+        </div>
+      </div>
+      <div class="card-body">
+        ${guideBox(
+          'Ordenar la arquitectura básica de un sistema ciberfísico 4.0.',
+          [
+            'Haz clic en un componente inferior y luego en una posición libre (o arrástralo).',
+            'Si te equivocas, haz clic sobre una posición ocupada para devolver el bloque.',
+            'Pulsa <b>Verificar Flujo</b> para validar cada posición.'
+          ],
+          'Todas las posiciones quedan en verde en el orden correcto.'
+        )}
+        <div class="fs-flow" id="fsFlow">
+          ${cfg.nodes.map((n,i) => `
+            <div class="fs-slot" data-slot="${i}" data-expected="${esc(n.id)}">
+              <span class="fs-slot-label">Posición ${i+1}</span>
+            </div>
+            ${i < cfg.nodes.length-1 ? '<div class="fs-arrow">→</div>' : ''}
+          `).join('')}
+        </div>
+        <div class="fs-pool" id="fsPool">
+          ${shuffleArray([...cfg.nodes]).map(n => `
+            <div class="fs-node" draggable="true" data-node-id="${esc(n.id)}">${n.icon} ${esc(n.label)}</div>
+          `).join('')}
+        </div>
+        <div class="widget-actions">
+          <button type="button" class="btn btn-primary" id="fsVerify">✓ Verificar Flujo</button>
+          <button type="button" class="btn btn-outline" id="fsExample">⚡ Cargar ejemplo</button>
+          <button type="button" class="btn btn-outline" id="fsReset">↻ Reiniciar</button>
+          ${nextLessonButton('w-factory-sim')}
+        </div>
+        <div id="fsResult"></div>
+      </div>
+    </div>
+  `;
+  initFactorySimDnD(cfg, host);
+}
+
+function initFactorySimDnD(cfg, host){
+  const slots = document.querySelectorAll('.fs-slot');
+  const pool = document.getElementById('fsPool');
+  let selectedNode = null;
+
+  pool.addEventListener('click', (e) => {
+    const node = e.target.closest('.fs-node');
+    if(!node || node.classList.contains('used')) return;
+    pool.querySelectorAll('.fs-node').forEach(n => n.style.outline = '');
+    selectedNode = node;
+    node.style.outline = '3px solid var(--udi-gold)';
+  });
+
+  slots.forEach(slot => {
+    slot.addEventListener('click', () => {
+      slot.classList.remove('slot-ok','slot-err');
+      if(slot.classList.contains('filled')){
+        const nodeId = slot.dataset.nodeId;
+        slot.classList.remove('filled');
+        slot.dataset.nodeId = '';
+        slot.innerHTML = `<span class="fs-slot-label">Posición ${parseInt(slot.dataset.slot)+1}</span>`;
+        const poolNode = pool.querySelector(`[data-node-id="${nodeId}"]`);
+        if(poolNode) poolNode.classList.remove('used');
+        return;
+      }
+      if(!selectedNode) return;
+      placeNodeInSlot(selectedNode, slot);
+      selectedNode.style.outline = '';
+      selectedNode = null;
+    });
+
+    slot.addEventListener('dragover', (e) => { e.preventDefault(); slot.classList.add('drag-over'); });
+    slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+    slot.addEventListener('drop', (e) => {
+      e.preventDefault();
+      slot.classList.remove('drag-over');
+      if(slot.classList.contains('filled')) return;
+      const nodeId = e.dataTransfer.getData('text/plain');
+      const node = pool.querySelector(`[data-node-id="${nodeId}"]`);
+      if(node && !node.classList.contains('used')) placeNodeInSlot(node, slot);
+    });
+  });
+
+  pool.querySelectorAll('.fs-node').forEach(node => {
+    node.addEventListener('dragstart', (e) => {
+      if(node.classList.contains('used')){ e.preventDefault(); return; }
+      e.dataTransfer.setData('text/plain', node.dataset.nodeId);
+      node.classList.add('dragging');
+    });
+    node.addEventListener('dragend', () => node.classList.remove('dragging'));
+  });
+
+  document.getElementById('fsExample').addEventListener('click', () => {
+    slots.forEach((slot, i) => {
+      slot.classList.remove('slot-ok','slot-err');
+      const expectedId = cfg.nodes[i].id;
+      const node = pool.querySelector(`[data-node-id="${expectedId}"]`);
+      if(node) placeNodeInSlot(node, slot);
+    });
+  });
+
+  document.getElementById('fsVerify').addEventListener('click', () => {
+    const result = document.getElementById('fsResult');
+    let allFilled = true, allCorrect = true;
+    slots.forEach(slot => {
+      slot.classList.remove('slot-ok','slot-err');
+      if(!slot.classList.contains('filled')){ allFilled = false; return; }
+      if(slot.dataset.nodeId === slot.dataset.expected){
+        slot.classList.add('slot-ok');
+      } else {
+        slot.classList.add('slot-err');
+        allCorrect = false;
+      }
+    });
+    if(!allFilled){
+      result.innerHTML = '<div class="alert alert-warning">⚠️ Completa las 4 posiciones antes de verificar.</div>';
+      return;
+    }
+    if(allCorrect){
+      result.innerHTML = `<div class="alert alert-success">✅ ¡Correcto! ${esc(cfg.successMsg)}</div>`;
+      markComplete('w-factory-sim', cfg.successMsg);
+    } else {
+      result.innerHTML = '<div class="alert alert-danger">❌ Las posiciones en rojo están fuera de orden. Haz clic en ellas para retirarlas y reintentar.</div>';
+    }
+  });
+
+  document.getElementById('fsReset').addEventListener('click', () => renderFactorySim(host));
+}
+
+function placeNodeInSlot(node, slot){
+  slot.innerHTML = `<span class="fs-slot-label">${node.innerHTML}</span>`;
+  slot.classList.add('filled');
+  slot.dataset.nodeId = node.dataset.nodeId;
+  node.classList.add('used');
+}
+
+/* ================================================================
+   WIDGET 2: MANTENIMIENTO PREDICTIVO
+================================================================ */
+function renderPredictiveMaint(host){
+  const cfg = careerConfig[state.profile.career].predictiveMaint;
+  host.innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📈</div>
+        <div>
+          <div class="card-title">2. ${esc(cfg.title)}</div>
+          <div class="card-subtitle">${esc(cfg.desc)}</div>
+        </div>
+      </div>
+      <div class="card-body">
+        ${guideBox(
+          'Identificar la ventana óptima de intervención predictiva (ni demasiado pronto ni demasiado tarde).',
+          [
+            'Desliza el control de días para observar la curva de desgaste.',
+            'Puedes explorar libremente hasta el día 100 y regresar sin perder tu intento.',
+            'Cuando estés en la <b>zona óptima (días 65–89)</b>, pulsa el botón de intervención.'
+          ],
+          'Programas la intervención dentro de la ventana óptima (días 65–89).'
+        )}
+        <div class="pm-slider-wrap">
+          <div class="pm-slider-label">
+            <span>Día de operación</span>
+            <span><strong id="pmDay">1</strong> / 100</span>
+          </div>
+          <input type="range" class="pm-slider" id="pmSlider" min="1" max="100" value="1" aria-label="Día de operación">
+        </div>
+        <canvas class="pm-canvas" id="pmCanvas" role="img" aria-label="Gráfico de tendencia de desgaste del equipo"></canvas>
+        <div class="pm-status ok" id="pmStatus"></div>
+        <div class="widget-actions">
+          <button type="button" class="btn btn-success" id="pmAction">${cfg.action}</button>
+          <button type="button" class="btn btn-outline" id="pmExample">⚡ Ir a ventana óptima (Día 78)</button>
+          <button type="button" class="btn btn-outline" id="pmReset">↻ Reiniciar</button>
+          ${nextLessonButton('w-predictive-maint')}
+        </div>
+        <div id="pmResult"></div>
+      </div>
+    </div>
+  `;
+
+  const slider = document.getElementById('pmSlider');
+  const canvas = document.getElementById('pmCanvas');
+  const ctx = canvas.getContext('2d');
+  const dayEl = document.getElementById('pmDay');
+  const statusEl = document.getElementById('pmStatus');
+  const resultEl = document.getElementById('pmResult');
+
+  function calcValue(day){
+    if(day < 50) return 20 + day * 0.6;
+    if(day < 90) return 50 + (day - 50) * 0.75;
+    return Math.min(100, 80 + (day - 90) * 2);
+  }
+
+  function drawChart(currentDay){
+    const dpr = window.devicePixelRatio || 1;
+    const cssW = canvas.clientWidth || 600;
+    const cssH = 240;
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const pad = {top:20, right:20, bottom:32, left:46};
+    const plotW = cssW - pad.left - pad.right;
+    const plotH = cssH - pad.top - pad.bottom;
+    const xOf = d => pad.left + ((d - 1) / 99) * plotW;
+    const yOf = v => pad.top + plotH - (v / 100) * plotH;
+
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    ctx.fillStyle = isDark ? '#1a2332' : '#f8f9fa';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    ctx.fillStyle = 'rgba(243,156,18,.12)';
+    ctx.fillRect(xOf(cfg.optStart), pad.top, xOf(cfg.failDay) - xOf(cfg.optStart), plotH);
+    ctx.fillStyle = 'rgba(231,76,60,.14)';
+    ctx.fillRect(xOf(cfg.failDay), pad.top, xOf(100) - xOf(cfg.failDay), plotH);
+
+    ctx.strokeStyle = isDark ? '#2d3a4d' : '#e1e7ef';
+    ctx.lineWidth = 1;
+    for(let i=0; i<=4; i++){
+      const y = pad.top + (plotH/4)*i;
+      ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(cssW-pad.right, y); ctx.stroke();
+    }
+
+    ctx.fillStyle = isDark ? '#a8b3c2' : '#5a6779';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'right';
+    for(let i=0; i<=4; i++){
+      ctx.fillText(100 - i*25, pad.left - 8, pad.top + (plotH/4)*i + 4);
+    }
+    ctx.textAlign = 'center';
+    [1, 20, 40, 60, 80, 100].forEach(d => {
+      ctx.fillText('D' + d, xOf(d), cssH - pad.bottom + 18);
+    });
+
+    const threshY = yOf(cfg.threshold);
+    ctx.strokeStyle = '#f39c12';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6,4]);
+    ctx.beginPath(); ctx.moveTo(pad.left, threshY); ctx.lineTo(cssW-pad.right, threshY); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#f39c12';
+    ctx.textAlign = 'left';
+    ctx.fillText(`Umbral ${cfg.threshold} ${cfg.unit}`, pad.left + 8, threshY - 6);
+
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    for(let d=1; d<=currentDay; d++){
+      const x = xOf(d), y = yOf(calcValue(d));
+      if(d===1) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    const lastVal = calcValue(currentDay);
+    const color = currentDay >= cfg.failDay ? '#e74c3c' : currentDay >= cfg.optStart ? '#f39c12' : '#27ae60';
+    ctx.strokeStyle = color;
+    ctx.stroke();
+
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(xOf(currentDay), yOf(lastVal), 6, 0, Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle = isDark ? '#1a2332' : '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    canvas.setAttribute('aria-label', `Gráfico de ${cfg.metric}: valor ${Math.round(lastVal)} ${cfg.unit} en día ${currentDay}`);
+  }
+
+  function update(){
+    const day = parseInt(slider.value);
+    dayEl.textContent = day;
+    const val = Math.round(calcValue(day));
+    drawChart(day);
+
+    if(day >= cfg.failDay){
+      statusEl.className = 'pm-status danger';
+      statusEl.textContent = `💥 Día ${day}: ${cfg.metric} en ${val} ${cfg.unit} — FALLO CRÍTICO`;
+    } else if(day >= cfg.optStart){
+      statusEl.className = 'pm-status warn';
+      statusEl.textContent = `⚡ Día ${day}: ${cfg.metric} en ${val} ${cfg.unit} — Ventana óptima de intervención`;
+    } else {
+      statusEl.className = 'pm-status ok';
+      statusEl.textContent = `✅ Día ${day}: ${cfg.metric} en ${val} ${cfg.unit} — Operación normal`;
+    }
+  }
+
+  const onResize = () => drawChart(parseInt(slider.value));
+  window.addEventListener('resize', onResize);
+  state.cleanupFn = () => window.removeEventListener('resize', onResize);
+
+  slider.addEventListener('input', update);
+  document.getElementById('pmExample').addEventListener('click', () => {
+    slider.value = 78;
+    update();
+  });
+  document.getElementById('pmAction').addEventListener('click', () => {
+    const day = parseInt(slider.value);
+    if(day >= cfg.failDay){
+      resultEl.innerHTML = `<div class="alert alert-danger">${esc(cfg.failMsg)}</div>`;
+    } else if(day < cfg.optStart){
+      resultEl.innerHTML = `<div class="alert alert-warning">${esc(cfg.earlyMsg)}</div>`;
+    } else {
+      resultEl.innerHTML = `<div class="alert alert-success">${esc(cfg.successMsg)}</div>`;
+      markComplete('w-predictive-maint', `Intervención óptima en el día ${day} (${Math.round(calcValue(day))} ${cfg.unit}).`);
+    }
+  });
+  document.getElementById('pmReset').addEventListener('click', () => renderPredictiveMaint(host));
+  update();
+}
+
+/* ================================================================
+   WIDGET 3: CALCULADORA OEE + TAKT TIME
+================================================================ */
+function renderOEE(host){
+  host.innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">⚙️</div>
+        <div>
+          <div class="card-title">3. Calculadora OEE + Takt Time</div>
+          <div class="card-subtitle">Evalúa la Eficiencia General de los Equipos frente al estándar mundial (85%)</div>
+        </div>
+      </div>
+      <div class="card-body">
+        ${guideBox(
+          'Calcular Disponibilidad, Rendimiento, Calidad, OEE y Takt Time de un turno.',
+          [
+            'Ingresa los datos del turno o pulsa <b>Cargar ejemplo</b>.',
+            'Pulsa <b>Calcular OEE</b> para ver el desglose y el semáforo frente al 85%.'
+          ],
+          'Calculas un escenario válido de OEE y Takt Time.'
+        )}
+        <div class="grid grid-3">
+          <div class="form-group">
+            <label class="form-label">Tiempo planificado (min)</label>
+            <input type="number" class="form-input" id="oeePlan" min="1" placeholder="Ej: 480">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Paradas no planificadas (min)</label>
+            <input type="number" class="form-input" id="oeeDown" min="0" placeholder="Ej: 45">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tiempo de ciclo ideal (seg/und)</label>
+            <input type="number" class="form-input" id="oeeCycle" min="0.1" step="0.1" placeholder="Ej: 30">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Unidades producidas totales</label>
+            <input type="number" class="form-input" id="oeeTotal" min="0" placeholder="Ej: 780">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Unidades defectuosas</label>
+            <input type="number" class="form-input" id="oeeDef" min="0" placeholder="Ej: 24">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Demanda del cliente (und/turno)</label>
+            <input type="number" class="form-input" id="oeeDem" min="1" placeholder="Ej: 800">
+          </div>
+        </div>
+        <div class="widget-actions">
+          <button type="button" class="btn btn-primary" id="oeeCalc">📊 Calcular OEE</button>
+          <button type="button" class="btn btn-outline" id="oeeExample">⚡ Cargar ejemplo</button>
+          <button type="button" class="btn btn-outline" id="oeeReset">↻ Reiniciar</button>
+          ${nextLessonButton('w-oee')}
+        </div>
+        <div id="oeeOutput" style="margin-top:16px"></div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('oeeExample').addEventListener('click', () => {
+    document.getElementById('oeePlan').value = 480;
+    document.getElementById('oeeDown').value = 45;
+    document.getElementById('oeeCycle').value = 30;
+    document.getElementById('oeeTotal').value = 780;
+    document.getElementById('oeeDef').value = 24;
+    document.getElementById('oeeDem').value = 800;
+  });
+
+  document.getElementById('oeeCalc').addEventListener('click', () => {
+    const plan = parseFloat(document.getElementById('oeePlan').value);
+    const down = parseFloat(document.getElementById('oeeDown').value) || 0;
+    const cycle = parseFloat(document.getElementById('oeeCycle').value);
+    const total = parseFloat(document.getElementById('oeeTotal').value);
+    const def = parseFloat(document.getElementById('oeeDef').value) || 0;
+    const dem = parseFloat(document.getElementById('oeeDem').value);
+    const out = document.getElementById('oeeOutput');
+
+    if(!(plan > 0) || !(cycle > 0) || !(total > 0) || !(dem > 0) || down >= plan || def > total){
+      out.innerHTML = '<div class="alert alert-warning">⚠️ Verifica los datos: el tiempo planificado, ciclo, producción y demanda deben ser mayores a 0 (paradas &lt; planificado y defectos ≤ total).</div>';
+      return;
+    }
+
+    const runTime = plan - down;
+    const disp = runTime / plan;
+    const rend = Math.min(1, ((cycle * total) / 60) / runTime);
+    const cal = (total - def) / total;
+    const oee = disp * rend * cal * 100;
+    const takt = (plan * 60) / dem;
+
+    const statusClass = oee >= 85 ? 'alert-success' : oee >= 65 ? 'alert-warning' : 'alert-danger';
+    const statusText = oee >= 85 ? '🏆 Clase Mundial (≥ 85%)' : oee >= 65 ? '⚡ Aceptable, con oportunidades de mejora (65–84%)' : '⚠️ Bajo desempeño (&lt; 65%): prioriza pérdidas principales';
+
+    out.innerHTML = `
+      <div class="grid grid-4" style="margin-bottom:14px">
+        <div class="kpi-card"><div class="kpi-val">${(disp*100).toFixed(1)}%</div><div class="kpi-lbl">Disponibilidad</div></div>
+        <div class="kpi-card"><div class="kpi-val">${(rend*100).toFixed(1)}%</div><div class="kpi-lbl">Rendimiento</div></div>
+        <div class="kpi-card"><div class="kpi-val">${(cal*100).toFixed(1)}%</div><div class="kpi-lbl">Calidad</div></div>
+        <div class="kpi-card"><div class="kpi-val">${oee.toFixed(1)}%</div><div class="kpi-lbl">OEE Total</div></div>
+      </div>
+      <div class="alert ${statusClass}"><strong>${statusText}</strong> · Takt Time requerido: <strong>${takt.toFixed(1)} seg/und</strong> (vs ciclo ideal de ${cycle} seg/und).</div>
+    `;
+    markComplete('w-oee', `OEE: ${oee.toFixed(1)}% (D:${(disp*100).toFixed(0)}% · R:${(rend*100).toFixed(0)}% · C:${(cal*100).toFixed(0)}%) · Takt: ${takt.toFixed(1)}s`);
+  });
+
+  document.getElementById('oeeReset').addEventListener('click', () => renderOEE(host));
+}
+
+/* ================================================================
+   WIDGET 4: GRÁFICO DE CONTROL SPC
+================================================================ */
+function renderSPC(host){
+  host.innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📉</div>
+        <div>
+          <div class="card-title">4. Gráfico de Control Estadístico (SPC)</div>
+          <div class="card-subtitle">Detecta causas especiales de variación usando límites ±3σ</div>
+        </div>
+      </div>
+      <div class="card-body">
+        ${guideBox(
+          'Analizar la estabilidad de un proceso mediante media (X̄) y límites de control (±3σ).',
+          [
+            'Pega mediciones separadas por coma o pulsa <b>Generar 30 datos</b>.',
+            'Pulsa <b>Analizar SPC</b> para graficar los límites y detectar puntos fuera de control.'
+          ],
+          'Analizas un conjunto de al menos 10 mediciones.'
+        )}
+        <div class="form-group">
+          <label class="form-label">Mediciones del proceso (separadas por coma)</label>
+          <textarea class="form-textarea" id="spcInput" placeholder="Ej: 50.1, 49.8, 50.3, 50.0, 52.8..."></textarea>
+        </div>
+        <div class="widget-actions" style="margin-top:8px">
+          <button type="button" class="btn btn-primary" id="spcRun">📊 Analizar SPC</button>
+          <button type="button" class="btn btn-outline" id="spcExample">⚡ Generar 30 datos</button>
+          <button type="button" class="btn btn-outline" id="spcReset">↻ Reiniciar</button>
+          ${nextLessonButton('w-spc')}
+        </div>
+        <canvas class="pm-canvas" id="spcCanvas" style="display:none" role="img" aria-label="Gráfico de control estadístico del proceso"></canvas>
+        <div id="spcOutput"></div>
+      </div>
+    </div>
+  `;
+
+  let lastData = null;
+  const canvas = document.getElementById('spcCanvas');
+  const ctx = canvas.getContext('2d');
+
+  function drawSPC(vals, mean, ucl, lcl){
+    canvas.style.display = 'block';
+    const dpr = window.devicePixelRatio || 1;
+    const cssW = canvas.clientWidth || 600;
+    const cssH = 240;
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const pad = {top:22, right:24, bottom:30, left:50};
+    const plotW = cssW - pad.left - pad.right;
+    const plotH = cssH - pad.top - pad.bottom;
+    const minV = Math.min(lcl, ...vals) - 0.5;
+    const maxV = Math.max(ucl, ...vals) + 0.5;
+    const xOf = i => pad.left + (i / (vals.length - 1)) * plotW;
+    const yOf = v => pad.top + plotH - ((v - minV) / (maxV - minV)) * plotH;
+
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    ctx.fillStyle = isDark ? '#1a2332' : '#f8f9fa';
+    ctx.fillRect(0, 0, cssW, cssH);
+
+    const lines = [
+      { v: ucl, c: '#e74c3c', lbl: `UCL ${ucl.toFixed(2)}`, dash: [5,4] },
+      { v: mean, c: '#27ae60', lbl: `X̄ ${mean.toFixed(2)}`, dash: [] },
+      { v: lcl, c: '#e74c3c', lbl: `LCL ${lcl.toFixed(2)}`, dash: [5,4] }
+    ];
+    ctx.font = '11px sans-serif';
+    lines.forEach(l => {
+      const y = yOf(l.v);
+      ctx.strokeStyle = l.c;
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash(l.dash);
+      ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(cssW - pad.right, y); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = l.c;
+      ctx.textAlign = 'left';
+      ctx.fillText(l.lbl, pad.left + 6, y - 4);
+    });
+
+    ctx.strokeStyle = isDark ? '#60a5fa' : '#0a3d62';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    vals.forEach((v,i) => {
+      const x = xOf(i), y = yOf(v);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+
+    vals.forEach((v,i) => {
+      const out = v > ucl || v < lcl;
+      ctx.fillStyle = out ? '#e74c3c' : '#1e6091';
+      ctx.beginPath();
+      ctx.arc(xOf(i), yOf(v), out ? 5.5 : 3.5, 0, Math.PI*2);
+      ctx.fill();
+    });
+
+    canvas.setAttribute('aria-label', `Gráfico SPC: ${vals.length} muestras, X̄=${mean.toFixed(2)}, σ=${Math.sqrt(vals.reduce((a,b)=>a+Math.pow(b-mean,2),0)/(vals.length-1)).toFixed(2)}`);
+  }
+
+  const onResize = () => { if(lastData) drawSPC(lastData.vals, lastData.mean, lastData.ucl, lastData.lcl); };
+  window.addEventListener('resize', onResize);
+  state.cleanupFn = () => window.removeEventListener('resize', onResize);
+
+  document.getElementById('spcExample').addEventListener('click', () => {
+    const arr = [];
+    for(let i=0;i<30;i++){
+      let v = 50 + (Math.random() + Math.random() - 1) * 0.9;
+      if(i === 18) v = 52.7;
+      arr.push(v.toFixed(2));
+    }
+    document.getElementById('spcInput').value = arr.join(', ');
+  });
+
+  document.getElementById('spcRun').addEventListener('click', () => {
+    const raw = document.getElementById('spcInput').value;
+    const vals = raw.split(/[\s,;]+/).map(Number).filter(n => !isNaN(n));
+    const out = document.getElementById('spcOutput');
+    if(vals.length < 10){
+      out.innerHTML = '<div class="alert alert-warning">⚠️ Ingresa al menos 10 mediciones numéricas (o pulsa "Generar 30 datos").</div>';
+      return;
+    }
+    const mean = vals.reduce((a,b)=>a+b,0) / vals.length;
+    const variance = vals.reduce((a,b)=>a + Math.pow(b-mean,2),0) / (vals.length - 1);
+    const sd = Math.sqrt(variance);
+    const ucl = mean + 3 * sd;
+    const lcl = mean - 3 * sd;
+    const outPts = vals.map((v,i)=>({v, idx:i+1})).filter(p => p.v > ucl || p.v < lcl);
+
+    lastData = { vals, mean, ucl, lcl };
+    drawSPC(vals, mean, ucl, lcl);
+
+    out.innerHTML = `
+      <div class="alert ${outPts.length ? 'alert-danger' : 'alert-success'}">
+        <strong>Media (X̄):</strong> ${mean.toFixed(2)} · <strong>σ:</strong> ${sd.toFixed(2)} · <strong>Límites:</strong> [${lcl.toFixed(2)}, ${ucl.toFixed(2)}]<br>
+        ${outPts.length ? `⚠️ Se detectaron <strong>${outPts.length} punto(s) fuera de control</strong> (muestra #${outPts.map(p=>p.idx).join(', #')}). Requiere investigación de causa especial.` : '✅ Proceso bajo control estadístico: todos los puntos están dentro de ±3σ.'}
+      </div>
+    `;
+    markComplete('w-spc', `SPC (${vals.length} muestras): X̄=${mean.toFixed(2)}, σ=${sd.toFixed(2)}, fuera de control=${outPts.length}`);
+  });
+
+  document.getElementById('spcReset').addEventListener('click', () => renderSPC(host));
+}
+
+/* ================================================================
+   WIDGET 5: TASK SPLITTER
+================================================================ */
+function renderTaskSplitter(host){
+  const cfg = careerConfig[state.profile.career];
+  const tasks = shuffleArray([...cfg.tasks]);
+  host.innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🤝</div>
+        <div>
+          <div class="card-title">5. Divisor de Tareas: Humano vs IA</div>
+          <div class="card-subtitle">Clasifica cada actividad según el enfoque colaborativo de la Industria 5.0</div>
+        </div>
+      </div>
+      <div class="card-body">
+        ${guideBox(
+          'Distinguir tareas delegables a la IA, tareas exclusivamente humanas y tareas colaborativas.',
+          [
+            'Haz clic en una tarea y luego en una zona (o arrástrala).',
+            '<b>Deshacer:</b> haz clic en cualquier tarea ya colocada para devolverla al listado.',
+            'Pulsa <b>Evaluar</b> para recibir retroalimentación.'
+          ],
+          'Logras 100% de aciertos en la clasificación.'
+        )}
+        <div class="ts-pool" id="tsPool">
+          ${tasks.map((t,i) => `<div class="ts-task" data-task-idx="${i}" draggable="true">${esc(t.text)}</div>`).join('')}
+        </div>
+        <div class="ts-zones">
+          <div class="ts-zone" data-zone="human"><div class="ts-zone-title">👤 100% Humano</div></div>
+          <div class="ts-zone" data-zone="ia"><div class="ts-zone-title">🤖 100% IA</div></div>
+          <div class="ts-zone" data-zone="collab"><div class="ts-zone-title">🤝 Colaborativo (5.0)</div></div>
+        </div>
+        <div class="widget-actions">
+          <button type="button" class="btn btn-primary" id="tsEval">📊 Evaluar</button>
+          <button type="button" class="btn btn-outline" id="tsExample">⚡ Cargar ejemplo</button>
+          <button type="button" class="btn btn-outline" id="tsReset">↻ Reiniciar</button>
+          ${nextLessonButton('w-task-splitter')}
+        </div>
+        <div id="tsResult"></div>
+      </div>
+    </div>
+  `;
+  initTaskSplitterDnD(tasks, host);
+}
+
+function initTaskSplitterDnD(tasks, host){
+  const pool = document.getElementById('tsPool');
+  const zones = document.querySelectorAll('.ts-zone');
+  let selectedTask = null;
+
+  pool.addEventListener('click', (e) => {
+    const task = e.target.closest('.ts-task');
+    if(!task || task.classList.contains('assigned')) return;
+    pool.querySelectorAll('.ts-task').forEach(t => t.classList.remove('selected'));
+    task.classList.add('selected');
+    selectedTask = task;
+  });
+
+  zones.forEach(zone => {
+    zone.addEventListener('click', (e) => {
+      const placed = e.target.closest('.ts-zone-task');
+      if(placed){
+        const idx = placed.dataset.taskIdx;
+        placed.remove();
+        const orig = pool.querySelector(`[data-task-idx="${idx}"]`);
+        if(orig) orig.classList.remove('assigned');
+        return;
+      }
+      if(!selectedTask) return;
+      placeTaskInZone(selectedTask, zone, tasks);
+      selectedTask = null;
+    });
+    zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      const idx = e.dataTransfer.getData('text/plain');
+      const task = pool.querySelector(`[data-task-idx="${idx}"]`);
+      if(task && !task.classList.contains('assigned')) placeTaskInZone(task, zone, tasks);
+    });
+  });
+
+  pool.querySelectorAll('.ts-task').forEach(task => {
+    task.addEventListener('dragstart', (e) => {
+      if(task.classList.contains('assigned')){ e.preventDefault(); return; }
+      e.dataTransfer.setData('text/plain', task.dataset.taskIdx);
+    });
+  });
+
+  document.getElementById('tsExample').addEventListener('click', () => {
+    zones.forEach(z => z.querySelectorAll('.ts-zone-task').forEach(el => el.remove()));
+    pool.querySelectorAll('.ts-task').forEach(t => t.classList.remove('assigned','selected'));
+    tasks.forEach((t, i) => {
+      const taskEl = pool.querySelector(`[data-task-idx="${i}"]`);
+      const targetZone = document.querySelector(`.ts-zone[data-zone="${t.cat}"]`);
+      if(taskEl && targetZone) placeTaskInZone(taskEl, targetZone, tasks);
+    });
+  });
+
+  document.getElementById('tsEval').addEventListener('click', () => {
+    const result = document.getElementById('tsResult');
+    let correct = 0, assigned = 0;
+    const feedback = [];
+    zones.forEach(zone => {
+      const zoneCat = zone.dataset.zone;
+      zone.querySelectorAll('.ts-zone-task').forEach(el => {
+        el.classList.remove('correct','wrong');
+        assigned++;
+        const idx = parseInt(el.dataset.taskIdx);
+        const real = tasks[idx].cat;
+        if(zoneCat === real){ correct++; el.classList.add('correct'); }
+        else { el.classList.add('wrong'); feedback.push({task: tasks[idx].text, reason: tasks[idx].reason, correct: zoneCatName(real)}); }
+      });
+    });
+    if(assigned < tasks.length){
+      result.innerHTML = `<div class="alert alert-warning">⚠️ Te faltan ${tasks.length - assigned} tareas por clasificar.</div>`;
+      return;
+    }
+    const pct = Math.round((correct / tasks.length) * 100);
+    let html = `<div class="alert ${pct===100?'alert-success':'alert-info'}"><strong>Puntaje: ${pct}%</strong> (${correct}/${tasks.length} correctas). Puedes hacer clic en cualquier tarea en rojo para corregirla.</div>`;
+    if(pct === 100){
+      markComplete('w-task-splitter', '100% en clasificación Humano vs IA.');
+    } else {
+      html += `<div class="alert alert-info"><strong>💡 Pistas:</strong><ul style="margin:6px 0 0 18px">` +
+        feedback.map(f => `<li><b>"${esc(f.task)}"</b> → ${f.correct}. ${esc(f.reason)}</li>`).join('') + `</ul></div>`;
+    }
+    result.innerHTML = html;
+  });
+
+  document.getElementById('tsReset').addEventListener('click', () => renderTaskSplitter(host));
+}
+
+function placeTaskInZone(task, zone, tasks){
+  const idx = parseInt(task.dataset.taskIdx);
+  const div = document.createElement('div');
+  div.className = 'ts-zone-task';
+  div.title = 'Clic para devolver al listado';
+  div.innerHTML = `<span>${esc(tasks[idx].text)}</span><span class="undo-x">✕</span>`;
+  div.dataset.taskIdx = idx;
+  zone.appendChild(div);
+  task.classList.add('assigned');
+  task.classList.remove('selected');
+}
+
+function zoneCatName(cat){
+  return {human:'👤 100% Humano', ia:'🤖 100% IA', collab:'🤝 Colaborativo (5.0)'}[cat] || cat;
+}
+
+/* ================================================================
+   WIDGET 6: EVALUADOR 3 PILARES INDUSTRIA 5.0 (Radar dinámico)
+================================================================ */
+function renderPillars(host){
+  host.innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🧭</div>
+        <div>
+          <div class="card-title">6. Evaluador de los 3 Pilares Industria 5.0</div>
+          <div class="card-subtitle">Marco de la Comisión Europea: Centrado en el Humano, Sostenibilidad y Resiliencia</div>
+        </div>
+      </div>
+      <div class="card-body">
+        ${guideBox(
+          'Diagnosticar el nivel de madurez 5.0 de un proyecto o empresa en sus tres pilares.',
+          [
+            'Ajusta cada indicador de 1 (inicial) a 5 (maduro) según tu caso de estudio.',
+            'Pulsa <b>Evaluar Proyecto</b> para ver el radar y la recomendación prioritaria.'
+          ],
+          'Generas el diagnóstico radar de tu caso.'
+        )}
+        <div class="grid grid-2" style="align-items:center">
+          <div>
+            <div class="pm-slider-wrap">
+              <div class="pm-slider-label"><span>👤 Centrado en el Humano (ergonomía, capacitación, ética)</span><strong id="pHumVal">3</strong></div>
+              <input type="range" class="pm-slider" id="pHum" min="1" max="5" value="3" aria-label="Pilar Humano">
+            </div>
+            <div class="pm-slider-wrap">
+              <div class="pm-slider-label"><span>🌱 Sostenibilidad (eficiencia energética, circularidad)</span><strong id="pSusVal">3</strong></div>
+              <input type="range" class="pm-slider" id="pSus" min="1" max="5" value="3" aria-label="Pilar Sostenibilidad">
+            </div>
+            <div class="pm-slider-wrap">
+              <div class="pm-slider-label"><span>🛡️ Resiliencia (continuidad ante fallos y cadena flexible)</span><strong id="pResVal">3</strong></div>
+              <input type="range" class="pm-slider" id="pRes" min="1" max="5" value="3" aria-label="Pilar Resiliencia">
+            </div>
+          </div>
+          <div>
+            <canvas class="radar-canvas" id="pillarsCanvas" role="img" aria-label="Gráfico radar de los 3 pilares de Industria 5.0"></canvas>
+          </div>
+        </div>
+        <div class="widget-actions">
+          <button type="button" class="btn btn-primary" id="pEval">🧭 Evaluar Proyecto</button>
+          <button type="button" class="btn btn-outline" id="pExample">⚡ Cargar ejemplo</button>
+          <button type="button" class="btn btn-outline" id="pReset">↻ Reiniciar</button>
+          ${nextLessonButton('w-pillars')}
+        </div>
+        <div id="pOutput"></div>
+      </div>
+    </div>
+  `;
+
+  const sH = document.getElementById('pHum');
+  const sS = document.getElementById('pSus');
+  const sR = document.getElementById('pRes');
+  const canvas = document.getElementById('pillarsCanvas');
+  const ctx = canvas.getContext('2d');
+
+  function drawRadar(){
+    const h = +sH.value, s = +sS.value, r = +sR.value;
+    document.getElementById('pHumVal').textContent = h;
+    document.getElementById('pSusVal').textContent = s;
+    document.getElementById('pResVal').textContent = r;
+
+    const dpr = window.devicePixelRatio || 1;
+    const cssW = canvas.clientWidth || 360;
+    const cssH = canvas.clientHeight || 300;
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const cx = cssW / 2;
+    const cy = cssH / 2 + 8;
+    const maxR = Math.min(cssW, cssH) * 0.33;
+    const angles = [-Math.PI/2, Math.PI/6, 5*Math.PI/6];
+    const labels = ['👤 Humano', '🌱 Sostenible', '🛡️ Resiliente'];
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+    ctx.clearRect(0, 0, cssW, cssH);
+    for(let lvl=1; lvl<=5; lvl++){
+      const rad = (lvl/5)*maxR;
+      ctx.beginPath();
+      angles.forEach((a,i) => {
+        const x = cx + Math.cos(a)*rad, y = cy + Math.sin(a)*rad;
+        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      });
+      ctx.closePath();
+      ctx.strokeStyle = isDark ? '#2d3a4d' : '#dce3ec';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+    ctx.fillStyle = isDark ? '#e8ecf1' : '#1a2332';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'center';
+    angles.forEach((a,i) => {
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx + Math.cos(a)*maxR, cy + Math.sin(a)*maxR);
+      ctx.strokeStyle = isDark ? '#2d3a4d' : '#dce3ec'; ctx.lineWidth = 1; ctx.stroke();
+      const labelR = maxR + Math.min(28, cssW * 0.08);
+      ctx.fillText(labels[i], cx + Math.cos(a)*labelR, cy + Math.sin(a)*labelR + 4);
+    });
+    const vals = [h, s, r];
+    ctx.beginPath();
+    vals.forEach((v,i) => {
+      const rad = (v/5)*maxR;
+      const x = cx + Math.cos(angles[i])*rad, y = cy + Math.sin(angles[i])*rad;
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(30,96,145,.28)';
+    ctx.fill();
+    ctx.strokeStyle = '#1e6091';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    vals.forEach((v,i) => {
+      const rad = (v/5)*maxR;
+      const x = cx + Math.cos(angles[i])*rad, y = cy + Math.sin(angles[i])*rad;
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI*2);
+      ctx.fillStyle = '#1e6091';
+      ctx.fill();
+      ctx.strokeStyle = isDark ? '#1a2332' : '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    });
+
+    canvas.setAttribute('aria-label', `Radar 5.0: Humano ${h}/5, Sostenibilidad ${s}/5, Resiliencia ${r}/5`);
+  }
+
+  const onResize = () => drawRadar();
+  window.addEventListener('resize', onResize);
+  state.cleanupFn = () => window.removeEventListener('resize', onResize);
+
+  [sH,sS,sR].forEach(el => el.addEventListener('input', drawRadar));
+  document.getElementById('pExample').addEventListener('click', () => { sH.value = 4; sS.value = 5; sR.value = 3; drawRadar(); });
+  document.getElementById('pEval').addEventListener('click', () => {
+    const h = +sH.value, s = +sS.value, r = +sR.value;
+    const avg = ((h+s+r)/3).toFixed(1);
+    const minVal = Math.min(h,s,r);
+    const weakest = minVal === h ? 'Centrado en el Humano' : minVal === s ? 'Sostenibilidad' : 'Resiliencia';
+    document.getElementById('pOutput').innerHTML = `
+      <div class="alert alert-info">
+        <strong>Índice 5.0: ${avg} / 5.0</strong> · Pilar prioritario a fortalecer: <strong>${weakest}</strong>.
+      </div>
+    `;
+    markComplete('w-pillars', `Pilares 5.0: Humano=${h}, Sostenibilidad=${s}, Resiliencia=${r} (Promedio ${avg}/5).`);
+  });
+  document.getElementById('pReset').addEventListener('click', () => renderPillars(host));
+  drawRadar();
+}
+
+/* ================================================================
+   WIDGET 7: HUELLA DIGITAL (UPME)
+================================================================ */
+function renderSustainability(host){
+  host.innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🌱</div>
+        <div>
+          <div class="card-title">7. Calculadora de Huella Digital (Con Fuentes)</div>
+          <div class="card-subtitle">Estima el ahorro mensual de CO₂ usando factores de emisión verificables</div>
+        </div>
+      </div>
+      <div class="card-body">
+        ${guideBox(
+          'Cuantificar el impacto ambiental de iniciativas de digitalización con unidades coherentes.',
+          [
+            'Ajusta los ahorros mensuales estimados (hojas, kilómetros y kWh).',
+            'Pulsa <b>Registrar Impacto</b> para guardar el cálculo en tu reporte.'
+          ],
+          'Registras un escenario con al menos una variable mayor a 0.'
+        )}
+        <div class="sus-metric">
+          <div class="sus-metric-value"><span id="susCO2">0.0</span> kg CO₂e</div>
+          <div class="sus-metric-label">Ahorro mensual estimado</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">📄 Hojas A4 ahorradas/mes (0,005 kg CO₂/hoja): <strong id="susPaperVal">0</strong></label>
+          <input type="range" class="pm-slider" id="susPaper" min="0" max="2000" value="0" step="50" aria-label="Hojas ahorradas">
+        </div>
+        <div class="form-group">
+          <label class="form-label">🚗 Km de transporte evitados/mes (0,21 kg CO₂/km): <strong id="susKmVal">0</strong></label>
+          <input type="range" class="pm-slider" id="susKm" min="0" max="500" value="0" step="10" aria-label="Kilómetros evitados">
+        </div>
+        <div class="form-group">
+          <label class="form-label">⚡ Energía ahorrada/mes en kWh (0,164 kg CO₂/kWh · Red Colombia UPME): <strong id="susEnergyVal">0</strong> kWh</label>
+          <input type="range" class="pm-slider" id="susEnergy" min="0" max="500" value="0" step="10" aria-label="Energía ahorrada">
+        </div>
+        <div style="font-size:11.5px;color:var(--text-3);margin-bottom:10px">
+          Fuentes de referencia: Factor de emisión SIN Colombia (UPME, ~0,164 kg CO₂/kWh), vehículo liviano promedio (DEFRA, ~0,21 kg CO₂/km), papel bond A4 (~0,005 kg CO₂/hoja).
+        </div>
+        <div class="widget-actions">
+          <button type="button" class="btn btn-primary" id="susSave">💾 Registrar Impacto</button>
+          <button type="button" class="btn btn-outline" id="susExample">⚡ Cargar ejemplo</button>
+          <button type="button" class="btn btn-outline" id="susReset">↻ Reiniciar</button>
+          ${nextLessonButton('w-sustainability')}
+        </div>
+        <div id="susFeedback"></div>
+      </div>
+    </div>
+  `;
+
+  const paper = document.getElementById('susPaper');
+  const km = document.getElementById('susKm');
+  const energy = document.getElementById('susEnergy');
+
+  function calcCO2(){
+    const p = +paper.value, k = +km.value, e = +energy.value;
+    document.getElementById('susPaperVal').textContent = p;
+    document.getElementById('susKmVal').textContent = k;
+    document.getElementById('susEnergyVal').textContent = e;
+    const co2 = (p * 0.005) + (k * 0.21) + (e * 0.164);
+    document.getElementById('susCO2').textContent = co2.toFixed(1);
+    return { p, k, e, co2 };
+  }
+
+  [paper, km, energy].forEach(s => s.addEventListener('input', calcCO2));
+  document.getElementById('susExample').addEventListener('click', () => {
+    paper.value = 500; km.value = 120; energy.value = 150; calcCO2();
+  });
+  document.getElementById('susSave').addEventListener('click', () => {
+    const { p, k, e, co2 } = calcCO2();
+    const fb = document.getElementById('susFeedback');
+    if(co2 <= 0){
+      fb.innerHTML = '<div class="alert alert-warning">⚠️ Ajusta al menos un deslizador antes de registrar el impacto.</div>';
+      return;
+    }
+    fb.innerHTML = `<div class="alert alert-success">✅ Impacto registrado: <strong>${co2.toFixed(1)} kg CO₂e/mes</strong> (${(co2*12).toFixed(1)} kg CO₂e/año).</div>`;
+    markComplete('w-sustainability', `Ahorro estimado: ${co2.toFixed(1)} kg CO₂e/mes (${p} hojas, ${k} km, ${e} kWh).`);
+  });
+  document.getElementById('susReset').addEventListener('click', () => renderSustainability(host));
+  calcCO2();
+}
+
+/* ================================================================
+   WIDGET 8: GEMELOS DIGITALES
+================================================================ */
+function renderDigitalTwin(host){
+  const career = state.profile.career;
+  const areas = career === 'ingenieria'
+    ? [['produccion','🏭 Línea de Producción'],['logistica','🚚 Almacén / Logística'],['energia','⚡ Planta Energética']]
+    : [['oficina','🏢 Oficina / Negocio'],['clientes','👥 Atención al Cliente'],['rrhh','🧑‍💼 Recursos Humanos']];
+
+  host.innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">👥</div>
+        <div>
+          <div class="card-title">8. Constructor de Gemelos Digitales</div>
+          <div class="card-subtitle">Diseña la ficha técnica de una réplica virtual de tu entorno</div>
+        </div>
+      </div>
+      <div class="card-body">
+        ${guideBox(
+          'Definir las variables críticas, sensores y propósito de un Gemelo Digital.',
+          [
+            'Selecciona el área y el objetivo principal.',
+            'Escribe 3 variables medibles reales (o pulsa <b>Cargar ejemplo</b>).',
+            'Pulsa <b>Generar Gemelo Digital</b>.'
+          ],
+          'Generas la ficha con las 3 variables diligenciadas.'
+        )}
+        <div class="grid grid-2">
+          <div class="form-group">
+            <label class="form-label">Área de aplicación:</label>
+            <select class="form-select" id="dtArea">${areas.map(a => `<option value="${a[0]}">${esc(a[1])}</option>`).join('')}</select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Objetivo principal:</label>
+            <select class="form-select" id="dtGoal">
+              <option value="optimizar">Optimizar procesos</option>
+              <option value="predecir">Predecir fallos/riesgos</option>
+              <option value="simular">Simular escenarios</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-3">
+          <div class="form-group"><label class="form-label">Variable clave 1 *</label><input type="text" class="form-input" id="dtV1" placeholder="${career==='ingenieria'?'Ej: Temperatura (°C)':'Ej: Tiempo de respuesta'}"></div>
+          <div class="form-group"><label class="form-label">Variable clave 2 *</label><input type="text" class="form-input" id="dtV2" placeholder="${career==='ingenieria'?'Ej: Vibración (mm/s)':'Ej: Satisfacción (CSAT)'}"></div>
+          <div class="form-group"><label class="form-label">Variable clave 3 *</label><input type="text" class="form-input" id="dtV3" placeholder="${career==='ingenieria'?'Ej: Consumo (kWh)':'Ej: Tasa de retención'}"></div>
+        </div>
+        <div class="widget-actions">
+          <button type="button" class="btn btn-primary" id="dtGenerate">✨ Generar Gemelo Digital</button>
+          <button type="button" class="btn btn-outline" id="dtExample">⚡ Cargar ejemplo</button>
+          <button type="button" class="btn btn-outline" id="dtReset">↻ Reiniciar</button>
+          ${nextLessonButton('w-digital-twin')}
+        </div>
+        <div id="dtOutput"></div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('dtExample').addEventListener('click', () => {
+    if(career === 'ingenieria'){
+      document.getElementById('dtV1').value = 'Temperatura del horno (°C)';
+      document.getElementById('dtV2').value = 'Vibración del motor (mm/s)';
+      document.getElementById('dtV3').value = 'Consumo eléctrico (kWh)';
+    } else {
+      document.getElementById('dtV1').value = 'Tiempo medio de atención (min)';
+      document.getElementById('dtV2').value = 'Índice de satisfacción (CSAT)';
+      document.getElementById('dtV3').value = 'Tasa de conversión (%)';
+    }
+  });
+
+  document.getElementById('dtGenerate').addEventListener('click', () => {
+    const area = document.getElementById('dtArea').value;
+    const goal = document.getElementById('dtGoal').value;
+    const v1 = document.getElementById('dtV1').value.trim();
+    const v2 = document.getElementById('dtV2').value.trim();
+    const v3 = document.getElementById('dtV3').value.trim();
+    const out = document.getElementById('dtOutput');
+
+    if(!v1 || !v2 || !v3){
+      out.innerHTML = '<div class="alert alert-warning">⚠️ Completa las 3 variables clave antes de generar el Gemelo Digital.</div>';
+      return;
+    }
+
+    const areaNames = {
+      produccion:'Línea de Producción', logistica:'Almacén y Logística', energia:'Planta Energética',
+      oficina:'Oficina de Negocios', clientes:'Atención al Cliente', rrhh:'Departamento de RRHH'
+    };
+    const goalNames = {optimizar:'optimizar procesos', predecir:'predecir fallos y riesgos', simular:'simular escenarios sin detener la operación'};
+    const sensors = {
+      produccion:'sensores IoT de temperatura, acelerómetros, medidores de potencia y cámaras industriales',
+      logistica:'lectores RFID, GPS, sensores de temperatura/humedad y conteo óptico',
+      energia:'medidores inteligentes, analizadores de red y termografía',
+      oficina:'CRM, telemetría de flujos de trabajo y tableros de ocupación',
+      clientes:'registros de tiempo de espera, tickets y análisis de sentimiento',
+      rrhh:'encuestas de clima laboral, métricas de desempeño y ausentismo'
+    };
+
+    out.innerHTML = `
+      <div class="dt-output">
+        <h4>🎯 Gemelo Digital: ${esc(areaNames[area])}</h4>
+        <p style="margin-bottom:8px"><strong>Propósito:</strong> ${esc(goalNames[goal])} mediante sincronización de datos en tiempo real.</p>
+        <p style="margin-bottom:8px"><strong>📡 Fuentes de datos / sensores:</strong> ${esc(sensors[area])}.</p>
+        <p style="margin-bottom:6px"><strong>📊 Variables monitoreadas:</strong></p>
+        <ul>
+          <li><strong>${esc(v1)}:</strong> Captura continua y detección de desviaciones frente a límites operativos.</li>
+          <li><strong>${esc(v2)}:</strong> Modelado de tendencias para alertas tempranas.</li>
+          <li><strong>${esc(v3)}:</strong> Evaluación de escenarios "qué pasaría si" antes de aplicar cambios físicos.</li>
+        </ul>
+        <p style="margin-bottom:6px"><strong>✅ Valor esperado:</strong></p>
+        <ul>
+          <li>Decisiones respaldadas por datos reales y simulaciones previas.</li>
+          <li>Reducción de paradas no planificadas y menor riesgo en pruebas de mejora.</li>
+        </ul>
+      </div>
+    `;
+    markComplete('w-digital-twin', `Gemelo Digital (${areaNames[area]}): ${v1}, ${v2}, ${v3}.`);
+  });
+
+  document.getElementById('dtReset').addEventListener('click', () => renderDigitalTwin(host));
+}
+
+/* ================================================================
+   WIDGET 9: ESPECIFICACIÓN DE DATASET VISIÓN ARTIFICIAL
+================================================================ */
+function renderVisionPrompt(host){
+  const career = state.profile.career;
+  const objects = career === 'ingenieria'
+    ? [['cafe','☕ Grano de café'],['piezas','⚙️ Piezas industriales'],['soldadura','🔧 Soldadura'],['superficie','📏 Superficie']]
+    : [['rostro','👤 Rostro humano'],['documento','📄 Documento'],['producto','📦 Producto en anaquel'],['firma','✍️ Firma']];
+  const defects = career === 'ingenieria'
+    ? ['manchas','grietas','deformaciones','color anómalo','piezas faltantes']
+    : ['texto borroso','daño en empaque','posición incorrecta','elementos faltantes'];
+
+  host.innerHTML = `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">👁️</div>
+        <div>
+          <div class="card-title">9. Especificación de Dataset para Visión Artificial</div>
+          <div class="card-subtitle">Define los requisitos técnicos de datos para entrenar en Roboflow o Edge Impulse</div>
+        </div>
+      </div>
+      <div class="card-body">
+        ${guideBox(
+          'Estructurar una especificación de dataset (clases, iluminación, aumentos y métricas) antes de recolectar fotos.',
+          [
+            'Selecciona el objeto, el defecto, la iluminación y el tipo de tarea de visión.',
+            'Pulsa <b>Generar Especificación</b> y cópiala si deseas llevarla a tu proyecto.'
+          ],
+          'Generas la especificación técnica del dataset.'
+        )}
+        <div class="grid grid-2">
+          <div class="form-group">
+            <label class="form-label">Objeto a inspeccionar:</label>
+            <select class="form-select" id="vpObject">${objects.map(o => `<option value="${esc(o[0])}">${esc(o[1])}</option>`).join('')}</select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Defecto o característica:</label>
+            <select class="form-select" id="vpDefect">
+              ${defects.map(d => `<option value="${esc(d)}">${esc(d)}</option>`).join('')}
+              <option value="custom">✏️ Personalizado...</option>
+            </select>
+            <input type="text" class="form-input" id="vpDefectCustom" placeholder="Especifica el defecto" style="margin-top:8px;display:none">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Iluminación en captura:</label>
+            <select class="form-select" id="vpLight">
+              <option value="natural">☀️ Luz natural</option>
+              <option value="artificial">💡 Luz artificial controlada</option>
+              <option value="baja">🌙 Baja iluminación</option>
+              <option value="variable">🔄 Iluminación variable</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tarea del modelo:</label>
+            <select class="form-select" id="vpModel">
+              <option value="clasificacion">Clasificación de imágenes</option>
+              <option value="deteccion">Detección de objetos (bounding boxes)</option>
+              <option value="segmentacion">Segmentación semántica</option>
+            </select>
+          </div>
+        </div>
+        <div class="widget-actions">
+          <button type="button" class="btn btn-primary" id="vpGenerate">✨ Generar Especificación</button>
+          <button type="button" class="btn btn-outline" id="vpExample">⚡ Cargar ejemplo</button>
+          <button type="button" class="btn btn-outline" id="vpReset">↻ Reiniciar</button>
+        </div>
+        <div id="vpOutput"></div>
+      </div>
+    </div>
+  `;
+
+  const defectSel = document.getElementById('vpDefect');
+  const defectCustom = document.getElementById('vpDefectCustom');
+  defectSel.addEventListener('change', () => {
+    defectCustom.style.display = defectSel.value === 'custom' ? 'block' : 'none';
+  });
+
+  document.getElementById('vpExample').addEventListener('click', () => {
+    document.getElementById('vpLight').value = 'artificial';
+    document.getElementById('vpModel').value = 'deteccion';
+    document.getElementById('vpGenerate').click();
+  });
+
+  document.getElementById('vpGenerate').addEventListener('click', () => {
+    const obj = document.getElementById('vpObject').value;
+    const rawDefect = defectSel.value === 'custom' ? (defectCustom.value.trim() || 'defecto personalizado') : defectSel.value;
+    const light = document.getElementById('vpLight').value;
+    const model = document.getElementById('vpModel').value;
+
+    const objNames = {
+      cafe:'granos de café', piezas:'piezas industriales', soldadura:'soldaduras', superficie:'superficies',
+      rostro:'rostros humanos', documento:'documentos', producto:'productos en anaquel', firma:'firmas'
+    };
+    const lightDesc = {
+      natural:'luz natural con variaciones de intensidad',
+      artificial:'iluminación artificial controlada y uniforme',
+      baja:'baja iluminación con posible ruido y sombras',
+      variable:'iluminación variable no controlada'
+    };
+    const modelDesc = {
+      clasificacion:'Clasificar cada imagen completa según presencia de',
+      deteccion:'Detectar y localizar con bounding boxes',
+      segmentacion:'Segmentar píxel a píxel las zonas con'
+    };
+
+    const specText = `# ESPECIFICACIÓN DE DATASET — VISIÓN ARTIFICIAL
+# Destino: Roboflow / Edge Impulse / PyTorch
+
+## 🎯 OBJETIVO
+${modelDesc[model]} "${rawDefect}" en ${objNames[obj]}, bajo ${lightDesc[light]}.
+
+## 📂 ESTRUCTURA DEL DATASET
+- Clase 0: Normal / Sin defecto
+- Clase 1: ${rawDefect} (leve)
+- Clase 2: ${rawDefect} (severo)
+- División sugerida: 70% Train / 20% Valid / 10% Test
+- Resolución mínima: 640×640 px (JPG/PNG)
+- Balanceo: mínimo 300–500 imágenes por clase con variaciones de ángulo (±30°).
+
+## 🔄 DATA AUGMENTATION
+- Rotación ±15°, brillo ±20%, contraste ±15%, flip horizontal.
+
+## 📊 MÉTRICAS DE VALIDACIÓN
+- Precision > 95% · Recall > 90% · mAP@0.5 > 0.85 (en detección).`;
+
+    document.getElementById('vpOutput').innerHTML = `
+      <div class="vp-output">
+        <button type="button" class="vp-copy" id="vpCopy">📋 Copiar</button>
+        <pre style="margin:0;white-space:pre-wrap;font-family:inherit">${esc(specText)}</pre>
+      </div>
+    `;
+
+    markComplete('w-vision-prompt', `Dataset ${model} para ${objNames[obj]} (${rawDefect}).`);
+
+    document.getElementById('vpCopy').addEventListener('click', () => {
+      const btn = document.getElementById('vpCopy');
+      copyTextSafe(specText,
+        () => { btn.textContent = '✅ ¡Copiado!'; setTimeout(() => btn.textContent = '📋 Copiar', 2000); },
+        () => { btn.textContent = '⚠️ Selecciona y copia manual'; setTimeout(() => btn.textContent = '📋 Copiar', 2500); }
+      );
+    });
+  });
+
+  document.getElementById('vpReset').addEventListener('click', () => renderVisionPrompt(host));
+}
+
+/* ================================================================
+   EXPORTAR REPORTE MARKDOWN (.md)
+================================================================ */
+function exportMarkdownReport(){
+  const pct = getProgressPct();
+  const safeName = (state.profile.name || 'Estudiante').replace(/[^\w\s-]/g, '').trim() || 'Estudiante';
+  const lines = [
+    `# Reporte de Laboratorio · UDI Clase 2 (Industria 4.0 y 5.0)`,
+    ``,
+    `- **Estudiante:** ${safeName}`,
+    `- **Carrera:** ${state.profile.career === 'ingenieria' ? 'Ingeniería' : 'Administración'}`,
+    `- **Nivel:** ${getLevelBadge()}`,
+    `- **Progreso:** ${pct}% (${WIDGET_ORDER.filter(id=>state.completed[id]).length}/${WIDGET_ORDER.length})`,
+    `- **Fecha:** ${new Date().toLocaleString('es-CO')}`,
+    ``,
+    `## Resultados por Herramienta`,
+    ``
+  ];
+  WIDGET_ORDER.forEach((id, i) => {
+    const done = state.completed[id] ? '✅ Completado' : '⬜ Pendiente';
+    const res = state.results[id] ? ` — ${state.results[id]}` : '';
+    lines.push(`${i+1}. **${WIDGET_NAMES[id]}:** ${done}${res}`);
+  });
+
+  const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `UDI_Clase2_${safeName.replace(/\s+/g,'_')}.md`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
